@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../core/constants/app_colors.dart';
 import '../controllers/library_controller.dart';
 import '../models/song.dart';
+import '../../player/controllers/player_controller.dart';
 
 class LibraryView extends GetView<LibraryController> {
   const LibraryView({super.key});
@@ -58,7 +59,7 @@ class _SongTile extends StatelessWidget {
     title: Text(song.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
     subtitle: Text(song.artist, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
     trailing: Text(song.durationLabel, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
-    onTap: () => Get.snackbar('Coming soon', 'Audio playback will be added in the next stage.', snackPosition: SnackPosition.BOTTOM, margin: const EdgeInsets.all(16)),
+    onTap: () => Get.find<PlayerController>().playSong(song, Get.find<LibraryController>().songs.toList()),
   );
 }
 
