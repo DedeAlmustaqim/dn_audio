@@ -18,6 +18,7 @@
 - Flutter
 - GetX for state management and navigation
 - just_audio for audio playback
+- audio_service for the Android background audio service and media session
 - Android MediaStore through a platform MethodChannel
 - Android-first development
 
@@ -30,10 +31,12 @@
 - Audio playback with play, pause, seek, previous, and next controls.
 - Shuffle and repeat modes.
 - Persistent mini-player and expanded Now Playing view.
+- Background audio handler foundation with a shared just_audio engine and media queue/state bridge.
+- Android media playback foreground service and media button receiver declarations.
 
 ## Planned
 
-- Background playback, media notification, and lock-screen controls.
+- End-to-end validation of background playback, media notification, and lock-screen controls.
 - Playlist management and playback queue UI.
 - Album artwork and richer metadata presentation.
 - Equalizer and supported audio effects.
@@ -50,4 +53,4 @@
 
 ## Current status
 
-Stages 1–3 are implemented. Stage 3.5 focuses on stabilization, error handling, and automated tests before background playback work begins.
+Stages 1–3.5 are implemented. Stage 4.1 adds the audio_service architecture; local build and device verification are pending.
