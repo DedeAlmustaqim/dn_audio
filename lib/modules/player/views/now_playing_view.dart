@@ -84,13 +84,15 @@ class NowPlayingView extends GetView<PlayerController> {
                         onPressed: () async {
                           await controller.toggleShuffle();
                           Get.rawSnackbar(
-                            message: controller.isShuffleEnabled.value
-                                ? 'Acak diaktifkan'
-                                : 'Acak dinonaktifkan',
+                            messageText: Text(
+                              controller.isShuffleEnabled.value
+                                  ? 'Acak diaktifkan'
+                                  : 'Acak dinonaktifkan',
+                              style: const TextStyle(color: AppColors.textPrimary),
+                            ),
                             duration: const Duration(milliseconds: 1500),
                             snackPosition: SnackPosition.BOTTOM,
                             backgroundColor: AppColors.surfaceElevated,
-                            colorText: AppColors.textPrimary,
                             borderRadius: 14,
                             margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
                           );
@@ -180,11 +182,13 @@ class NowPlayingView extends GetView<PlayerController> {
                             LoopMode.one => 'Ulangi satu lagu',
                           };
                           Get.rawSnackbar(
-                            message: message,
+                            messageText: Text(
+                              message,
+                              style: const TextStyle(color: AppColors.textPrimary),
+                            ),
                             duration: const Duration(milliseconds: 1500),
                             snackPosition: SnackPosition.BOTTOM,
                             backgroundColor: AppColors.surfaceElevated,
-                            colorText: AppColors.textPrimary,
                             borderRadius: 14,
                             margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
                           );
