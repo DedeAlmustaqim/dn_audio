@@ -32,7 +32,7 @@ class LibraryView extends GetView<LibraryController> {
       else if (visibleSongs.isEmpty)
         const SliverFillRemaining(hasScrollBody: false, child: _InfoState(icon: Icons.search_off_rounded, title: 'No matching songs', message: 'Try another song, artist, or album name.'))
       else
-        SliverPadding(padding: const EdgeInsets.fromLTRB(16, 0, 16, 24), sliver: SliverList.separated(itemCount: visibleSongs.length, separatorBuilder: (_, __) => const Divider(height: 1, indent: 68), itemBuilder: (context, index) => _SongTile(song: visibleSongs[index]))),
+        SliverPadding(padding: const EdgeInsets.fromLTRB(16, 0, 16, 24), sliver: SliverList.separated(itemCount: visibleSongs.length, separatorBuilder: (_, _) => const Divider(height: 1, indent: 68), itemBuilder: (context, index) => _SongTile(song: visibleSongs[index]))),
     ]);
   });
 }
