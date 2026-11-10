@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../controllers/home_controller.dart';
+import '../../library/views/library_view.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -18,7 +19,7 @@ class HomeView extends GetView<HomeController> {
             index: index,
             children: const [
               _HomeTab(),
-              _LibraryTab(),
+              LibraryView(),
               _PlaylistsTab(),
               _EqualizerTab(),
             ],
