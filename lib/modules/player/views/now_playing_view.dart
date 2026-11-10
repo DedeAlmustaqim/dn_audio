@@ -36,16 +36,18 @@ class NowPlayingView extends GetView<PlayerController> {
                   const SizedBox(width: 48),
                 ]),
                 const Spacer(),
-                Container(
-                  width: double.infinity,
-                  constraints: const BoxConstraints(maxWidth: 310),
+                AspectRatio(
                   aspectRatio: 1,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [AppColors.primary.withValues(alpha: 0.28), AppColors.surfaceElevated], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                    borderRadius: BorderRadius.circular(28),
-                    border: Border.all(color: AppColors.border),
+                  child: Container(
+                    width: double.infinity,
+                    constraints: const BoxConstraints(maxWidth: 310),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: [AppColors.primary.withValues(alpha: 0.28), AppColors.surfaceElevated], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                      borderRadius: BorderRadius.circular(28),
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: const Icon(Icons.graphic_eq_rounded, size: 112, color: AppColors.primary),
                   ),
-                  child: const Icon(Icons.graphic_eq_rounded, size: 112, color: AppColors.primary),
                 ),
                 const SizedBox(height: 34),
                 Text(song.title, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800)),
