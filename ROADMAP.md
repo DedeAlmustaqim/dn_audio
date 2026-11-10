@@ -82,7 +82,7 @@ Catatan pengujian perangkat:
 - Judul lagu, progress, durasi, dan kontrol media sudah tampil.
 - Metadata artis masih terbaca sebagai `<unknown>` pada lagu yang diuji.
 - Album artwork belum tampil dan masih perlu ditelusuri.
-- Sinkronisasi status Play/Pause antara Now Playing dan notifikasi perlu dipastikan.
+- Sinkronisasi status Play/Pause antara Now Playing dan notifikasi sudah berhasil diuji.
 
 ### 4.4 — Lock Screen & Audio Focus
 
@@ -149,17 +149,16 @@ Catatan pengujian perangkat:
 
 # Stage 4.3 — Media Notification
 
-Fondasi audio service dan background playback sudah selesai serta telah diuji pada perangkat lokal. Saat ini fokus pengembangan adalah memastikan media notification menampilkan metadata dan artwork dengan benar serta seluruh kontrol media tersinkronisasi.
+Fondasi audio service dan background playback sudah selesai serta telah diuji pada perangkat lokal. Media notification sudah muncul dan sinkronisasi Play/Pause antara notifikasi dan halaman Now Playing telah dikonfirmasi. Fokus berikutnya adalah penyempurnaan metadata artis, album artwork, serta pengujian kontrol lainnya.
 
 ### Urutan pekerjaan berikutnya
 
 1. Periksa pembacaan metadata artis agar tidak menampilkan `<unknown>` jika informasi tersedia.
 2. Telusuri penyebab album artwork belum tampil pada notifikasi.
-3. Pastikan Play/Pause pada notifikasi dan halaman Now Playing selalu sinkron.
-4. Uji Next/Previous dan progress dari notification shade.
-5. Tandai Stage 4.3 selesai setelah seluruh pengujian perangkat berhasil.
-6. Lanjutkan Stage 4.4 — Lock Screen & Audio Focus.
-7. Setelah seluruh Stage 4 selesai, masuk ke Stage 5 — Playlist Management.
+3. Uji Next/Previous dan progress dari notification shade.
+4. Tandai Stage 4.3 selesai setelah metadata, artwork, dan seluruh kontrol terverifikasi.
+5. Lanjutkan Stage 4.4 — Lock Screen & Audio Focus.
+6. Setelah seluruh Stage 4 selesai, masuk ke Stage 5 — Playlist Management.
 
 ---
 
