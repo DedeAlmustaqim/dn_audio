@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../library/views/library_view.dart';
+import '../../player/views/player_mini_bar.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -25,10 +26,14 @@ class HomeView extends GetView<HomeController> {
             ],
           ),
         ),
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: index,
-          onDestinationSelected: controller.selectTab,
-          destinations: const [
+        bottomNavigationBar: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const PlayerMiniBar(),
+            NavigationBar(
+              selectedIndex: index,
+              onDestinationSelected: controller.selectTab,
+              destinations: const [
             NavigationDestination(
               icon: Icon(Icons.home_outlined),
               selectedIcon: Icon(Icons.home_rounded),
@@ -47,6 +52,8 @@ class HomeView extends GetView<HomeController> {
             NavigationDestination(
               icon: Icon(Icons.equalizer_rounded),
               label: 'Equalizer',
+            ),
+              ],
             ),
           ],
         ),
