@@ -16,6 +16,7 @@ class LibraryController extends GetxController {
   final errorMessage = RxnString();
 
   bool _hasLoaded = false;
+  Future<void>? _refreshFuture;
 
   List<Song> get filteredSongs {
     final query = searchQuery.value.trim().toLowerCase();
@@ -31,14 +32,26 @@ class LibraryController extends GetxController {
         .toList(growable: false);
   }
 
-  Future<void> ensureLoaded() async {
-    if (_hasLoaded || isLoading.value) return;
-    await refreshLibrary();
+  Future<void> ensureLoaded() {
+    if (_hasLoaded) return Future<void>.value();
+    return refreshLibrary();
   }
 
-  Future<void> refreshLibrary() async {
-    if (isLoading.value) return;
+  Future<void> refreshLibrary() {
+    final inFlight = _refreshFuture;
+    if (inFlight != null) return inFlight;
 
+    late final Future<void> trackedRefresh;
+    trackedRefresh = _performRefresh().whenComplete(() {
+      if (identical(_refreshFuture, trackedRefresh)) {
+        _refreshFuture = null;
+      }
+    });
+    _refreshFuture = trackedRefresh;
+    return trackedRefresh;
+  }
+
+  Future<void> _performRefresh() async {
     isLoading.value = true;
     errorMessage.value = null;
 
