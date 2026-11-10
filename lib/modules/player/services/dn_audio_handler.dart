@@ -40,7 +40,7 @@ class DnAudioHandler extends BaseAudioHandler
         title: song.title,
         artist: song.artist,
         album: song.album,
-        duration: song.duration,
+        duration: Duration(milliseconds: song.durationMs),
         extras: {'songId': song.id},
       );
 
