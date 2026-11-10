@@ -21,7 +21,7 @@ class PlayerController extends GetxController {
   StreamSubscription<PlayerState>? _playerStateSubscription;
   StreamSubscription<Duration>? _positionSubscription;
   StreamSubscription<Duration?>? _durationSubscription;
-  StreamSubscription<int?>? _indexSubscription;
+  StreamSubscription<SequenceState>? _sequenceSubscription;
   StreamSubscription<bool>? _shuffleSubscription;
   StreamSubscription<LoopMode>? _loopSubscription;
   StreamSubscription<PlayerException>? _errorSubscription;
@@ -46,10 +46,9 @@ class PlayerController extends GetxController {
     _durationSubscription = player.durationStream.listen((value) {
       duration.value = value ?? Duration.zero;
     });
-    _indexSubscription = player.currentIndexStream.listen((index) {
-      if (index != null && index >= 0 && index < _queue.length) {
-        currentSong.value = _queue[index];
-      }
+    _sequenceSubscription = player.sequenceStateStream.listen((state) {
+      final tag = state.currentSource?.tag;
+      if (tag is Song) currentSong.value = tag;
     });
     _shuffleSubscription = player.shuffleModeEnabledStream.listen((value) {
       isShuffleEnabled.value = value;
@@ -93,7 +92,7 @@ class PlayerController extends GetxController {
     try {
       await player.setAudioSources(
         _queue
-            .map((item) => AudioSource.uri(Uri.parse(item.contentUri)))
+            .map((item) => AudioSource.uri(Uri.parse(item.contentUri), tag: item))
             .toList(growable: false),
         initialIndex: selectedIndex,
         initialPosition: Duration.zero,
@@ -188,7 +187,7 @@ class PlayerController extends GetxController {
     _playerStateSubscription?.cancel();
     _positionSubscription?.cancel();
     _durationSubscription?.cancel();
-    _indexSubscription?.cancel();
+    _sequenceSubscription?.cancel();
     _shuffleSubscription?.cancel();
     _loopSubscription?.cancel();
     _errorSubscription?.cancel();
