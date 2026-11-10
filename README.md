@@ -17,15 +17,37 @@
 
 - Flutter
 - GetX for state management and navigation
+- just_audio for audio playback
+- Android MediaStore through a platform MethodChannel
 - Android-first development
+
+## Implemented
+
+- Premium Dark application shell and bottom navigation.
+- Local audio library scanning through Android MediaStore.
+- Audio permission handling when the Library tab is first opened.
+- Song search by title, artist, and album.
+- Audio playback with play, pause, seek, previous, and next controls.
+- Shuffle and repeat modes.
+- Persistent mini-player and expanded Now Playing view.
+
+## Planned
+
+- Background playback, media notification, and lock-screen controls.
+- Playlist management and playback queue UI.
+- Album artwork and richer metadata presentation.
+- Equalizer and supported audio effects.
+- Sleep timer.
+- Listening history and recently played.
 
 ## Development
 
     flutter pub get
-    dart format lib
+    dart format lib test
     flutter analyze
+    flutter test
     flutter run
 
 ## Current status
 
-The initial application shell and Premium Dark design foundation are in place. Library scanning and the audio playback engine are planned next.
+Stages 1–3 are implemented. Stage 3.5 focuses on stabilization, error handling, and automated tests before background playback work begins.
