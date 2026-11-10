@@ -58,8 +58,24 @@ class PlayerController extends GetxController {
       loopMode.value = value;
     });
     _errorSubscription = player.errorStream.listen((error) {
-      playbackError.value = error.message ?? 'Unable to play this audio file.';
+      _setPlaybackError(error);
     });
+  }
+
+  void _setPlaybackError(Object error) {
+    playbackError.value = error is PlayerException
+        ? (error.message ?? 'Unable to play this audio file.')
+        : error.toString();
+    isPlaying.value = false;
+    isBuffering.value = false;
+  }
+
+  Future<void> _playSafely(AudioPlayer player) async {
+    try {
+      await player.play();
+    } catch (error) {
+      _setPlaybackError(error);
+    }
   }
 
   Future<void> playSong(Song song, List<Song> songs) async {
@@ -82,22 +98,27 @@ class PlayerController extends GetxController {
         initialIndex: selectedIndex,
         initialPosition: Duration.zero,
       );
-      unawaited(player.play());
+      unawaited(_playSafely(player));
     } catch (error) {
-      playbackError.value = 'Could not play this song: $error';
+      _setPlaybackError('Could not play this song: $error');
     }
   }
 
   Future<void> togglePlayPause() async {
     final player = _player;
     if (currentSong.value == null || player == null) return;
-    if (player.playing) {
-      await player.pause();
-    } else {
-      if (player.processingState == ProcessingState.completed) {
-        await player.seek(Duration.zero);
+
+    try {
+      if (player.playing) {
+        await player.pause();
+      } else {
+        if (player.processingState == ProcessingState.completed) {
+          await player.seek(Duration.zero);
+        }
+        unawaited(_playSafely(player));
       }
-      unawaited(player.play());
+    } catch (error) {
+      _setPlaybackError(error);
     }
   }
 
