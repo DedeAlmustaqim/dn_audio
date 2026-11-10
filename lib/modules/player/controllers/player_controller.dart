@@ -24,6 +24,7 @@ class PlayerController extends GetxController {
   StreamSubscription<int?>? _indexSubscription;
   StreamSubscription<bool>? _shuffleSubscription;
   StreamSubscription<LoopMode>? _loopSubscription;
+  StreamSubscription<PlayerException>? _errorSubscription;
 
   AudioPlayer get audioPlayer => _player;
 
@@ -55,7 +56,7 @@ class PlayerController extends GetxController {
     _loopSubscription = _player.loopModeStream.listen((value) {
       loopMode.value = value;
     });
-    _player.errorStream.listen((error) {
+    _errorSubscription = _player.errorStream.listen((error) {
       playbackError.value = error.message ?? 'Unable to play this audio file.';
     });
   }
@@ -141,6 +142,7 @@ class PlayerController extends GetxController {
     _indexSubscription?.cancel();
     _shuffleSubscription?.cancel();
     _loopSubscription?.cancel();
+    _errorSubscription?.cancel();
     _player.dispose();
     super.onClose();
   }
