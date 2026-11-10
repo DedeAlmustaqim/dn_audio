@@ -33,11 +33,13 @@
 - Persistent mini-player and expanded Now Playing view.
 - Background audio handler foundation with a shared just_audio engine and media queue/state bridge.
 - Android media playback foreground service and media button receiver declarations.
+- Media notification metadata includes track title, artist, album, duration, and available MediaStore album artwork URI.
 
 ## Planned
 
-- Background playback validation and lifecycle handling (Stage 4.2).
-- Media notification and lock-screen controls (Stages 4.3–4.4).
+- Background playback and lifecycle validation (Stage 4.2).
+- Media notification metadata and album artwork integration (Stage 4.3).
+- Lock-screen controls and audio focus refinements (Stage 4.4).
 - Playlist management and playback queue UI.
 - Album artwork and richer metadata presentation.
 - Equalizer and supported audio effects.
@@ -54,4 +56,4 @@
 
 ## Current status
 
-Stages 1–3.5 are implemented. Stage 4.1 (audio_service architecture) has passed local build and device verification. Stage 4.2 focuses on routing playback commands through the audio handler and validating background playback on-device.
+Stages 1–3.5 and Stage 4.1 are complete. Stage 4.2 background playback has passed local device verification. Stage 4.3 adds media notification metadata and album artwork; local verification is pending.
