@@ -17,7 +17,6 @@ class PlayerController extends GetxController {
   final isShuffleEnabled = false.obs;
   final loopMode = LoopMode.off.obs;
 
-  List<Song> _queue = <Song>[];
   StreamSubscription<PlayerState>? _playerStateSubscription;
   StreamSubscription<Duration>? _positionSubscription;
   StreamSubscription<Duration?>? _durationSubscription;
@@ -84,14 +83,13 @@ class PlayerController extends GetxController {
 
     _initializePlayer();
     final player = _player!;
-    _queue = List<Song>.unmodifiable(songs);
     playbackError.value = null;
     position.value = Duration.zero;
     currentSong.value = song;
 
     try {
       await player.setAudioSources(
-        _queue
+        songs
             .map((item) => AudioSource.uri(Uri.parse(item.contentUri), tag: item))
             .toList(growable: false),
         initialIndex: selectedIndex,
