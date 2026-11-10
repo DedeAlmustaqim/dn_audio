@@ -35,12 +35,19 @@ class DnAudioHandler extends BaseAudioHandler
     _broadcastPlaybackState(player.playbackEvent);
   }
 
+  Uri? _parseArtworkUri(String? value) {
+    if (value == null || value.isEmpty) return null;
+    final uri = Uri.tryParse(value);
+    return uri != null && uri.hasScheme ? uri : null;
+  }
+
   MediaItem _toMediaItem(Song song) => MediaItem(
         id: song.contentUri,
         title: song.title,
         artist: song.artist,
         album: song.album,
         duration: Duration(milliseconds: song.durationMs),
+        artUri: _parseArtworkUri(song.albumArtUri),
         extras: {'songId': song.id},
       );
 
