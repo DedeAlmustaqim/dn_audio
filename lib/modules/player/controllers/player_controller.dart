@@ -71,9 +71,9 @@ class PlayerController extends GetxController {
     isBuffering.value = false;
   }
 
-  Future<void> _playSafely(AudioPlayer player) async {
+  Future<void> _playSafely(DnAudioHandler handler) async {
     try {
-      await player.play();
+      await handler.play();
     } catch (error) {
       _setPlaybackError(error);
     }
@@ -93,7 +93,7 @@ class PlayerController extends GetxController {
 
     try {
       await handler.loadPlaylist(songs, selectedIndex);
-      unawaited(_playSafely(player));
+      unawaited(_playSafely(handler));
     } catch (error) {
       _setPlaybackError('Could not play this song: $error');
     }
@@ -113,7 +113,7 @@ class PlayerController extends GetxController {
         if (player.processingState == ProcessingState.completed) {
           await handler.seek(Duration.zero);
         }
-        unawaited(_playSafely(player));
+        unawaited(_playSafely(handler));
       }
     } catch (error) {
       _setPlaybackError(error);
