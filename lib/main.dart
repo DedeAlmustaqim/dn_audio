@@ -15,6 +15,8 @@ Future<void> main() async {
     config: const AudioServiceConfig(
       androidNotificationChannelId: 'com.digitalnative.dn_audio.channel.audio',
       androidNotificationChannelName: 'DN Audio Playback',
+      androidNotificationChannelDescription:
+          'Playback controls and current track information for DN Audio.',
       androidNotificationOngoing: true,
     ),
   );
