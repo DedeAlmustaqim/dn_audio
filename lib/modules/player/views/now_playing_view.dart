@@ -81,22 +81,7 @@ class NowPlayingView extends GetView<PlayerController> {
                         label: 'Acak',
                         icon: Icons.shuffle_rounded,
                         isActive: controller.isShuffleEnabled.value,
-                        onPressed: () async {
-                          await controller.toggleShuffle();
-                          Get.rawSnackbar(
-                            messageText: Text(
-                              controller.isShuffleEnabled.value
-                                  ? 'Acak diaktifkan'
-                                  : 'Acak dinonaktifkan',
-                              style: const TextStyle(color: AppColors.textPrimary),
-                            ),
-                            duration: const Duration(milliseconds: 1500),
-                            snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: AppColors.surfaceElevated,
-                            borderRadius: 14,
-                            margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                          );
-                        },
+                        onPressed: controller.toggleShuffle,
                       ),
                     ),
                     Expanded(
@@ -174,25 +159,7 @@ class NowPlayingView extends GetView<PlayerController> {
                             ? Icons.repeat_one_rounded
                             : Icons.repeat_rounded,
                         isActive: controller.loopMode.value != LoopMode.off,
-                        onPressed: () async {
-                          await controller.cycleLoopMode();
-                          final message = switch (controller.loopMode.value) {
-                            LoopMode.off => 'Pengulangan dimatikan',
-                            LoopMode.all => 'Ulangi semua lagu',
-                            LoopMode.one => 'Ulangi satu lagu',
-                          };
-                          Get.rawSnackbar(
-                            messageText: Text(
-                              message,
-                              style: const TextStyle(color: AppColors.textPrimary),
-                            ),
-                            duration: const Duration(milliseconds: 1500),
-                            snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: AppColors.surfaceElevated,
-                            borderRadius: 14,
-                            margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                          );
-                        },
+                        onPressed: controller.cycleLoopMode,
                       ),
                     ),
                   ],
