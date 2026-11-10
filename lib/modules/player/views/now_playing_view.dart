@@ -74,23 +74,123 @@ class NowPlayingView extends GetView<PlayerController> {
                 ),
                 const SizedBox(height: 20),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    IconButton(onPressed: controller.toggleShuffle, icon: Icon(Icons.shuffle_rounded, color: controller.isShuffleEnabled.value ? AppColors.primary : AppColors.textSecondary)),
-                    IconButton(onPressed: controller.skipPrevious, icon: const Icon(Icons.skip_previous_rounded, size: 38)),
-                    Container(
-                      width: 68,
-                      height: 68,
-                      decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
-                      child: IconButton(
-                        onPressed: controller.togglePlayPause,
-                        icon: controller.isBuffering.value
-                            ? const SizedBox(width: 25, height: 25, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.background))
-                            : Icon(controller.isPlaying.value ? Icons.pause_rounded : Icons.play_arrow_rounded, size: 36, color: AppColors.background),
+                    Expanded(
+                      child: _LabeledPlayerControl(
+                        tooltip: 'Acak',
+                        label: 'Acak',
+                        icon: Icons.shuffle_rounded,
+                        isActive: controller.isShuffleEnabled.value,
+                        onPressed: () async {
+                          await controller.toggleShuffle();
+                          Get.rawSnackbar(
+                            message: controller.isShuffleEnabled.value
+                                ? 'Acak diaktifkan'
+                                : 'Acak dinonaktifkan',
+                            duration: const Duration(milliseconds: 1500),
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: AppColors.surfaceElevated,
+                            colorText: AppColors.textPrimary,
+                            borderRadius: 14,
+                            margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                          );
+                        },
                       ),
                     ),
-                    IconButton(onPressed: controller.skipNext, icon: const Icon(Icons.skip_next_rounded, size: 38)),
-                    IconButton(onPressed: controller.cycleLoopMode, icon: Icon(controller.loopMode.value == LoopMode.one ? Icons.repeat_one_rounded : Icons.repeat_rounded, color: controller.loopMode.value == LoopMode.off ? AppColors.textSecondary : AppColors.primary)),
+                    Expanded(
+                      child: _LabeledPlayerControl(
+                        tooltip: 'Lagu sebelumnya',
+                        label: 'Sebelum',
+                        icon: Icons.skip_previous_rounded,
+                        iconSize: 30,
+                        onPressed: controller.skipPrevious,
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 60,
+                            height: 60,
+                            decoration: const BoxDecoration(
+                              color: AppColors.primary,
+                              shape: BoxShape.circle,
+                            ),
+                            child: IconButton(
+                              tooltip: controller.isPlaying.value ? 'Jeda' : 'Putar',
+                              onPressed: controller.togglePlayPause,
+                              icon: controller.isBuffering.value
+                                  ? const SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: AppColors.background,
+                                      ),
+                                    )
+                                  : Icon(
+                                      controller.isPlaying.value
+                                          ? Icons.pause_rounded
+                                          : Icons.play_arrow_rounded,
+                                      size: 34,
+                                      color: AppColors.background,
+                                    ),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            controller.isPlaying.value ? 'Jeda' : 'Putar',
+                            maxLines: 1,
+                            style: const TextStyle(
+                              fontSize: 10,
+                              color: AppColors.textSecondary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: _LabeledPlayerControl(
+                        tooltip: 'Lagu berikutnya',
+                        label: 'Berikutnya',
+                        icon: Icons.skip_next_rounded,
+                        iconSize: 30,
+                        onPressed: controller.skipNext,
+                      ),
+                    ),
+                    Expanded(
+                      child: _LabeledPlayerControl(
+                        tooltip: 'Mode pengulangan',
+                        label: switch (controller.loopMode.value) {
+                          LoopMode.off => 'Ulangi',
+                          LoopMode.all => 'Semua',
+                          LoopMode.one => 'Satu lagu',
+                        },
+                        icon: controller.loopMode.value == LoopMode.one
+                            ? Icons.repeat_one_rounded
+                            : Icons.repeat_rounded,
+                        isActive: controller.loopMode.value != LoopMode.off,
+                        onPressed: () async {
+                          await controller.cycleLoopMode();
+                          final message = switch (controller.loopMode.value) {
+                            LoopMode.off => 'Pengulangan dimatikan',
+                            LoopMode.all => 'Ulangi semua lagu',
+                            LoopMode.one => 'Ulangi satu lagu',
+                          };
+                          Get.rawSnackbar(
+                            message: message,
+                            duration: const Duration(milliseconds: 1500),
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: AppColors.surfaceElevated,
+                            colorText: AppColors.textPrimary,
+                            borderRadius: 14,
+                            margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
                 const Spacer(),
@@ -99,6 +199,53 @@ class NowPlayingView extends GetView<PlayerController> {
           );
         }),
       ),
+    );
+  }
+}
+
+
+class _LabeledPlayerControl extends StatelessWidget {
+  const _LabeledPlayerControl({
+    required this.tooltip,
+    required this.label,
+    required this.icon,
+    required this.onPressed,
+    this.isActive = false,
+    this.iconSize = 24,
+  });
+
+  final String tooltip;
+  final String label;
+  final IconData icon;
+  final VoidCallback onPressed;
+  final bool isActive;
+  final double iconSize;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = isActive ? AppColors.primary : AppColors.textSecondary;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          tooltip: tooltip,
+          onPressed: onPressed,
+          icon: Icon(icon, size: iconSize, color: color),
+        ),
+        const SizedBox(height: 5),
+        Text(
+          label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 10,
+            color: color,
+            fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 }
