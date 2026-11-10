@@ -1,17 +1,31 @@
-# dn_audio
+# DN Audio
 
-A new Flutter project.
+**DN Audio** is a premium offline music player for Android, built by **Digital Native Dev**.
 
-## Getting Started
+> Your Music. Your Experience.
 
-This project is a starting point for a Flutter application.
+## Product direction
 
-A few resources to get you started if this is your first Flutter project:
+- Offline-first playback from the device's local music library.
+- Modern, minimal Premium Dark interface.
+- Library browsing, playlists, queue and Now Playing.
+- Background playback with notification and lock-screen controls.
+- Equalizer and audio effects where supported by the device.
+- Sleep timer designed for reliable operation while the screen is off.
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Tech stack
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Flutter
+- GetX for state management and navigation
+- Android-first development
+
+## Development
+
+    flutter pub get
+    dart format lib
+    flutter analyze
+    flutter run
+
+## Current status
+
+The initial application shell and Premium Dark design foundation are in place. Library scanning and the audio playback engine are planned next.
