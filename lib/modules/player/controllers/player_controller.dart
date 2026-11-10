@@ -122,33 +122,48 @@ class PlayerController extends GetxController {
     }
   }
 
+  Future<void> _runPlayerAction(Future<void> Function() action) async {
+    try {
+      await action();
+    } catch (error) {
+      _setPlaybackError(error);
+    }
+  }
+
   Future<void> seek(Duration value) async {
     final player = _player;
-    if (player != null) await player.seek(value);
+    if (player == null) return;
+    await _runPlayerAction(() => player.seek(value));
   }
 
   Future<void> skipNext() async {
     final player = _player;
-    if (player != null && player.hasNext) await player.seekToNext();
+    if (player == null || !player.hasNext) return;
+    await _runPlayerAction(player.seekToNext);
   }
 
   Future<void> skipPrevious() async {
     final player = _player;
     if (player == null) return;
-    if (player.hasPrevious && player.position > const Duration(seconds: 3)) {
-      await player.seek(Duration.zero);
-    } else if (player.hasPrevious) {
-      await player.seekToPrevious();
-    } else {
-      await player.seek(Duration.zero);
-    }
+
+    await _runPlayerAction(() async {
+      if (player.hasPrevious && player.position > const Duration(seconds: 3)) {
+        await player.seek(Duration.zero);
+      } else if (player.hasPrevious) {
+        await player.seekToPrevious();
+      } else {
+        await player.seek(Duration.zero);
+      }
+    });
   }
 
   Future<void> toggleShuffle() async {
     final player = _player;
-    if (player != null) {
-      await player.setShuffleModeEnabled(!player.shuffleModeEnabled);
-    }
+    if (player == null) return;
+
+    await _runPlayerAction(
+      () => player.setShuffleModeEnabled(!player.shuffleModeEnabled),
+    );
   }
 
   Future<void> cycleLoopMode() async {
@@ -159,7 +174,7 @@ class PlayerController extends GetxController {
       LoopMode.all => LoopMode.one,
       LoopMode.one => LoopMode.off,
     };
-    await player.setLoopMode(next);
+    await _runPlayerAction(() => player.setLoopMode(next));
   }
 
   String formatDuration(Duration value) {
