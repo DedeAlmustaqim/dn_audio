@@ -23,10 +23,10 @@ class LibraryView extends GetView<LibraryController> {
       ]))),
       if (controller.isLoading.value)
         const SliverFillRemaining(hasScrollBody: false, child: Center(child: CircularProgressIndicator(color: AppColors.primary)))
-      else if (!controller.hasPermission.value)
-        SliverFillRemaining(hasScrollBody: false, child: _InfoState(icon: Icons.folder_off_outlined, title: 'Music access is needed', message: 'Allow DN Audio to access audio files so it can build your offline library.', actionLabel: 'Allow access', onPressed: controller.refreshLibrary))
       else if (controller.errorMessage.value != null)
         SliverFillRemaining(hasScrollBody: false, child: _InfoState(icon: Icons.error_outline_rounded, title: 'Could not scan music', message: controller.errorMessage.value!, actionLabel: 'Try again', onPressed: controller.refreshLibrary))
+      else if (!controller.hasPermission.value)
+        SliverFillRemaining(hasScrollBody: false, child: _InfoState(icon: Icons.folder_off_outlined, title: 'Music access is needed', message: 'Allow DN Audio to access audio files so it can build your offline library.', actionLabel: 'Allow access', onPressed: controller.refreshLibrary))
       else if (controller.songs.isEmpty)
         const SliverFillRemaining(hasScrollBody: false, child: _InfoState(icon: Icons.music_off_rounded, title: 'No music found', message: 'Audio files stored on your device will appear here after scanning.'))
       else if (visibleSongs.isEmpty)
