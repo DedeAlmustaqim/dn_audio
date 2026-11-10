@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:audio_service/audio_service.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 
 import '../../library/models/song.dart';
+import '../services/dn_audio_handler.dart';
 
 class PlayerController extends GetxController {
+  DnAudioHandler? _audioHandler;
   AudioPlayer? _player;
 
   final currentSong = Rxn<Song>();
@@ -28,7 +31,9 @@ class PlayerController extends GetxController {
   void _initializePlayer() {
     if (_player != null) return;
 
-    final player = AudioPlayer();
+    final handler = Get.find<DnAudioHandler>();
+    final player = handler.player;
+    _audioHandler = handler;
     _player = player;
 
     _playerStateSubscription = player.playerStateStream.listen((state) {
@@ -55,9 +60,7 @@ class PlayerController extends GetxController {
     _loopSubscription = player.loopModeStream.listen((value) {
       loopMode.value = value;
     });
-    _errorSubscription = player.errorStream.listen((error) {
-      _setPlaybackError(error);
-    });
+    _errorSubscription = player.errorStream.listen(_setPlaybackError);
   }
 
   void _setPlaybackError(Object error) {
@@ -83,18 +86,13 @@ class PlayerController extends GetxController {
 
     _initializePlayer();
     final player = _player!;
+    final handler = _audioHandler!;
     playbackError.value = null;
     position.value = Duration.zero;
     currentSong.value = song;
 
     try {
-      await player.setAudioSources(
-        songs
-            .map((item) => AudioSource.uri(Uri.parse(item.contentUri), tag: item))
-            .toList(growable: false),
-        initialIndex: selectedIndex,
-        initialPosition: Duration.zero,
-      );
+      await handler.loadPlaylist(songs, selectedIndex);
       unawaited(_playSafely(player));
     } catch (error) {
       _setPlaybackError('Could not play this song: $error');
@@ -103,14 +101,17 @@ class PlayerController extends GetxController {
 
   Future<void> togglePlayPause() async {
     final player = _player;
-    if (currentSong.value == null || player == null) return;
+    final handler = _audioHandler;
+    if (currentSong.value == null || player == null || handler == null) {
+      return;
+    }
 
     try {
       if (player.playing) {
-        await player.pause();
+        await handler.pause();
       } else {
         if (player.processingState == ProcessingState.completed) {
-          await player.seek(Duration.zero);
+          await handler.seek(Duration.zero);
         }
         unawaited(_playSafely(player));
       }
@@ -128,56 +129,55 @@ class PlayerController extends GetxController {
   }
 
   Future<void> seek(Duration value) async {
-    final player = _player;
-    if (player == null) return;
-    await _runPlayerAction(() => player.seek(value));
+    final handler = _audioHandler;
+    if (handler == null) return;
+    await _runPlayerAction(() => handler.seek(value));
   }
 
   Future<void> skipNext() async {
+    final handler = _audioHandler;
     final player = _player;
-    if (player == null || !player.hasNext) return;
-    await _runPlayerAction(player.seekToNext);
+    if (handler == null || player == null || !player.hasNext) return;
+    await _runPlayerAction(handler.skipToNext);
   }
 
   Future<void> skipPrevious() async {
-    final player = _player;
-    if (player == null) return;
-
-    await _runPlayerAction(() async {
-      if (player.hasPrevious && player.position > const Duration(seconds: 3)) {
-        await player.seek(Duration.zero);
-      } else if (player.hasPrevious) {
-        await player.seekToPrevious();
-      } else {
-        await player.seek(Duration.zero);
-      }
-    });
+    final handler = _audioHandler;
+    if (handler == null) return;
+    await _runPlayerAction(handler.skipToPrevious);
   }
 
   Future<void> toggleShuffle() async {
+    final handler = _audioHandler;
     final player = _player;
-    if (player == null) return;
+    if (handler == null || player == null) return;
 
     await _runPlayerAction(
-      () => player.setShuffleModeEnabled(!player.shuffleModeEnabled),
+      () => handler.setShuffleMode(
+        player.shuffleModeEnabled
+            ? AudioServiceShuffleMode.none
+            : AudioServiceShuffleMode.all,
+      ),
     );
   }
 
   Future<void> cycleLoopMode() async {
+    final handler = _audioHandler;
     final player = _player;
-    if (player == null) return;
+    if (handler == null || player == null) return;
+
     final next = switch (player.loopMode) {
-      LoopMode.off => LoopMode.all,
-      LoopMode.all => LoopMode.one,
-      LoopMode.one => LoopMode.off,
+      LoopMode.off => AudioServiceRepeatMode.all,
+      LoopMode.all => AudioServiceRepeatMode.one,
+      LoopMode.one => AudioServiceRepeatMode.none,
     };
-    await _runPlayerAction(() => player.setLoopMode(next));
+    await _runPlayerAction(() => handler.setRepeatMode(next));
   }
 
   String formatDuration(Duration value) {
     final minutes = value.inMinutes;
     final seconds = value.inSeconds.remainder(60);
-    return '$minutes:${seconds.toString().padLeft(2, '0')}';
+    return '${minutes}:${seconds.toString().padLeft(2, '0')}';
   }
 
   @override
@@ -189,7 +189,8 @@ class PlayerController extends GetxController {
     _shuffleSubscription?.cancel();
     _loopSubscription?.cancel();
     _errorSubscription?.cancel();
-    _player?.dispose();
+    _player = null;
+    _audioHandler = null;
     super.onClose();
   }
 }
