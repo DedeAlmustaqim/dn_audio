@@ -36,7 +36,8 @@
 
 ## Planned
 
-- End-to-end validation of background playback, media notification, and lock-screen controls.
+- Background playback validation and lifecycle handling (Stage 4.2).
+- Media notification and lock-screen controls (Stages 4.3–4.4).
 - Playlist management and playback queue UI.
 - Album artwork and richer metadata presentation.
 - Equalizer and supported audio effects.
@@ -53,4 +54,4 @@
 
 ## Current status
 
-Stages 1–3.5 are implemented. Stage 4.1 adds the audio_service architecture; local build and device verification are pending.
+Stages 1–3.5 are implemented. Stage 4.1 (audio_service architecture) has passed local build and device verification. Stage 4.2 focuses on routing playback commands through the audio handler and validating background playback on-device.
