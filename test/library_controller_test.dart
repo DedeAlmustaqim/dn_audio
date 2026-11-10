@@ -33,6 +33,25 @@ void main() {
       expect(service.permissionRequests, 1);
       expect(service.scanRequests, 1);
     });
+
+    test('concurrent load requests share one scan operation', () async {
+      final service = _FakeAudioLibraryService();
+      final controller = LibraryController(service: service);
+
+      final firstLoad = controller.ensureLoaded();
+      final secondLoad = controller.ensureLoaded();
+
+      expect(service.permissionChecks, 1);
+      expect(service.permissionRequests, 0);
+      expect(controller.isLoading.value, isTrue);
+
+      await Future.wait([firstLoad, secondLoad]);
+
+      expect(service.permissionChecks, 1);
+      expect(service.permissionRequests, 1);
+      expect(service.scanRequests, 1);
+      expect(controller.isLoading.value, isFalse);
+    });
   });
 }
 
