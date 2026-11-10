@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:just_audio/just_audio.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../controllers/player_controller.dart';
