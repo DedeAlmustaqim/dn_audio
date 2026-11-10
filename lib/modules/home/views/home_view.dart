@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../controllers/home_controller.dart';
 import '../../library/views/library_view.dart';
+import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -340,17 +340,6 @@ class _LibraryShortcut extends StatelessWidget {
       ),
     );
   }
-}
-
-class _LibraryTab extends StatelessWidget {
-  const _LibraryTab();
-
-  @override
-  Widget build(BuildContext context) => const _PlaceholderTab(
-        icon: Icons.library_music_rounded,
-        title: 'Your Library',
-        description: 'Your local music collection will live here.',
-      );
 }
 
 class _PlaylistsTab extends StatelessWidget {
