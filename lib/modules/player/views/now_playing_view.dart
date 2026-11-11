@@ -5,7 +5,6 @@ import 'package:just_audio/just_audio.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../library/widgets/song_artwork.dart';
 import '../controllers/player_controller.dart';
-import '../services/dn_audio_handler.dart';
 import 'equalizer_view.dart';
 
 class NowPlayingView extends GetView<PlayerController> {
