@@ -12,6 +12,7 @@ class LibraryController extends GetxController {
   final AudioLibraryService _service;
   final songs = <Song>[].obs;
   final searchQuery = ''.obs;
+  final librarySection = 'songs'.obs;
   final isLoading = false.obs;
   final hasPermission = false.obs;
   final errorMessage = RxnString();
@@ -31,6 +32,29 @@ class LibraryController extends GetxController {
               song.album.toLowerCase().contains(query),
         )
         .toList(growable: false);
+  }
+
+  List<AlbumCollection> get filteredAlbums {
+    final query = searchQuery.value.trim().toLowerCase();
+    if (query.isEmpty) return albums;
+    return albums.where((album) =>
+      album.title.toLowerCase().contains(query) ||
+      album.artist.toLowerCase().contains(query)
+    ).toList(growable: false);
+  }
+
+  List<ArtistCollection> get filteredArtists {
+    final query = searchQuery.value.trim().toLowerCase();
+    if (query.isEmpty) return artists;
+    return artists.where((artist) =>
+      artist.name.toLowerCase().contains(query)
+    ).toList(growable: false);
+  }
+
+  void selectLibrarySection(String section) {
+    if (section == 'songs' || section == 'albums' || section == 'artists') {
+      librarySection.value = section;
+    }
   }
 
   List<AlbumCollection> get albums {
