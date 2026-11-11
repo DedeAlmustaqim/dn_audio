@@ -467,12 +467,13 @@ class _EqualizerViewState extends State<EqualizerView> {
         OutlinedButton.icon(
           onPressed: () {
             Navigator.of(context).pop();
-            showModalBottomSheet<void>(
-              context: context,
-              isScrollControlled: true,
-              backgroundColor: AppColors.surface,
-              builder: (_) => const EqualizerView(),
-            );
+            Future<void>.delayed(Duration.zero, () {
+              Get.bottomSheet<void>(
+                const EqualizerView(),
+                isScrollControlled: true,
+                backgroundColor: AppColors.surface,
+              );
+            });
           },
           icon: const Icon(Icons.tune_rounded),
           label: const Text('Open full equalizer'),
