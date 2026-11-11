@@ -336,11 +336,14 @@ Catatan:
 
 ### 7.3 — Preset Audio
 
-- Preset bawaan DN Audio
-- Memetakan preset ke band yang tersedia di perangkat
-- Reset ke flat dan penanganan preset yang tidak cocok
+- Menambahkan preset Flat, Bass, Vocal, Treble, dan Rock sebagai kurva bawaan DN Audio
+- Memetakan kurva lima titik frekuensi ke band aktual perangkat menggunakan interpolasi logaritmik
+- Membatasi gain sesuai rentang millibel yang dilaporkan perangkat
+- Menambahkan pemilih preset pada halaman Equalizer
+- Menggunakan perintah band yang sama pada AudioEffectsService dan session native aktif
+- Menambahkan unit test untuk pemetaan Flat, kurva preset, pembatasan rentang, dan ID preset tidak dikenal
 
-**Status: Belum dimulai**
+**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian, dan build Android lokal**
 
 ### 7.4 — Bass Enhancement & Virtualizer
 
@@ -381,11 +384,9 @@ Catatan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 7.2 — Equalizer Engine & Controls
+# Stage 7.3 — Preset Audio
 
-Stage 6 telah ditutup setelah pengguna mengonfirmasi seluruh checklist album detail, artist detail, navigasi, playback, Mini Player, notifikasi, dan background playback berhasil.
-
-Stage 7.1 telah dinyatakan selesai oleh pengguna setelah konfirmasi clean untuk 7.1.1, 7.1.2, dan 7.1.3. Stage 7.2 kini menyediakan engine native, service Flutter, dan UI Equalizer yang dapat dibuka dari header Now Playing. Jumlah band serta rentang slider mengikuti capability perangkat. Implementasi menunggu verifikasi lokal.
+Stage 7.2 telah dinyatakan clean oleh pengguna. Stage 7.3 menambahkan preset DN Audio yang dipetakan ke konfigurasi band aktual perangkat, dengan interpolasi frekuensi logaritmik dan pembatasan rentang level perangkat. Implementasi preset menunggu verifikasi lokal.
 
 ---
 
