@@ -16,6 +16,7 @@ class AudioEffectsManager {
     private var equalizer: Equalizer? = null
     private var bassBoost: BassBoost? = null
     private var virtualizer: Virtualizer? = null
+    private val initializationErrors = mutableMapOf<String, String>()
 
     @Synchronized
     fun attachSession(sessionId: Int): Map<String, Any?> {
@@ -31,9 +32,10 @@ class AudioEffectsManager {
         if (attachedSessionId != sessionId) {
             releaseEffects()
             attachedSessionId = sessionId
-            equalizer = createEffect { Equalizer(0, sessionId) }
-            bassBoost = createEffect { BassBoost(0, sessionId) }
-            virtualizer = createEffect { Virtualizer(0, sessionId) }
+            initializationErrors.clear()
+            equalizer = createEffect("equalizer") { Equalizer(0, sessionId) }
+            bassBoost = createEffect("bassBoost") { BassBoost(0, sessionId) }
+            virtualizer = createEffect("virtualizer") { Virtualizer(0, sessionId) }
         }
 
         return getCapabilities()
@@ -46,7 +48,10 @@ class AudioEffectsManager {
         val virtual = virtualizer
 
         val equalizerInfo = if (eq == null) {
-            mapOf("supported" to false)
+            mapOf(
+                "supported" to false,
+                "error" to (initializationErrors["equalizer"] ?: "effect_unavailable")
+            )
         } else {
             try {
                 val bandRange = eq.bandLevelRange
@@ -78,7 +83,10 @@ class AudioEffectsManager {
         }
 
         val bassInfo = if (bass == null) {
-            mapOf("supported" to false)
+            mapOf(
+                "supported" to false,
+                "error" to (initializationErrors["bassBoost"] ?: "effect_unavailable")
+            )
         } else {
             try {
                 mapOf(
@@ -97,7 +105,10 @@ class AudioEffectsManager {
         }
 
         val virtualizerInfo = if (virtual == null) {
-            mapOf("supported" to false)
+            mapOf(
+                "supported" to false,
+                "error" to (initializationErrors["virtualizer"] ?: "effect_unavailable")
+            )
         } else {
             try {
                 mapOf(
@@ -118,6 +129,7 @@ class AudioEffectsManager {
         return mapOf(
             "available" to (eq != null || bass != null || virtual != null),
             "sessionId" to attachedSessionId,
+            "error" to if (eq == null && bass == null && virtual == null) "no_supported_effects" else null,
             "equalizer" to equalizerInfo,
             "bassBoost" to bassInfo,
             "virtualizer" to virtualizerInfo
@@ -137,6 +149,7 @@ class AudioEffectsManager {
         equalizer = null
         bassBoost = null
         virtualizer = null
+        initializationErrors.clear()
     }
 
     private fun releaseSafely(effect: AudioEffect?) {
@@ -147,17 +160,22 @@ class AudioEffectsManager {
         }
     }
 
-    private fun <T : AudioEffect> createEffect(factory: () -> T): T? {
+    private fun <T : AudioEffect> createEffect(
+        effectName: String,
+        factory: () -> T
+    ): T? {
         val effect = try {
             factory()
-        } catch (_: Exception) {
+        } catch (error: Exception) {
+            initializationErrors[effectName] = error.javaClass.simpleName
             return null
         }
 
         return try {
             effect.enabled = false
             effect
-        } catch (_: Exception) {
+        } catch (error: Exception) {
+            initializationErrors[effectName] = error.javaClass.simpleName
             releaseSafely(effect)
             null
         }
