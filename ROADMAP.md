@@ -284,7 +284,20 @@ Catatan:
 - Melepaskan instance efek lama dengan aman saat session berubah atau service ditutup
 - Menangani perangkat/API yang tidak mendukung efek tanpa mengganggu playback
 
-**Status: Rancangan arsitektur ditetapkan — siap implementasi native bridge dan session binding**
+#### 7.1.1 — Native Audio Effects Manager
+
+- Menambahkan `AudioEffectsManager` native Android untuk mengelola instance Equalizer, BassBoost, dan Virtualizer secara independen
+- Menambahkan MethodChannel khusus `dn_audio/audio_effects`
+- Menyediakan operasi `attachSession`, `getCapabilities`, dan `release`
+- Mengembalikan kemampuan dasar Equalizer dari perangkat, termasuk jumlah band, rentang level, dan rentang frekuensi
+- Menangani kegagalan inisialisasi tiap efek secara terpisah agar efek lain tetap dapat digunakan
+- Melepaskan instance efek dengan aman jika gagal diinisialisasi atau saat manager dilepas
+
+**Status: Implementasi tersedia di GitHub — menunggu build Android, analisis, dan pengujian lokal**
+
+#### 7.1.2 — Session Binding & Lifecycle
+
+**Status: Belum dimulai**
 
 ### 7.2 — Equalizer Engine & Controls
 
@@ -345,7 +358,7 @@ Catatan:
 
 Stage 6 telah ditutup setelah pengguna mengonfirmasi seluruh checklist album detail, artist detail, navigasi, playback, Mini Player, notifikasi, dan background playback berhasil.
 
-Fokus berikutnya adalah membangun fondasi efek audio Android yang terikat ke Audio Session ID milik satu-satunya `AudioPlayer` di `DnAudioHandler`. Implementasi akan mendeteksi kemampuan perangkat secara dinamis dan tidak boleh mengganggu playback jika efek tidak tersedia.
+7.1.1 telah menambahkan native manager dan MethodChannel khusus. Langkah berikutnya adalah menghubungkan Audio Session ID dari satu-satunya `AudioPlayer` di `DnAudioHandler`, lalu mengelola perubahan session tanpa mengganggu playback.
 
 ---
 
