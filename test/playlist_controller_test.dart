@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:dn_audio/modules/library/models/song.dart';
 import 'package:dn_audio/modules/playlist/controllers/playlist_controller.dart';
 import 'package:dn_audio/modules/playlist/models/playlist.dart';
 import 'package:dn_audio/modules/playlist/services/playlist_repository.dart';
@@ -47,6 +48,57 @@ void main() {
       controller.onClose();
     });
 
+    test('adds a song to the selected playlist', () async {
+      final repository = _FakePlaylistRepository();
+      final controller = PlaylistController(repository: repository);
+      const song = Song(
+        id: 'song-1',
+        title: 'Test Track',
+        artist: 'Test Artist',
+        album: 'Test Album',
+        durationMs: 180000,
+        contentUri: 'content://media/audio/1',
+        albumArtUri: null,
+        sizeBytes: 1000,
+        dateAdded: 1,
+      );
+
+      await Future<void>.delayed(Duration.zero);
+      final result = await controller.addSongToPlaylist(1, song);
+
+      expect(result, isTrue);
+      expect(repository.addedSong, (1, song));
+      expect(repository.loadCalls, 2);
+      controller.onClose();
+    });
+
+    test('shows an error when a song is already in the playlist', () async {
+      final repository = _FakePlaylistRepository()
+        ..addSongError = const PlaylistSongAlreadyExistsException();
+      final controller = PlaylistController(repository: repository);
+      const song = Song(
+        id: 'song-1',
+        title: 'Test Track',
+        artist: 'Test Artist',
+        album: 'Test Album',
+        durationMs: 180000,
+        contentUri: 'content://media/audio/1',
+        albumArtUri: null,
+        sizeBytes: 1000,
+        dateAdded: 1,
+      );
+
+      await Future<void>.delayed(Duration.zero);
+      final result = await controller.addSongToPlaylist(1, song);
+
+      expect(result, isFalse);
+      expect(
+        controller.errorMessage.value,
+        'This song is already in the playlist.',
+      );
+      controller.onClose();
+    });
+
     test('renames and deletes selected playlist', () async {
       final repository = _FakePlaylistRepository();
       final controller = PlaylistController(repository: repository);
@@ -65,8 +117,10 @@ class _FakePlaylistRepository extends PlaylistRepository {
   int loadCalls = 0;
   final createdNames = <String>[];
   (int, String)? renamed;
+  (int, Song)? addedSong;
   int? deletedId;
   Exception? createError;
+  Exception? addSongError;
 
   @override
   Future<List<Playlist>> getPlaylists() async {
@@ -87,6 +141,12 @@ class _FakePlaylistRepository extends PlaylistRepository {
     if (createError != null) throw createError!;
     createdNames.add(name);
     return 2;
+  }
+
+  @override
+  Future<void> addSongToPlaylist(int playlistId, Song song) async {
+    if (addSongError != null) throw addSongError!;
+    addedSong = (playlistId, song);
   }
 
   @override
