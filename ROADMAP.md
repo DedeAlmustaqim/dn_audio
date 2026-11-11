@@ -326,9 +326,13 @@ Catatan:
 - Mengembalikan capability terbaru setelah perubahan agar state Flutter tetap sinkron
 - Menolak indeks band dan level di luar rentang sebelum perubahan diterapkan
 - Menambahkan API service Flutter dan unit test untuk command, sinkronisasi capability, dan validasi rentang
-- Belum mencakup UI Equalizer maupun persistensi preferensi
+- Menambahkan akses Equalizer dari header Now Playing
+- Menambahkan halaman bottom sheet Equalizer dengan sakelar ON/OFF
+- Menampilkan slider sesuai band dan rentang level perangkat
+- Menampilkan level dB aktual, refresh capability, reset flat, dan state unsupported
+- Menggunakan AudioEffectsService yang dimiliki DnAudioHandler tanpa membuat audio pipeline baru
 
-**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian, dan build Android lokal**
+**Status: Implementasi UI dan engine tersedia di GitHub — menunggu format, analisis, pengujian, dan build Android lokal**
 
 ### 7.3 — Preset Audio
 
@@ -381,7 +385,7 @@ Catatan:
 
 Stage 6 telah ditutup setelah pengguna mengonfirmasi seluruh checklist album detail, artist detail, navigasi, playback, Mini Player, notifikasi, dan background playback berhasil.
 
-Stage 7.1 telah dinyatakan selesai oleh pengguna setelah konfirmasi clean untuk 7.1.1, 7.1.2, dan 7.1.3. Stage 7.2 menyediakan operasi native dan service Flutter untuk mengaktifkan Equalizer serta mengatur level band berdasarkan capability perangkat. Implementasi 7.2 menunggu verifikasi lokal.
+Stage 7.1 telah dinyatakan selesai oleh pengguna setelah konfirmasi clean untuk 7.1.1, 7.1.2, dan 7.1.3. Stage 7.2 kini menyediakan engine native, service Flutter, dan UI Equalizer yang dapat dibuka dari header Now Playing. Jumlah band serta rentang slider mengikuti capability perangkat. Implementasi menunggu verifikasi lokal.
 
 ---
 
