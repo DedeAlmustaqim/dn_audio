@@ -107,7 +107,6 @@ class MainActivity : AudioServiceActivity() {
         }
     }
 
-
     private fun resolveArtwork(contentUriValue: String, songId: String): String? {
         val audioUri = Uri.parse(contentUriValue)
         var artworkBytes: ByteArray? = null
@@ -133,8 +132,9 @@ class MainActivity : AudioServiceActivity() {
             }
         }
 
+        // ByteArray has no isNullOrEmpty extension; check null and emptiness safely.
         // If MediaStore has no readable cover, try artwork embedded in the audio file.
-        if (artworkBytes.isNullOrEmpty()) {
+        if (artworkBytes?.isEmpty() != false) {
             val retriever = MediaMetadataRetriever()
             try {
                 retriever.setDataSource(this, audioUri)
