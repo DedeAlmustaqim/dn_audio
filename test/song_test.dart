@@ -54,6 +54,18 @@ void main() {
       expect(song.durationLabel, '0:00');
     });
 
+    test('normalizes Android MediaStore unknown metadata marker', () {
+      final song = Song.fromMap({
+        'title': '  <UNKNOWN>  ',
+        'artist': '<unknown>',
+        'album': ' <Unknown> ',
+      });
+
+      expect(song.title, 'Unknown title');
+      expect(song.artist, 'Unknown artist');
+      expect(song.album, 'Unknown album');
+    });
+
     test('parses numeric strings for integer fields', () {
       final song = Song.fromMap({
         'duration': '65000',
