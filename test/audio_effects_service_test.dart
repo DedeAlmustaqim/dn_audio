@@ -89,6 +89,7 @@ void main() {
             'centerFrequencyHz': 100,
             'minFrequencyHz': 80,
             'maxFrequencyHz': 120,
+            'levelMillibels': 250,
           },
           {
             'index': 1,
@@ -113,6 +114,7 @@ void main() {
     expect(capabilities.equalizer.bandCount, 2);
     expect(capabilities.equalizer.bands, hasLength(2));
     expect(capabilities.equalizer.bands.first.centerFrequencyHz, 100);
+    expect(capabilities.equalizer.bands.first.levelMillibels, 250);
     expect(capabilities.bassBoost.supported, isFalse);
     expect(capabilities.bassBoost.error, 'UnsupportedOperationException');
     expect(capabilities.virtualizer.supported, isTrue);
@@ -149,6 +151,94 @@ void main() {
 
     await service.dispose();
     await subscription.cancel();
+    await sessionIds.close();
+  });
+
+  test('sends equalizer enable and band level commands and refreshes state', () async {
+    final calls = <MethodCall>[];
+    messenger.setMockMethodCallHandler(channel, (call) async {
+      calls.add(call);
+      return {
+        'success': true,
+        'capabilities': {
+          'available': true,
+          'sessionId': 505,
+          'equalizer': {
+            'supported': true,
+            'enabled': call.method == 'setEqualizerEnabled'
+                ? call.arguments['enabled']
+                : true,
+            'bandCount': 1,
+            'minLevelMillibels': -1000,
+            'maxLevelMillibels': 1000,
+            'bands': [
+              {
+                'index': 0,
+                'centerFrequencyHz': 1000,
+                'minFrequencyHz': 800,
+                'maxFrequencyHz': 1200,
+                'levelMillibels': call.method == 'setBandLevel'
+                    ? call.arguments['levelMillibels']
+                    : 0,
+              }
+            ],
+          },
+          'bassBoost': {'supported': false},
+          'virtualizer': {'supported': false},
+        },
+      };
+    });
+
+    final service = AudioEffectsService(channel: channel);
+    final sessionIds = StreamController<int?>();
+    service.bindSessionStream(sessionIds.stream);
+    sessionIds.add(505);
+    await Future<void>.delayed(const Duration(milliseconds: 10));
+
+    expect(await service.setEqualizerEnabled(true), isTrue);
+    expect(await service.setBandLevel(0, 350), isTrue);
+    expect(calls.map((call) => call.method).toList(), [
+      'attachSession',
+      'setEqualizerEnabled',
+      'setBandLevel',
+    ]);
+    expect(calls[1].arguments, {'enabled': true});
+    expect(calls[2].arguments, {'bandIndex': 0, 'levelMillibels': 350});
+    expect(service.capabilities.equalizer.bands.first.levelMillibels, 350);
+
+    await service.dispose();
+    await sessionIds.close();
+  });
+
+  test('rejects out-of-range band levels without calling native channel', () async {
+    final calls = <MethodCall>[];
+    messenger.setMockMethodCallHandler(channel, (call) async {
+      calls.add(call);
+      if (call.method == 'attachSession') {
+        return {
+          'available': true,
+          'sessionId': 606,
+          'equalizer': {
+            'supported': true,
+            'minLevelMillibels': -500,
+            'maxLevelMillibels': 500,
+            'bands': [],
+          },
+        };
+      }
+      return null;
+    });
+
+    final service = AudioEffectsService(channel: channel);
+    final sessionIds = StreamController<int?>();
+    service.bindSessionStream(sessionIds.stream);
+    sessionIds.add(606);
+    await Future<void>.delayed(const Duration(milliseconds: 10));
+
+    expect(await service.setBandLevel(0, 700), isFalse);
+    expect(calls.map((call) => call.method).toList(), ['attachSession']);
+
+    await service.dispose();
     await sessionIds.close();
   });
 
