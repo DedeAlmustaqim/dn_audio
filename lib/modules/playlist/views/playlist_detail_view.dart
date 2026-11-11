@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../player/controllers/player_controller.dart';
+import '../../player/views/player_mini_bar.dart';
 import '../controllers/playlist_controller.dart';
 import '../models/playlist.dart';
 import '../models/playlist_song.dart';
@@ -82,6 +83,7 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
+      bottomNavigationBar: const PlayerMiniBar(),
       appBar: AppBar(
         backgroundColor: AppColors.background,
         title: const Text('Playlist'),
