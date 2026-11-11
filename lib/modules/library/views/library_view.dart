@@ -329,10 +329,13 @@ class _SongTile extends StatelessWidget {
             ),
           ],
         ),
-        onTap: () => Get.find<PlayerController>().playSong(
-          song,
-          Get.find<LibraryController>().songs.toList(),
-        ),
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+          Get.find<PlayerController>().playSong(
+            song,
+            Get.find<LibraryController>().songs.toList(),
+          );
+        },
       );
 }
 
