@@ -129,6 +129,16 @@ The channel is registered separately from `dn_audio/audio_library` in `MainActiv
 
 Preset selection is currently an in-memory UI action. Persisting the selected profile and restoring it across sessions remains in Stage 7.5.
 
+### Stage 7.4 — Bass Enhancement & Virtualizer
+
+- Added native `setBassBoost` and `setVirtualizer` operations. Each effect is controlled independently and remains bound to the existing player's active audio session.
+- Android exposes the strength domain as 0–1000 for these effects; the native capability response reports that domain, whether `strengthSupported` is true, and the current rounded strength.
+- When strength control is unsupported, the native command can still toggle the effect without attempting to set its strength. Flutter hides the intensity slider and presents the ON/OFF-only state.
+- Flutter service validates effect support, active session, and reported strength bounds before invoking the channel. Successful commands publish refreshed capabilities.
+- The Equalizer screen shows Bass Enhancement and Virtualizer controls only when each effect is reported as supported. No additional player or audio pipeline is created.
+- Added service tests for command payloads, refreshed state, unsupported effects, and out-of-range strengths.
+
+
 All effect types are initialized independently. If one effect cannot be created, other supported effects remain available. A failed effect initialization is treated as an unavailable optional capability, not as a playback failure.
 
 ## 7. Non-Goals for Stage 7.1
