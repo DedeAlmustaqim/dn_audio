@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:get/get.dart';
 
 import '../models/audio_effects_capabilities.dart';
-import '../models/audio_equalizer_preset.dart';
 import '../services/audio_effects_settings_repository.dart';
 import '../services/dn_audio_handler.dart';
 
