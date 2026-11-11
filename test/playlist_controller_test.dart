@@ -110,6 +110,24 @@ void main() {
       controller.onClose();
     });
 
+    test('propagates playlist song loading errors', () async {
+      final repository = _FakePlaylistRepository()
+        ..playlistSongsError = Exception('Database unavailable');
+      final controller = PlaylistController(repository: repository);
+
+      await Future<void>.delayed(Duration.zero);
+      await expectLater(
+        controller.loadPlaylistSongs(1),
+        throwsA(isA<Exception>()),
+      );
+
+      expect(
+        controller.errorMessage.value,
+        'Unable to load songs in this playlist.',
+      );
+      controller.onClose();
+    });
+
     test('removes a song and refreshes playlist songs', () async {
       final repository = _FakePlaylistRepository();
       final controller = PlaylistController(repository: repository);
@@ -143,6 +161,7 @@ class _FakePlaylistRepository extends PlaylistRepository {
   int? deletedId;
   Exception? createError;
   Exception? addSongError;
+  Exception? playlistSongsError;
   final testSong = const Song(id: 'song-1', title: 'Test Track', artist: 'Test Artist', album: 'Test Album', durationMs: 180000, contentUri: 'content://media/audio/1', albumArtUri: null, sizeBytes: 1000, dateAdded: 1);
 
   @override
@@ -160,9 +179,12 @@ class _FakePlaylistRepository extends PlaylistRepository {
   }
 
   @override
-  Future<List<PlaylistSong>> getPlaylistSongs(int playlistId) async => [
-    PlaylistSong(playlistId: playlistId, song: testSong, position: 0),
-  ];
+  Future<List<PlaylistSong>> getPlaylistSongs(int playlistId) async {
+    if (playlistSongsError != null) throw playlistSongsError!;
+    return [
+      PlaylistSong(playlistId: playlistId, song: testSong, position: 0),
+    ];
+  }
 
   @override
   Future<int> createPlaylist(String name) async {
