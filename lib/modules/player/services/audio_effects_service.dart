@@ -12,6 +12,7 @@ class AudioEffectsService {
   StreamSubscription<int?>? _sessionSubscription;
   Future<void> _pendingOperation = Future<void>.value();
   int? _attachedSessionId;
+  int? _requestedSessionId;
   bool _isDisposed = false;
 
   int? get attachedSessionId => _attachedSessionId;
@@ -29,12 +30,16 @@ class AudioEffectsService {
   }
 
   void _handleSessionId(int? sessionId) {
-    if (_isDisposed || sessionId == _attachedSessionId) return;
+    if (_isDisposed || sessionId == _requestedSessionId) return;
+    _requestedSessionId = sessionId;
 
     _pendingOperation = _pendingOperation
         .then((_) => _applySession(sessionId))
         .catchError((Object error, StackTrace stackTrace) {
       debugPrint('DN Audio: audio effects session binding failed: $error');
+      if (_requestedSessionId == sessionId) {
+        _requestedSessionId = _attachedSessionId;
+      }
     });
   }
 
@@ -69,8 +74,11 @@ class AudioEffectsService {
         debugPrint('DN Audio: unable to release native audio effects: $error');
       } on MissingPluginException catch (error) {
         debugPrint('DN Audio: native audio effects channel unavailable: $error');
+      } catch (error) {
+        debugPrint('DN Audio: unexpected native audio effects release error: $error');
       }
       _attachedSessionId = null;
+      _requestedSessionId = null;
     }
   }
 }
