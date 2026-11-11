@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
+import 'package:audio_session/audio_session.dart';
+import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:flutter/services.dart';
 
@@ -12,6 +14,7 @@ class DnAudioHandler extends BaseAudioHandler
 
   StreamSubscription<PlaybackEvent>? _playbackEventSubscription;
   StreamSubscription<SequenceState>? _sequenceStateSubscription;
+  StreamSubscription<void>? _becomingNoisySubscription;
   static const MethodChannel _artworkChannel = MethodChannel('dn_audio/audio_library');
   int _artworkRequestId = 0;
 
@@ -20,6 +23,31 @@ class DnAudioHandler extends BaseAudioHandler
         player.playbackEventStream.listen(_broadcastPlaybackState);
     _sequenceStateSubscription =
         player.sequenceStateStream.listen(_broadcastCurrentMediaItem);
+  }
+
+  Future<void> configureAudioSession() async {
+    try {
+      final session = await AudioSession.instance;
+      await session.configure(const AudioSessionConfiguration.music());
+
+      _becomingNoisySubscription =
+          session.becomingNoisyEventStream.listen((_) {
+        if (player.playing) {
+          unawaited(_pauseForNoisyEvent());
+        }
+      });
+    } catch (error, stackTrace) {
+      debugPrint('DN Audio: audio session configuration failed: $error');
+      debugPrintStack(stackTrace: stackTrace);
+    }
+  }
+
+  Future<void> _pauseForNoisyEvent() async {
+    try {
+      await player.pause();
+    } catch (error) {
+      debugPrint('DN Audio: unable to pause after audio route removal: $error');
+    }
   }
 
   Future<void> loadPlaylist(List<Song> songs, int initialIndex) async {
@@ -178,6 +206,7 @@ class DnAudioHandler extends BaseAudioHandler
   Future<void> dispose() async {
     await _playbackEventSubscription?.cancel();
     await _sequenceStateSubscription?.cancel();
+    await _becomingNoisySubscription?.cancel();
     await player.dispose();
   }
 }
