@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/foundation.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:flutter/services.dart';
+import 'package:just_audio/just_audio.dart';
 
 import '../../library/models/song.dart';
 
@@ -28,7 +28,7 @@ class DnAudioHandler extends BaseAudioHandler
   Future<void> configureAudioSession() async {
     try {
       final session = await AudioSession.instance;
-      await session.configure(const AudioSessionConfiguration.music());
+      await session.configure(AudioSessionConfiguration.music());
 
       _becomingNoisySubscription =
           session.becomingNoisyEventStream.listen((_) {
