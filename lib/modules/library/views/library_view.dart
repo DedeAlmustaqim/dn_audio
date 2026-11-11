@@ -8,6 +8,7 @@ import '../../playlist/controllers/playlist_controller.dart';
 import '../controllers/library_controller.dart';
 import '../models/song.dart';
 import '../models/library_collection.dart';
+import 'library_collection_detail_view.dart';
 
 class LibraryView extends GetView<LibraryController> {
   const LibraryView({super.key});
@@ -356,38 +357,39 @@ class _AlbumCard extends StatelessWidget {
   final AlbumCollection album;
 
   @override
-  Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: SizedBox(
-                width: double.infinity,
-                child: SongArtwork(song: album.artworkSong, iconSize: 42),
-              ),
+  Widget build(BuildContext context) => Material(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+            Get.to(() => AlbumDetailView(album: album));
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: SongArtwork(song: album.artworkSong, iconSize: 42),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(album.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 3),
+                Text(album.artist, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                const SizedBox(height: 3),
+                Text('${album.songCount} songs', style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
+              ],
             ),
           ),
-          const SizedBox(height: 10),
-          Text(
-            album.title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 3),
-          Text(
-            album.artist,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
-          ),
-          const SizedBox(height: 3),
-          Text(
-            '${album.songCount} songs',
-            style: const TextStyle(color: AppColors.textSecondary, fontSize: 11),
-          ),
-        ],
+        ),
       );
 }
 
@@ -416,6 +418,11 @@ class _ArtistTile extends StatelessWidget {
           '${artist.albumCount} albums · ${artist.songCount} songs',
           style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
         ),
+        trailing: const Icon(Icons.chevron_right_rounded, color: AppColors.textSecondary),
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+          Get.to(() => ArtistDetailView(artist: artist));
+        },
       );
 }
 
