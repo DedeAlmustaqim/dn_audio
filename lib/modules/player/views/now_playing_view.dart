@@ -184,7 +184,7 @@ class NowPlayingView extends GetView<PlayerController> {
         fit: BoxFit.cover,
         width: double.infinity,
         height: double.infinity,
-        errorBuilder: (_, __, ___) => const _ArtworkPlaceholder(),
+        errorBuilder: (_, _, _) => const _ArtworkPlaceholder(),
       );
     }
     return const _ArtworkPlaceholder();
