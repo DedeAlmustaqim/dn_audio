@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../core/constants/app_colors.dart';
 import '../controllers/playlist_controller.dart';
 import '../models/playlist.dart';
+import 'playlist_detail_view.dart';
 
 class PlaylistView extends GetView<PlaylistController> {
   const PlaylistView({super.key});
@@ -293,6 +294,7 @@ class _PlaylistTile extends StatelessWidget {
         border: Border.all(color: AppColors.border),
       ),
       child: ListTile(
+        onTap: () => Get.to(() => PlaylistDetailView(playlist: playlist)),
         contentPadding: const EdgeInsets.fromLTRB(14, 5, 5, 5),
         leading: Container(
           width: 48,
