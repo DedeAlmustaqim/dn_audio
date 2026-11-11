@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../player/controllers/player_controller.dart';
 import '../../player/views/player_mini_bar.dart';
+import '../../library/widgets/song_artwork.dart';
 import '../controllers/playlist_controller.dart';
 import '../models/playlist.dart';
 import '../models/playlist_song.dart';
@@ -212,16 +213,12 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
                         horizontal: 6,
                         vertical: 4,
                       ),
-                      leading: Container(
-                        width: 46,
-                        height: 46,
-                        decoration: BoxDecoration(
-                          color: AppColors.surfaceElevated,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(
-                          Icons.music_note_rounded,
-                          color: AppColors.primary,
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: SizedBox(
+                          width: 46,
+                          height: 46,
+                          child: SongArtwork(song: item.song, iconSize: 21),
                         ),
                       ),
                       title: Text(
