@@ -214,6 +214,7 @@ class MainActivity : AudioServiceActivity() {
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.SIZE,
             MediaStore.Audio.Media.ALBUM_ID,
+            MediaStore.Audio.Media.ARTIST_ID,
             MediaStore.Audio.Media.DATE_ADDED
         )
         val songs = mutableListOf<Map<String, Any?>>()
@@ -233,11 +234,13 @@ class MainActivity : AudioServiceActivity() {
             val durationColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
             val sizeColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
             val albumIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
+            val artistIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST_ID)
             val dateAddedColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED)
 
             while (it.moveToNext()) {
                 val id = it.getLong(idColumn)
                 val albumId = it.getLong(albumIdColumn)
+                val artistId = it.getLong(artistIdColumn)
                 val contentUri = ContentUris.withAppendedId(collection, id)
                 val albumArtUri = ContentUris.withAppendedId(
                     android.net.Uri.parse("content://media/external/audio/albumart"),
@@ -253,6 +256,8 @@ class MainActivity : AudioServiceActivity() {
                         "size" to it.getLong(sizeColumn),
                         "uri" to contentUri.toString(),
                         "albumArtUri" to if (albumId > 0) albumArtUri.toString() else null,
+                        "albumId" to albumId,
+                        "artistId" to artistId,
                         "dateAdded" to it.getLong(dateAddedColumn)
                     )
                 )
