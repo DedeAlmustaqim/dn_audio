@@ -104,6 +104,65 @@ class AudioEffectsService {
     }
   }
 
+  Future<bool> setEqualizerEnabled(bool enabled) {
+    return _runEqualizerCommand(
+      'setEqualizerEnabled',
+      {'enabled': enabled},
+    );
+  }
+
+  Future<bool> setBandLevel(int bandIndex, int levelMillibels) {
+    if (bandIndex < 0 || attachedSessionId == null) return Future.value(false);
+
+    final equalizer = _capabilities.equalizer;
+    final minLevel = equalizer.minLevelMillibels;
+    final maxLevel = equalizer.maxLevelMillibels;
+    if (!equalizer.supported ||
+        minLevel == null ||
+        maxLevel == null ||
+        levelMillibels < minLevel ||
+        levelMillibels > maxLevel) {
+      return Future.value(false);
+    }
+
+    return _runEqualizerCommand(
+      'setBandLevel',
+      {
+        'bandIndex': bandIndex,
+        'levelMillibels': levelMillibels,
+      },
+    );
+  }
+
+  Future<bool> _runEqualizerCommand(
+    String method,
+    Map<String, Object> arguments,
+  ) async {
+    if (_isDisposed || attachedSessionId == null ||
+        !_capabilities.equalizer.supported) {
+      return false;
+    }
+
+    try {
+      final response = await _channel.invokeMethod<Map<dynamic, dynamic>>(
+        method,
+        arguments,
+      );
+      if (response == null) return false;
+
+      final rawCapabilities = response['capabilities'];
+      if (rawCapabilities is Map) {
+        _publishCapabilities(
+          AudioEffectsCapabilities.fromMap(rawCapabilities),
+        );
+      }
+      return response['success'] == true;
+    } catch (error) {
+      debugPrint('DN Audio: equalizer command $method failed: $error');
+      return false;
+    }
+  }
+
   String _errorCode(Object error) {
     if (error is PlatformException) return error.code;
     if (error is MissingPluginException) return 'channel_unavailable';
