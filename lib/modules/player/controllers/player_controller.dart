@@ -12,6 +12,7 @@ class PlayerController extends GetxController {
   AudioPlayer? _player;
 
   final currentSong = Rxn<Song>();
+  final currentArtworkUri = Rxn<Uri>();
   final isPlaying = false.obs;
   final isBuffering = false.obs;
   final position = Duration.zero.obs;
@@ -27,6 +28,7 @@ class PlayerController extends GetxController {
   StreamSubscription<bool>? _shuffleSubscription;
   StreamSubscription<LoopMode>? _loopSubscription;
   StreamSubscription<PlayerException>? _errorSubscription;
+  StreamSubscription<MediaItem?>? _mediaItemSubscription;
 
   void _initializePlayer() {
     if (_player != null) return;
@@ -52,7 +54,15 @@ class PlayerController extends GetxController {
     });
     _sequenceSubscription = player.sequenceStateStream.listen((state) {
       final tag = state.currentSource?.tag;
-      if (tag is Song) currentSong.value = tag;
+      if (tag is Song && currentSong.value?.id != tag.id) {
+        currentSong.value = tag;
+        currentArtworkUri.value = null;
+      }
+    });
+    _mediaItemSubscription = handler.mediaItem.listen((item) {
+      final song = currentSong.value;
+      if (item == null || song == null || item.id != song.contentUri) return;
+      currentArtworkUri.value = item.artUri;
     });
     _shuffleSubscription = player.shuffleModeEnabledStream.listen((value) {
       isShuffleEnabled.value = value;
@@ -189,6 +199,7 @@ class PlayerController extends GetxController {
     _shuffleSubscription?.cancel();
     _loopSubscription?.cancel();
     _errorSubscription?.cancel();
+    _mediaItemSubscription?.cancel();
     _player = null;
     _audioHandler = null;
     super.onClose();
