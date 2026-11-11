@@ -106,39 +106,41 @@ class MainActivity : AudioServiceActivity() {
     private fun resolveArtwork(contentUriValue: String, songId: String): String? {
         val audioUri = Uri.parse(contentUriValue)
         var artworkBytes: ByteArray? = null
-        val retriever = MediaMetadataRetriever()
 
-        try {
-            retriever.setDataSource(this, audioUri)
-            artworkBytes = retriever.embeddedPicture
-        } catch (_: Exception) {
-            // Continue with the MediaStore album-art fallback.
-        } finally {
-            try {
-                retriever.release()
-            } catch (_: Exception) {
-                // Ignore release errors; artwork resolution is best-effort.
+        // Prefer the album artwork already indexed by Android MediaStore.
+        val projection = arrayOf(MediaStore.Audio.Media.ALBUM_ID)
+        contentResolver.query(audioUri, projection, null, null, null)?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                val albumId = cursor.getLong(
+                    cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
+                )
+                if (albumId > 0) {
+                    val albumArtUri = ContentUris.withAppendedId(
+                        Uri.parse("content://media/external/audio/albumart"),
+                        albumId
+                    )
+                    artworkBytes = try {
+                        contentResolver.openInputStream(albumArtUri)?.use { it.readBytes() }
+                    } catch (_: Exception) {
+                        null
+                    }
+                }
             }
         }
 
+        // If MediaStore has no readable cover, try artwork embedded in the audio file.
         if (artworkBytes.isNullOrEmpty()) {
-            val projection = arrayOf(MediaStore.Audio.Media.ALBUM_ID)
-            contentResolver.query(audioUri, projection, null, null, null)?.use { cursor ->
-                if (cursor.moveToFirst()) {
-                    val albumId = cursor.getLong(
-                        cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
-                    )
-                    if (albumId > 0) {
-                        val albumArtUri = ContentUris.withAppendedId(
-                            Uri.parse("content://media/external/audio/albumart"),
-                            albumId
-                        )
-                        artworkBytes = try {
-                            contentResolver.openInputStream(albumArtUri)?.use { it.readBytes() }
-                        } catch (_: Exception) {
-                            null
-                        }
-                    }
+            val retriever = MediaMetadataRetriever()
+            try {
+                retriever.setDataSource(this, audioUri)
+                artworkBytes = retriever.embeddedPicture
+            } catch (_: Exception) {
+                // Artwork is optional; continue without a cover.
+            } finally {
+                try {
+                    retriever.release()
+                } catch (_: Exception) {
+                    // Ignore release errors; playback must remain unaffected.
                 }
             }
         }
