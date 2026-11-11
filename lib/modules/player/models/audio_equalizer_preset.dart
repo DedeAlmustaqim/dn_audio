@@ -107,7 +107,7 @@ class AudioEqualizerPreset {
       return _toMillibels(gain, minLevel, maxLevel);
     }
 
-    return 0.clamp(minLevel, maxLevel);
+    return 0.clamp(minLevel, maxLevel).toInt();
   }
 
   int _toMillibels(double gainDb, int minLevel, int maxLevel) {
