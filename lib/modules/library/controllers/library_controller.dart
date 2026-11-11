@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../models/song.dart';
+import '../models/library_collection.dart';
 import '../services/audio_library_service.dart';
 
 class LibraryController extends GetxController {
@@ -30,6 +31,46 @@ class LibraryController extends GetxController {
               song.album.toLowerCase().contains(query),
         )
         .toList(growable: false);
+  }
+
+  List<AlbumCollection> get albums {
+    final grouped = <String, List<Song>>{};
+    for (final song in songs) {
+      grouped.putIfAbsent(albumCollectionKey(song), () => []).add(song);
+    }
+
+    final result = grouped.entries.map((entry) {
+      final albumSongs = List<Song>.unmodifiable(entry.value);
+      final first = albumSongs.first;
+      return AlbumCollection(
+        id: entry.key,
+        title: first.album,
+        artist: first.artist,
+        songs: albumSongs,
+      );
+    }).toList();
+
+    result.sort((a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
+    return List<AlbumCollection>.unmodifiable(result);
+  }
+
+  List<ArtistCollection> get artists {
+    final grouped = <String, List<Song>>{};
+    for (final song in songs) {
+      grouped.putIfAbsent(artistCollectionKey(song), () => []).add(song);
+    }
+
+    final result = grouped.entries.map((entry) {
+      final artistSongs = List<Song>.unmodifiable(entry.value);
+      return ArtistCollection(
+        id: entry.key,
+        name: artistSongs.first.artist,
+        songs: artistSongs,
+      );
+    }).toList();
+
+    result.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    return List<ArtistCollection>.unmodifiable(result);
   }
 
   Future<void> ensureLoaded() {
