@@ -31,8 +31,7 @@ class PlaylistDatabase {
   }
 
   Future<void> _createSchema(Database db, int version) async {
-    await db.transaction((txn) async {
-      await txn.execute('''
+    await db.execute('''
         CREATE TABLE playlists (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           name TEXT NOT NULL COLLATE NOCASE,
@@ -41,7 +40,7 @@ class PlaylistDatabase {
         )
       ''');
 
-      await txn.execute('''
+      await db.execute('''
         CREATE TABLE playlist_songs (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           playlist_id INTEGER NOT NULL,
@@ -62,19 +61,18 @@ class PlaylistDatabase {
         )
       ''');
 
-      await txn.execute(
+      await db.execute(
         'CREATE INDEX idx_playlist_songs_order '
         'ON playlist_songs (playlist_id, position)',
       );
-      await txn.execute(
+      await db.execute(
         'CREATE INDEX idx_playlist_songs_song_id '
         'ON playlist_songs (song_id)',
       );
-      await txn.execute(
+      await db.execute(
         'CREATE INDEX idx_playlists_name '
         'ON playlists (name)',
       );
-    });
   }
 
   Future<void> close() async {
