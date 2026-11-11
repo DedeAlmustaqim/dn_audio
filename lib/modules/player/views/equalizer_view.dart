@@ -168,7 +168,7 @@ class _EqualizerViewState extends State<EqualizerView> {
               ),
               Switch.adaptive(
                 value: capability.enabled,
-                activeColor: AppColors.primary,
+                activeThumbColor: AppColors.primary,
                 onChanged: _isUpdatingOptionalEffect
                     ? null
                     : (enabled) => _setOptionalEffect(
@@ -387,7 +387,7 @@ class _EqualizerViewState extends State<EqualizerView> {
               else
                 Switch.adaptive(
                   value: equalizer.enabled,
-                  activeColor: AppColors.primary,
+                  activeThumbColor: AppColors.primary,
                   onChanged: equalizer.supported ? _toggleEqualizer : null,
                 ),
             ],
