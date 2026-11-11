@@ -4,12 +4,14 @@ class AudioEffectBandCapability {
     required this.centerFrequencyHz,
     required this.minFrequencyHz,
     required this.maxFrequencyHz,
+    this.levelMillibels = 0,
   });
 
   final int index;
   final int centerFrequencyHz;
   final int minFrequencyHz;
   final int maxFrequencyHz;
+  final int levelMillibels;
 
   factory AudioEffectBandCapability.fromMap(Map<dynamic, dynamic> map) {
     return AudioEffectBandCapability(
@@ -17,6 +19,7 @@ class AudioEffectBandCapability {
       centerFrequencyHz: _readInt(map['centerFrequencyHz']) ?? 0,
       minFrequencyHz: _readInt(map['minFrequencyHz']) ?? 0,
       maxFrequencyHz: _readInt(map['maxFrequencyHz']) ?? 0,
+      levelMillibels: _readInt(map['levelMillibels']) ?? 0,
     );
   }
 }
