@@ -262,15 +262,60 @@ Catatan:
 - Menggunakan kembali SongArtwork, tema DN Audio, dan PlayerMiniBar
 - Menyediakan empty state untuk koleksi yang tidak memiliki lagu
 
-**Status: Implementasi tersedia di GitHub — menunggu format, analisis, dan pengujian lokal**
+**Status: Selesai — pengguna mengonfirmasi seluruh checklist A–E bersih pada pengujian perangkat**
 
 
 ## 8. Stage 7 — Equalizer & Audio Effects
 
-- Equalizer
+- Equalizer 5-band atau mengikuti kemampuan perangkat
 - Preset audio
 - Bass enhancement
-- Audio effects sesuai dukungan perangkat
+- Virtualizer / spatial effect jika tersedia
+- Persistensi pengaturan audio
+- Penanganan perangkat yang tidak mendukung efek tertentu
+
+### 7.1 — Audio Effects Architecture & Capability Discovery
+
+- Menggunakan Android Audio Session ID dari instance `just_audio` yang sudah menjadi playback engine utama
+- Mengikat efek native Android ke session ID aktif dan memperbaruinya jika session berubah
+- Menyediakan MethodChannel khusus audio effects, terpisah dari channel audio library
+- Mendeteksi ketersediaan Equalizer, BassBoost, dan Virtualizer serta membaca jumlah band dan rentang level dari perangkat
+- Menyediakan kontrak service Flutter yang tidak bergantung pada UI
+- Melepaskan instance efek lama dengan aman saat session berubah atau service ditutup
+- Menangani perangkat/API yang tidak mendukung efek tanpa mengganggu playback
+
+**Status: Rancangan arsitektur ditetapkan — implementasi menunggu persetujuan desain dan tahap berikutnya**
+
+### 7.2 — Equalizer Engine & Controls
+
+- Membuat dan mengelola band equalizer berdasarkan kemampuan perangkat
+- Mengatur level tiap band dan master enable/disable
+- Menyinkronkan state Flutter dengan efek native
+
+**Status: Belum dimulai**
+
+### 7.3 — Preset Audio
+
+- Preset bawaan DN Audio
+- Memetakan preset ke band yang tersedia di perangkat
+- Reset ke flat dan penanganan preset yang tidak cocok
+
+**Status: Belum dimulai**
+
+### 7.4 — Bass Enhancement & Virtualizer
+
+- Kontrol BassBoost jika didukung
+- Kontrol Virtualizer jika didukung
+- Pengaturan intensitas dan status aktif
+
+**Status: Belum dimulai**
+
+### 7.5 — Persistence, UI & Device Stabilization
+
+- Menyimpan preferensi efek audio secara lokal
+- Membangun halaman Equalizer dengan gaya visual DN Audio
+- Menguji efek saat lagu berganti, queue berubah, aplikasi background, dan session audio diperbarui
+- Memastikan playback tetap berjalan ketika efek tidak tersedia atau gagal diinisialisasi
 
 **Status: Belum dimulai**
 
@@ -296,18 +341,11 @@ Catatan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 6.2.3 — Album & Artist Detail
+# Stage 7.1 — Audio Effects Architecture & Capability Discovery
 
-Stage 6.2.3 menambahkan halaman detail album dan artis, navigasi antar koleksi, daftar lagu, serta pemutaran koleksi dan lagu terpilih melalui PlayerController. Implementasi tersedia di GitHub; format, analisis, dan pengujian lokal masih menunggu.
+Stage 6 telah ditutup setelah pengguna mengonfirmasi seluruh checklist album detail, artist detail, navigasi, playback, Mini Player, notifikasi, dan background playback berhasil.
 
-### Urutan pekerjaan berikutnya
-
-1. Sinkronkan perubahan Stage 6.2.3 dan jalankan `dart format lib test`, `flutter analyze`, serta `flutter test`.
-2. Uji navigasi dari Albums ke detail album dan dari Artists ke detail artis.
-3. Uji navigasi album dari detail artis ke detail album.
-4. Uji Play all dan pemilihan lagu pada detail album maupun artis.
-5. Pastikan Mini Player, artwork, dan playback queue tetap konsisten.
-6. Setelah verifikasi lokal, lanjutkan audit akhir Stage 6.2.
+Fokus berikutnya adalah membangun fondasi efek audio Android yang terikat ke Audio Session ID milik satu-satunya `AudioPlayer` di `DnAudioHandler`. Implementasi akan mendeteksi kemampuan perangkat secara dinamis dan tidak boleh mengganggu playback jika efek tidak tersedia.
 
 ---
 
