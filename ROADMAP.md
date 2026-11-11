@@ -194,7 +194,15 @@ Catatan:
 
 #### 5.5 — Playlist Playback & Queue
 
-**Status: Belum dimulai**
+- Menambahkan validasi playlist kosong dan indeks lagu sebelum audio source dimuat
+- Menyelaraskan queue audio_service dengan urutan lagu playlist setelah audio source berhasil dimuat
+- Menambahkan `PlayerController.playPlaylist()` agar pemutaran playlist dan lagu terpilih memakai satu `DnAudioHandler`
+- Mempertahankan `playSong()` sebagai jalur pemutaran lagu yang meneruskan daftar antrean terkait
+- Menambahkan tombol Play all pada halaman detail playlist
+- Menambahkan aksi tap pada setiap lagu untuk memulai pemutaran dari lagu yang dipilih
+- Next/Previous mengikuti sequence playlist yang dimuat oleh just_audio
+
+**Status: Implementasi tersedia di GitHub — menunggu analisis dan pengujian lokal**
 
 #### 5.6 — Persistence, Validation & Testing
 
@@ -241,17 +249,17 @@ Catatan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 5.4 — Playlist Detail & Song List
+# Stage 5.5 — Playlist Playback & Queue
 
-Stage 5.4 menambahkan halaman detail playlist, daftar lagu berdasarkan urutan SQLite, empty state, refresh, dan penghapusan lagu dengan konfirmasi. Implementasi tersedia di GitHub dan masih menunggu analisis serta pengujian lokal.
+Stage 5.5 menambahkan pemutaran seluruh lagu playlist, pemutaran dari lagu yang dipilih, dan sinkronisasi antrean audio_service dengan urutan playlist. Semua pemutaran tetap menggunakan satu DnAudioHandler dan satu AudioPlayer. Implementasi tersedia di GitHub dan masih menunggu analisis serta pengujian lokal.
 
 ### Urutan pekerjaan berikutnya
 
-1. Sinkronkan perubahan dan jalankan `flutter pub get`, `dart format`, `flutter analyze`, serta `flutter test`.
-2. Verifikasi navigasi dari daftar playlist ke halaman detail.
-3. Verifikasi daftar lagu, urutan lagu, empty state, refresh, dan penghapusan lagu.
-4. Lanjutkan Stage 5.5 — Playlist Playback & Queue.
-5. Selesaikan validasi persistence dan pengujian Stage 5.6.
+1. Sinkronkan perubahan dan jalankan `dart format lib test`, `flutter analyze`, serta `flutter test`.
+2. Verifikasi tombol Play all pada playlist berisi beberapa lagu.
+3. Verifikasi tap lagu tertentu memulai lagu tersebut, lalu Next/Previous mengikuti urutan playlist.
+4. Verifikasi playlist kosong tidak dapat memulai playback.
+5. Lanjutkan Stage 5.6 — Persistence, Validation & Testing.
 6. Pengujian Stage 4 yang tertunda tetap dijadwalkan ketika perangkat headset tersedia.
 ---
 
