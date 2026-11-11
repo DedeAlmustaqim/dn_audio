@@ -84,7 +84,7 @@ class AudioEqualizerPreset {
   }
 
   int _levelForFrequency(int frequencyHz, int minLevel, int maxLevel) {
-    if (frequencyHz <= 0) return 0.clamp(minLevel, maxLevel);
+    if (frequencyHz <= 0) return 0.clamp(minLevel, maxLevel).toInt();
 
     final frequency = frequencyHz.toDouble();
     if (frequency <= _anchorFrequencies.first) {
@@ -112,6 +112,6 @@ class AudioEqualizerPreset {
 
   int _toMillibels(double gainDb, int minLevel, int maxLevel) {
     final millibels = (gainDb * 100).round();
-    return millibels.clamp(minLevel, maxLevel);
+    return millibels.clamp(minLevel, maxLevel).toInt();
   }
 }
