@@ -32,47 +32,47 @@ class PlaylistDatabase {
 
   Future<void> _createSchema(Database db, int version) async {
     await db.execute('''
-        CREATE TABLE playlists (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          name TEXT NOT NULL COLLATE NOCASE,
-          created_at INTEGER NOT NULL,
-          updated_at INTEGER NOT NULL
-        )
-      ''');
+      CREATE TABLE playlists (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL COLLATE NOCASE,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL
+      )
+    ''');
 
-      await db.execute('''
-        CREATE TABLE playlist_songs (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          playlist_id INTEGER NOT NULL,
-          song_id TEXT NOT NULL,
-          title TEXT NOT NULL,
-          artist TEXT NOT NULL,
-          album TEXT NOT NULL,
-          duration_ms INTEGER NOT NULL DEFAULT 0,
-          content_uri TEXT NOT NULL,
-          album_art_uri TEXT,
-          size_bytes INTEGER NOT NULL DEFAULT 0,
-          date_added INTEGER NOT NULL DEFAULT 0,
-          position INTEGER NOT NULL,
-          FOREIGN KEY (playlist_id)
-            REFERENCES playlists (id)
-            ON DELETE CASCADE,
-          UNIQUE (playlist_id, content_uri)
-        )
-      ''');
+    await db.execute('''
+      CREATE TABLE playlist_songs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        playlist_id INTEGER NOT NULL,
+        song_id TEXT NOT NULL,
+        title TEXT NOT NULL,
+        artist TEXT NOT NULL,
+        album TEXT NOT NULL,
+        duration_ms INTEGER NOT NULL DEFAULT 0,
+        content_uri TEXT NOT NULL,
+        album_art_uri TEXT,
+        size_bytes INTEGER NOT NULL DEFAULT 0,
+        date_added INTEGER NOT NULL DEFAULT 0,
+        position INTEGER NOT NULL,
+        FOREIGN KEY (playlist_id)
+          REFERENCES playlists (id)
+          ON DELETE CASCADE,
+        UNIQUE (playlist_id, content_uri)
+      )
+    ''');
 
-      await db.execute(
-        'CREATE INDEX idx_playlist_songs_order '
-        'ON playlist_songs (playlist_id, position)',
-      );
-      await db.execute(
-        'CREATE INDEX idx_playlist_songs_song_id '
-        'ON playlist_songs (song_id)',
-      );
-      await db.execute(
-        'CREATE INDEX idx_playlists_name '
-        'ON playlists (name)',
-      );
+    await db.execute(
+      'CREATE INDEX idx_playlist_songs_order '
+      'ON playlist_songs (playlist_id, position)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_playlist_songs_song_id '
+      'ON playlist_songs (song_id)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_playlists_name '
+      'ON playlists (name)',
+    );
   }
 
   Future<void> close() async {
