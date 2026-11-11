@@ -82,6 +82,7 @@ Catatan pengujian perangkat:
 - Judul lagu, progress, durasi, dan kontrol media sudah tampil.
 - Metadata artis masih terbaca sebagai `<unknown>` pada lagu yang diuji.
 - Artwork notification kini memiliki resolver native: embedded artwork terlebih dahulu, lalu fallback MediaStore album art; hasil disimpan di cache aplikasi.
+- Now Playing kini mendengarkan `MediaItem.artUri` dari `DnAudioHandler` dan menampilkan file artwork yang sama; verifikasi tampilan di perangkat masih menunggu.
 - Sinkronisasi status Play/Pause antara Now Playing dan notifikasi sudah berhasil diuji.
 
 ### 4.4 — Lock Screen & Audio Focus
@@ -149,7 +150,7 @@ Catatan pengujian perangkat:
 
 # Stage 4.3 — Media Notification
 
-Fondasi audio service dan background playback sudah selesai serta telah diuji pada perangkat lokal. Media notification sudah muncul dan sinkronisasi Play/Pause antara notifikasi dan halaman Now Playing telah dikonfirmasi. Fokus berikutnya adalah penyempurnaan metadata artis, album artwork, serta pengujian kontrol lainnya.
+Fondasi audio service dan background playback sudah selesai serta telah diuji pada perangkat lokal. Media notification sudah muncul dan sinkronisasi Play/Pause antara notifikasi dan halaman Now Playing telah dikonfirmasi. Fokus berikutnya adalah verifikasi sinkronisasi album artwork pada Now Playing dan pengujian kontrol lainnya.
 
 ### Urutan pekerjaan berikutnya
 
