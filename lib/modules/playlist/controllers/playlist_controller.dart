@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 
+import '../../library/models/song.dart';
 import '../models/playlist.dart';
+import '../models/playlist_song.dart';
 import '../services/playlist_repository.dart';
 
 class PlaylistController extends GetxController {
@@ -10,6 +12,7 @@ class PlaylistController extends GetxController {
   final PlaylistRepository _repository;
 
   final playlists = <Playlist>[].obs;
+  final playlistSongs = <int, List<PlaylistSong>>{}.obs;
   final isLoading = false.obs;
   final isSaving = false.obs;
   final errorMessage = RxnString();
@@ -32,6 +35,17 @@ class PlaylistController extends GetxController {
     }
   }
 
+  Future<List<PlaylistSong>> loadPlaylistSongs(int playlistId) async {
+    try {
+      final songs = await _repository.getPlaylistSongs(playlistId);
+      playlistSongs[playlistId] = songs;
+      return songs;
+    } catch (_) {
+      errorMessage.value = 'Unable to load songs in this playlist.';
+      return const [];
+    }
+  }
+
   Future<bool> createPlaylist(String name) async {
     return _runMutation(() async {
       await _repository.createPlaylist(name);
@@ -47,6 +61,23 @@ class PlaylistController extends GetxController {
   Future<bool> deletePlaylist(int id) async {
     return _runMutation(() async {
       await _repository.deletePlaylist(id);
+      playlistSongs.remove(id);
+    });
+  }
+
+  Future<bool> addSongToPlaylist(int playlistId, Song song) async {
+    return _runMutation(() async {
+      await _repository.addSongToPlaylist(playlistId, song);
+    });
+  }
+
+  Future<bool> removeSongFromPlaylist(
+    int playlistId,
+    String contentUri,
+  ) async {
+    return _runMutation(() async {
+      await _repository.removeSongFromPlaylist(playlistId, contentUri);
+      await loadPlaylistSongs(playlistId);
     });
   }
 
@@ -61,6 +92,12 @@ class PlaylistController extends GetxController {
       return true;
     } on PlaylistAlreadyExistsException {
       errorMessage.value = 'A playlist with this name already exists.';
+    } on PlaylistSongAlreadyExistsException {
+      errorMessage.value = 'This song is already in the playlist.';
+    } on InvalidPlaylistSongException {
+      errorMessage.value = 'This song cannot be added to the playlist.';
+    } on PlaylistSongNotFoundException {
+      errorMessage.value = 'This song is no longer in the playlist.';
     } on InvalidPlaylistNameException catch (error) {
       errorMessage.value = error.message;
     } on PlaylistNotFoundException {
