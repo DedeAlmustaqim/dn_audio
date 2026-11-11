@@ -6,7 +6,7 @@
 **Platform:** Android (Flutter + GetX)  
 **Document status:** Design direction approved; detailed UI polish deferred  
 **Design direction:** Premium Editorial  
-**Accent:** Warm Amber  
+**Accent:** Monochrome  
 **Scope:** Entire application  
 **Implementation policy:** Do not start the visual redesign now. Apply this blueprint during the final polish stage, after core product features and playback behaviour are stable.
 
@@ -45,8 +45,8 @@ These are target design tokens for the final polish phase, not an instruction to
 | `color.background` | `#0B0B0F` | Main app background |
 | `color.surface` | `#17171D` | Navigation, sheets and grouped surfaces |
 | `color.surfaceElevated` | `#222229` | Elevated controls and selected surfaces |
-| `color.accent` | `#F2A65A` | Primary actions, active states, progress |
-| `color.accentPressed` | `#D98A3D` | Pressed/strong accent state |
+| `color.accent` | `#F5F3EF` | Primary actions and high-contrast active states |
+| `color.accentPressed` | `#D5D2CE` | Pressed/strong neutral state |
 | `color.textPrimary` | `#F5F3EF` | Main text |
 | `color.textSecondary` | `#A5A1A0` | Supporting metadata |
 | `color.borderSubtle` | `#302D2C` | Dividers and subtle outlines |
@@ -54,7 +54,7 @@ These are target design tokens for the final polish phase, not an instruction to
 | `color.warning` | semantic amber/yellow | Warnings (distinct from brand accent where needed) |
 | `color.error` | semantic red | Errors and destructive actions |
 
-Amber is the brand accent, not a background color for large areas. Use it selectively to direct attention.
+Monochrome is the visual foundation. Use contrast, weight, spacing and tonal surfaces—not a saturated accent color—to establish hierarchy and direct attention.
 
 ### 3.3 Typography
 
@@ -298,7 +298,7 @@ Implementation should:
 - Avoid screen-specific hardcoded colors and repeated style definitions after the design system is introduced.
 - Keep UI refactors separate from audio engine or database changes where possible.
 
-Current theme uses a dark palette with purple accent (`#B794F6`). This is the current implementation, not the final brand decision. Do not change it as part of ongoing feature work; migrate to the approved amber tokens in a dedicated visual-polish pass.
+Current theme uses a dark palette with purple accent (`#B794F6`). This is the current implementation, not the final brand decision. Do not change it as part of ongoing feature work; migrate to the approved monochrome tokens in a dedicated visual-polish pass.
 
 ## 10. Delivery plan and timing
 
@@ -337,7 +337,7 @@ Current theme uses a dark palette with purple accent (`#B794F6`). This is the cu
 | Product identity | DN Audio by Digital Native Dev |
 | Tagline | Your Music. Your Experience. |
 | Visual style | Premium Editorial |
-| Accent color | Warm Amber (`#F2A65A` proposed) |
+| Accent color | Monochrome (`#F2A65A` proposed) |
 | Overall theme | Premium Dark |
 | Scope | Entire application |
 | Implementation timing | Final polish stage, after feature development |
