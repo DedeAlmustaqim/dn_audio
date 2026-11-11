@@ -68,6 +68,32 @@ class MainActivity : AudioServiceActivity() {
                             )
                         }
                     }
+                    "setBassBoost" -> {
+                        val enabled = call.argument<Boolean>("enabled")
+                        val strength = call.argument<Int>("strength")
+                        if (enabled == null || strength == null) {
+                            result.error(
+                                "invalid_arguments",
+                                "enabled and strength are required.",
+                                null
+                            )
+                        } else {
+                            result.success(audioEffectsManager.setBassBoost(enabled, strength))
+                        }
+                    }
+                    "setVirtualizer" -> {
+                        val enabled = call.argument<Boolean>("enabled")
+                        val strength = call.argument<Int>("strength")
+                        if (enabled == null || strength == null) {
+                            result.error(
+                                "invalid_arguments",
+                                "enabled and strength are required.",
+                                null
+                            )
+                        } else {
+                            result.success(audioEffectsManager.setVirtualizer(enabled, strength))
+                        }
+                    }
                     "release" -> {
                         audioEffectsManager.release()
                         result.success(true)
