@@ -14,6 +14,7 @@ abstract final class AppPages {
       binding: BindingsBuilder(() {
         Get.lazyPut<HomeController>(HomeController.new);
         Get.lazyPut<LibraryController>(LibraryController.new);
+        Get.lazyPut<PlaylistController>(PlaylistController.new);
         Get.put<PlayerController>(PlayerController(), permanent: true);
       }),
     ),
