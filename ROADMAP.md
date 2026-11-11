@@ -81,7 +81,7 @@ Catatan pengujian perangkat:
 - Media notification berhasil muncul.
 - Judul lagu, progress, durasi, dan kontrol media sudah tampil.
 - Metadata artis masih terbaca sebagai `<unknown>` pada lagu yang diuji.
-- Album artwork belum tampil dan masih perlu ditelusuri.
+- Artwork notification kini memiliki resolver native: embedded artwork terlebih dahulu, lalu fallback MediaStore album art; hasil disimpan di cache aplikasi.
 - Sinkronisasi status Play/Pause antara Now Playing dan notifikasi sudah berhasil diuji.
 
 ### 4.4 — Lock Screen & Audio Focus
@@ -154,7 +154,7 @@ Fondasi audio service dan background playback sudah selesai serta telah diuji pa
 ### Urutan pekerjaan berikutnya
 
 1. Periksa pembacaan metadata artis agar tidak menampilkan `<unknown>` jika informasi tersedia.
-2. Telusuri penyebab album artwork belum tampil pada notifikasi.
+2. Uji resolver artwork pada lagu dengan embedded cover dan lagu tanpa cover.
 3. Uji Next/Previous dan progress dari notification shade.
 4. Tandai Stage 4.3 selesai setelah metadata, artwork, dan seluruh kontrol terverifikasi.
 5. Lanjutkan Stage 4.4 — Lock Screen & Audio Focus.
