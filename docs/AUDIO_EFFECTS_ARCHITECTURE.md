@@ -118,7 +118,16 @@ The channel is registered separately from `dn_audio/audio_library` in `MainActiv
 - Exposed the existing handler-owned service to the UI; no second player, service, or audio pipeline is created.
 - UI and engine changes are still subject to local Flutter and Android verification.
 
-Persisted user profiles and preset management remain outside this UI increment.
+### Stage 7.3 — DN Audio Presets
+
+- Added built-in Flat, Bass, Vocal, Treble and Rock sound curves.
+- Curves are authored as five frequency anchors and interpolated logarithmically onto the active device's reported band centers.
+- Preset gains are clamped to the active device's reported millibel range.
+- Applying a preset sends each band through the existing AudioEffectsService and native Equalizer session; no second playback pipeline or Android vendor preset assumptions are introduced.
+- The Equalizer view exposes preset chips and shows the selected profile; manual band changes clear the selected preset indicator.
+- Preset mapping has unit tests for flat response, curve mapping, range clamping and unknown preset IDs.
+
+Preset selection is currently an in-memory UI action. Persisting the selected profile and restoring it across sessions remains in Stage 7.5.
 
 All effect types are initialized independently. If one effect cannot be created, other supported effects remain available. A failed effect initialization is treated as an unavailable optional capability, not as a playback failure.
 
