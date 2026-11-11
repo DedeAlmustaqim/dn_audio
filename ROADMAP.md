@@ -154,7 +154,16 @@ Catatan:
 
 #### 5.2 — Create, Rename & Delete Playlist
 
-**Status: Belum dimulai**
+- Repository CRUD playlist dengan SQLite
+- Membuat playlist dengan nama wajib dan batas 50 karakter
+- Mencegah nama playlist duplikat tanpa membedakan huruf besar/kecil
+- Rename playlist dan memperbarui `updated_at`
+- Menghapus playlist; detail lagu akan mengikuti foreign key cascade
+- Menampilkan daftar playlist beserta jumlah lagu
+- UI tab Playlists dengan dialog create/rename dan konfirmasi delete
+- Unit test controller menggunakan repository fake
+
+**Status: Implementasi tersedia di GitHub — menunggu analisis dan pengujian lokal**
 
 #### 5.3 — Add & Remove Songs
 
@@ -213,14 +222,14 @@ Catatan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 5.1 — Playlist Architecture & Database
+# Stage 5.2 — Create, Rename & Delete Playlist
 
-Audit menemukan belum ada lapisan database SQLite untuk playlist. Model `Song` telah menyediakan identitas dan `contentUri`; playback dikelola oleh satu `DnAudioHandler`. Fondasi database playlist disiapkan secara terpisah tanpa mengubah jalur playback yang sudah ada.
+Fondasi database dan model playlist tersedia. Stage 5.2 menambahkan repository SQLite untuk operasi CRUD, validasi nama, controller GetX, serta tab Playlists dengan dialog create/rename dan konfirmasi delete. Pengujian lokal masih diperlukan.
 
 ### Urutan pekerjaan berikutnya
 
-1. Sinkronkan dependency dan jalankan analisis serta pengujian lokal.
-2. Lanjutkan Stage 5.2 — Create, Rename & Delete Playlist.
+1. Sinkronkan perubahan dan jalankan `flutter pub get`, `dart format`, `flutter analyze`, serta `flutter test`.
+2. Verifikasi create, rename, delete, validasi nama kosong/duplikat, dan persistensi setelah aplikasi dibuka ulang.
 3. Lanjutkan Stage 5.3 — Add & Remove Songs.
 4. Lanjutkan Stage 5.4 — Playlist Detail & Song List.
 5. Lanjutkan Stage 5.5 — Playlist Playback & Queue.
