@@ -45,6 +45,29 @@ class MainActivity : AudioServiceActivity() {
                         }
                     }
                     "getCapabilities" -> result.success(audioEffectsManager.getCapabilities())
+                    "setEqualizerEnabled" -> {
+                        val enabled = call.argument<Boolean>("enabled")
+                        if (enabled == null) {
+                            result.error("invalid_arguments", "A valid enabled value is required.", null)
+                        } else {
+                            result.success(audioEffectsManager.setEqualizerEnabled(enabled))
+                        }
+                    }
+                    "setBandLevel" -> {
+                        val bandIndex = call.argument<Int>("bandIndex")
+                        val levelMillibels = call.argument<Int>("levelMillibels")
+                        if (bandIndex == null || levelMillibels == null) {
+                            result.error(
+                                "invalid_arguments",
+                                "bandIndex and levelMillibels are required.",
+                                null
+                            )
+                        } else {
+                            result.success(
+                                audioEffectsManager.setBandLevel(bandIndex, levelMillibels)
+                            )
+                        }
+                    }
                     "release" -> {
                         audioEffectsManager.release()
                         result.success(true)
