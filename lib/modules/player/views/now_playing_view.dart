@@ -41,7 +41,7 @@ class NowPlayingView extends GetView<PlayerController> {
                       context: context,
                       isScrollControlled: true,
                       backgroundColor: AppColors.surface,
-                      builder: (_) => const EqualizerView(),
+                      builder: (_) => const EqualizerView(compact: true),
                     ),
                     icon: const Icon(Icons.tune_rounded),
                   ),
