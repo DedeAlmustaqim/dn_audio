@@ -10,7 +10,7 @@ void main() {
   group('PlaylistController', () {
     test('loads playlists on initialization', () async {
       final repository = _FakePlaylistRepository();
-      final controller = PlaylistController(repository: repository);
+      final controller = _createController(repository);
 
       await Future<void>.delayed(Duration.zero);
 
@@ -22,7 +22,7 @@ void main() {
 
     test('creates playlist and reloads the list', () async {
       final repository = _FakePlaylistRepository();
-      final controller = PlaylistController(repository: repository);
+      final controller = _createController(repository);
 
       await Future<void>.delayed(Duration.zero);
       final result = await controller.createPlaylist('Road Trip');
@@ -36,7 +36,7 @@ void main() {
     test('shows validation error for duplicate playlist names', () async {
       final repository = _FakePlaylistRepository()
         ..createError = const PlaylistAlreadyExistsException();
-      final controller = PlaylistController(repository: repository);
+      final controller = _createController(repository);
 
       await Future<void>.delayed(Duration.zero);
       final result = await controller.createPlaylist('Favorites');
@@ -51,7 +51,7 @@ void main() {
 
     test('adds a song to the selected playlist', () async {
       final repository = _FakePlaylistRepository();
-      final controller = PlaylistController(repository: repository);
+      final controller = _createController(repository);
       const song = Song(
         id: 'song-1',
         title: 'Test Track',
@@ -76,7 +76,7 @@ void main() {
     test('shows an error when a song is already in the playlist', () async {
       final repository = _FakePlaylistRepository()
         ..addSongError = const PlaylistSongAlreadyExistsException();
-      final controller = PlaylistController(repository: repository);
+      final controller = _createController(repository);
       const song = Song(
         id: 'song-1',
         title: 'Test Track',
@@ -102,7 +102,7 @@ void main() {
 
     test('loads songs for a playlist', () async {
       final repository = _FakePlaylistRepository();
-      final controller = PlaylistController(repository: repository);
+      final controller = _createController(repository);
       await Future<void>.delayed(Duration.zero);
       final songs = await controller.loadPlaylistSongs(1);
       expect(songs, hasLength(1));
@@ -113,7 +113,7 @@ void main() {
     test('propagates playlist song loading errors', () async {
       final repository = _FakePlaylistRepository()
         ..playlistSongsError = Exception('Database unavailable');
-      final controller = PlaylistController(repository: repository);
+      final controller = _createController(repository);
 
       await Future<void>.delayed(Duration.zero);
       await expectLater(
@@ -130,7 +130,7 @@ void main() {
 
     test('removes a song and refreshes playlist songs', () async {
       final repository = _FakePlaylistRepository();
-      final controller = PlaylistController(repository: repository);
+      final controller = _createController(repository);
       await Future<void>.delayed(Duration.zero);
       final result = await controller.removeSongFromPlaylist(1, 'content://media/audio/1');
       expect(result, isTrue);
@@ -140,7 +140,7 @@ void main() {
 
     test('renames and deletes selected playlist', () async {
       final repository = _FakePlaylistRepository();
-      final controller = PlaylistController(repository: repository);
+      final controller = _createController(repository);
 
       await Future<void>.delayed(Duration.zero);
       expect(await controller.renamePlaylist(1, 'Chill'), isTrue);
@@ -150,6 +150,12 @@ void main() {
       controller.onClose();
     });
   });
+}
+
+PlaylistController _createController(PlaylistRepository repository) {
+  final controller = PlaylistController(repository: repository);
+  controller.onInit();
+  return controller;
 }
 
 class _FakePlaylistRepository extends PlaylistRepository {
