@@ -189,7 +189,7 @@ class _EqualizerViewState extends State<EqualizerView> {
                   fontWeight: FontWeight.w700,
                   letterSpacing: 1.2)),
                 const Spacer(),
-                Text('\${(strength / 10).round()}%', style: const TextStyle(
+                Text('${(strength / 10).round()}%', style: const TextStyle(
                   color: AppColors.primary,
                   fontSize: 12,
                   fontWeight: FontWeight.w700)),
@@ -388,7 +388,7 @@ class _EqualizerViewState extends State<EqualizerView> {
                 Switch.adaptive(
                   value: equalizer.enabled,
                   activeColor: AppColors.primary,
-                  onChanged: _toggleEqualizer,
+                  onChanged: equalizer.supported ? _toggleEqualizer : null,
                 ),
             ],
           ),
