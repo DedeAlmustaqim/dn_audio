@@ -155,8 +155,9 @@ class MainActivity : AudioServiceActivity() {
 
         val safeSongId = songId.replace(Regex("[^A-Za-z0-9_-]"), "_")
         val artworkFile = File(artworkDirectory, "$safeSongId.png")
-        if (!artworkBytes.isNullOrEmpty()) {
-            artworkFile.writeBytes(artworkBytes)
+        val resolvedArtworkBytes = artworkBytes
+        if (resolvedArtworkBytes != null && resolvedArtworkBytes.isNotEmpty()) {
+            artworkFile.writeBytes(resolvedArtworkBytes)
         } else {
             createArtworkPlaceholder(artworkFile)
         }
