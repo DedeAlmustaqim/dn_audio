@@ -246,6 +246,29 @@ void main() {
     final calls = <MethodCall>[];
     messenger.setMockMethodCallHandler(channel, (call) async {
       calls.add(call);
+      if (call.method == 'attachSession') {
+        return {
+          'available': true,
+          'sessionId': 707,
+          'equalizer': {'supported': false},
+          'bassBoost': {
+            'supported': true,
+            'enabled': false,
+            'strengthSupported': true,
+            'minStrength': 0,
+            'maxStrength': 1000,
+            'strength': 400,
+          },
+          'virtualizer': {
+            'supported': true,
+            'enabled': false,
+            'strengthSupported': true,
+            'minStrength': 0,
+            'maxStrength': 1000,
+            'strength': 250,
+          },
+        };
+      }
       final bassEnabled = call.method == 'setBassBoost'
           ? call.arguments['enabled'] == true
           : false;
@@ -315,9 +338,25 @@ void main() {
     final calls = <MethodCall>[];
     messenger.setMockMethodCallHandler(channel, (call) async {
       calls.add(call);
+      if (call.method == 'attachSession') {
+        return {
+          'available': true,
+          'sessionId': 808,
+          'equalizer': {'supported': false},
+          'bassBoost': {
+            'supported': true,
+            'strengthSupported': true,
+            'minStrength': 0,
+            'maxStrength': 1000,
+          },
+          'virtualizer': {'supported': false},
+        };
+      }
       return {
-        'available': true,
-        'sessionId': 808,
+        'success': true,
+        'capabilities': {
+          'available': true,
+          'sessionId': 808,
         'equalizer': {'supported': false},
         'bassBoost': {
           'supported': true,
