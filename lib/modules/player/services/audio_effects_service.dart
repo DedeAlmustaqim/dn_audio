@@ -134,6 +134,67 @@ class AudioEffectsService {
     );
   }
 
+  Future<bool> setBassBoost({
+    required bool enabled,
+    required int strength,
+  }) {
+    return _runOptionalEffectCommand(
+      'setBassBoost',
+      _capabilities.bassBoost,
+      enabled: enabled,
+      strength: strength,
+    );
+  }
+
+  Future<bool> setVirtualizer({
+    required bool enabled,
+    required int strength,
+  }) {
+    return _runOptionalEffectCommand(
+      'setVirtualizer',
+      _capabilities.virtualizer,
+      enabled: enabled,
+      strength: strength,
+    );
+  }
+
+  Future<bool> _runOptionalEffectCommand(
+    String method,
+    AudioEffectCapability capability, {
+    required bool enabled,
+    required int strength,
+  }) async {
+    final minStrength = capability.minStrength;
+    final maxStrength = capability.maxStrength;
+    if (_isDisposed ||
+        attachedSessionId == null ||
+        !capability.supported ||
+        minStrength == null ||
+        maxStrength == null ||
+        strength < minStrength ||
+        strength > maxStrength) {
+      return false;
+    }
+
+    try {
+      final response = await _channel.invokeMethod<Map<dynamic, dynamic>>(
+        method,
+        {'enabled': enabled, 'strength': strength},
+      );
+      if (response == null) return false;
+      final rawCapabilities = response['capabilities'];
+      if (rawCapabilities is Map) {
+        _publishCapabilities(
+          AudioEffectsCapabilities.fromMap(rawCapabilities),
+        );
+      }
+      return response['success'] == true;
+    } catch (error) {
+      debugPrint('DN Audio: optional effect command $method failed: $error');
+      return false;
+    }
+  }
+
   Future<bool> _runEqualizerCommand(
     String method,
     Map<String, Object> arguments,
