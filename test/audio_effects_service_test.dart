@@ -357,14 +357,15 @@ void main() {
         'capabilities': {
           'available': true,
           'sessionId': 808,
-        'equalizer': {'supported': false},
-        'bassBoost': {
-          'supported': true,
-          'strengthSupported': true,
-          'minStrength': 0,
-          'maxStrength': 1000,
+          'equalizer': {'supported': false},
+          'bassBoost': {
+            'supported': true,
+            'strengthSupported': true,
+            'minStrength': 0,
+            'maxStrength': 1000,
+          },
+          'virtualizer': {'supported': false},
         },
-        'virtualizer': {'supported': false},
       };
     });
 
