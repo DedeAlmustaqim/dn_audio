@@ -37,7 +37,9 @@ The audio session ID can change when Android audio attributes are changed. There
 - Native manager releases old effect instances before binding to a new audio session.
 - Native manager reports capability and device-reported ranges to Flutter.
 
-The audio-library channel remains responsible only for media-library and artwork operations.\n\nFlutter session binding is encapsulated by `AudioEffectsService`, which listens to the existing player's Android session ID stream and serializes native attach/release operations.
+The audio-library channel remains responsible only for media-library and artwork operations.
+
+Flutter session binding is encapsulated by `AudioEffectsService`, which listens to the existing player's Android session ID stream and serializes native attach/release operations.
 
 ## 4. Session Lifecycle
 
@@ -83,7 +85,16 @@ Channel: `dn_audio/audio_effects`
 - `getCapabilities`: returns support flags and basic device-reported Equalizer band/frequency/level metadata, plus BassBoost and Virtualizer support information.
 - `release`: releases all native effect instances and clears the attached session.
 
-The channel is registered separately from `dn_audio/audio_library` in `MainActivity`.\n\n### Implemented in Stage 7.1.2\n\n- Added `AudioEffectsService` with the dedicated `dn_audio/audio_effects` MethodChannel.\n- Bound `AudioPlayer.androidAudioSessionIdStream` from the existing `DnAudioHandler`; no second player or audio pipeline is created.\n- Serialized session changes so rapid or duplicate stream events cannot race native attachment.\n- Attached a new positive session ID, released the native manager when the stream becomes null, and released the active session during handler disposal.\n- Treated native channel failures as optional-effect failures and logged them without changing playback state.\n- Added service tests for duplicate IDs, session replacement, null-session release, and disposal.
+The channel is registered separately from `dn_audio/audio_library` in `MainActivity`.
+
+### Implemented in Stage 7.1.2
+
+- Added `AudioEffectsService` with the dedicated `dn_audio/audio_effects` MethodChannel.
+- Bound `AudioPlayer.androidAudioSessionIdStream` from the existing `DnAudioHandler`; no second player or audio pipeline is created.
+- Serialized session changes so rapid or duplicate stream events cannot race native attachment.
+- Attached a new positive session ID, released the native manager when the stream becomes null, and released the active session during handler disposal.
+- Treated native channel failures as optional-effect failures and logged them without changing playback state.
+- Added service tests for duplicate IDs, session replacement, null-session release, and disposal.
 
 All effect types are initialized independently. If one effect cannot be created, other supported effects remain available. A failed effect initialization is treated as an unavailable optional capability, not as a playback failure.
 
@@ -98,7 +109,8 @@ All effect types are initialized independently. If one effect cannot be created,
 ## 8. Acceptance Criteria
 
 - A valid player session can be attached without replacing or recreating the player.
-- A changed session ID causes the old effects to be released and the new session to be rebound.\n- A null session ID releases the active effects; handler disposal releases any remaining native effects.
+- A changed session ID causes the old effects to be released and the new session to be rebound.
+- A null session ID releases the active effects; handler disposal releases any remaining native effects.
 - Unsupported effects are reported independently.
 - Device-reported band count and ranges are returned without assumptions.
 - Effect initialization failure does not pause, stop or otherwise interrupt playback.
