@@ -37,6 +37,7 @@ class AudioEffectCapability {
     this.strengthSupported,
     this.minStrength,
     this.maxStrength,
+    this.strength,
   });
 
   final bool supported;
@@ -50,6 +51,7 @@ class AudioEffectCapability {
   final bool? strengthSupported;
   final int? minStrength;
   final int? maxStrength;
+  final int? strength;
 
   factory AudioEffectCapability.fromMap(Map<dynamic, dynamic>? map) {
     if (map == null) {
@@ -78,6 +80,7 @@ class AudioEffectCapability {
           : null,
       minStrength: _readInt(map['minStrength']),
       maxStrength: _readInt(map['maxStrength']),
+      strength: _readInt(map['strength']),
     );
   }
 }
