@@ -315,15 +315,20 @@ Catatan:
 - Menambahkan alasan kegagalan per efek pada native manager agar Equalizer, BassBoost, dan Virtualizer tetap dapat dilaporkan secara independen
 - Menambahkan unit test parsing metadata band, dukungan efek opsional, publikasi capability, dan kegagalan channel
 
-**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian, dan build Android lokal**
+**Status: Selesai — pengguna mengonfirmasi 7.1.1, 7.1.2, dan 7.1.3 clean**
 
 ### 7.2 — Equalizer Engine & Controls
 
 - Membuat dan mengelola band equalizer berdasarkan kemampuan perangkat
 - Mengatur level tiap band dan master enable/disable
-- Menyinkronkan state Flutter dengan efek native
+- Menambahkan operasi native untuk mengaktifkan/menonaktifkan Equalizer
+- Mengatur level band berdasarkan indeks dan rentang millibel yang dilaporkan perangkat
+- Mengembalikan capability terbaru setelah perubahan agar state Flutter tetap sinkron
+- Menolak indeks band dan level di luar rentang sebelum perubahan diterapkan
+- Menambahkan API service Flutter dan unit test untuk command, sinkronisasi capability, dan validasi rentang
+- Belum mencakup UI Equalizer maupun persistensi preferensi
 
-**Status: Belum dimulai**
+**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian, dan build Android lokal**
 
 ### 7.3 — Preset Audio
 
