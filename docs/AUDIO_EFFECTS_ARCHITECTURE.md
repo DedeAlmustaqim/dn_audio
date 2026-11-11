@@ -113,7 +113,12 @@ The channel is registered separately from `dn_audio/audio_library` in `MainActiv
 - Added `AudioEffectsService` methods that reject unsupported or out-of-range requests and treat channel failures as optional-feature failures.
 - Added service tests for command arguments, capability refresh, and range validation.
 
-No Equalizer UI or persisted user profile is introduced in this stage; those remain in Stage 7.5.
+- Added an Equalizer action to the Now Playing header that opens a dedicated responsive bottom sheet.
+- Added device-aware band sliders, master enable/disable, current dB labels, flat reset, capability refresh, and an unavailable state.
+- Exposed the existing handler-owned service to the UI; no second player, service, or audio pipeline is created.
+- UI and engine changes are still subject to local Flutter and Android verification.
+
+Persisted user profiles and preset management remain outside this UI increment.
 
 All effect types are initialized independently. If one effect cannot be created, other supported effects remain available. A failed effect initialization is treated as an unavailable optional capability, not as a playback failure.
 
