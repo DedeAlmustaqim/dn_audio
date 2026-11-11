@@ -4,8 +4,11 @@ import android.Manifest
 import android.content.ContentUris
 import android.content.pm.PackageManager
 import android.database.Cursor
+import android.media.MediaMetadataRetriever
+import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import java.io.File
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.ryanheise.audioservice.AudioServiceActivity
@@ -33,6 +36,22 @@ class MainActivity : AudioServiceActivity() {
                             } catch (error: Exception) {
                                 result.error("scan_failed", error.message, null)
                             }
+                        }
+                    }
+                    "resolveArtwork" -> {
+                        val contentUri = call.argument<String>("contentUri")
+                        val songId = call.argument<String>("songId")
+                        if (contentUri.isNullOrBlank() || songId.isNullOrBlank()) {
+                            result.error("invalid_arguments", "contentUri and songId are required.", null)
+                        } else {
+                            Thread {
+                                val artworkUri = try {
+                                    resolveArtwork(contentUri, songId)
+                                } catch (_: Exception) {
+                                    null
+                                }
+                                runOnUiThread { result.success(artworkUri) }
+                            }.start()
                         }
                     }
                     else -> result.notImplemented()
@@ -81,6 +100,58 @@ class MainActivity : AudioServiceActivity() {
             permissionResult?.success(granted)
             permissionResult = null
         }
+    }
+
+
+    private fun resolveArtwork(contentUriValue: String, songId: String): String? {
+        val audioUri = Uri.parse(contentUriValue)
+        var artworkBytes: ByteArray? = null
+        val retriever = MediaMetadataRetriever()
+
+        try {
+            retriever.setDataSource(this, audioUri)
+            artworkBytes = retriever.embeddedPicture
+        } catch (_: Exception) {
+            // Continue with the MediaStore album-art fallback.
+        } finally {
+            try {
+                retriever.release()
+            } catch (_: Exception) {
+                // Ignore release errors; artwork resolution is best-effort.
+            }
+        }
+
+        if (artworkBytes.isNullOrEmpty()) {
+            val projection = arrayOf(MediaStore.Audio.Media.ALBUM_ID)
+            contentResolver.query(audioUri, projection, null, null, null)?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    val albumId = cursor.getLong(
+                        cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
+                    )
+                    if (albumId > 0) {
+                        val albumArtUri = ContentUris.withAppendedId(
+                            Uri.parse("content://media/external/audio/albumart"),
+                            albumId
+                        )
+                        artworkBytes = try {
+                            contentResolver.openInputStream(albumArtUri)?.use { it.readBytes() }
+                        } catch (_: Exception) {
+                            null
+                        }
+                    }
+                }
+            }
+        }
+
+        if (artworkBytes.isNullOrEmpty()) return null
+
+        val artworkDirectory = File(cacheDir, "dn_audio_artwork")
+        if (!artworkDirectory.exists() && !artworkDirectory.mkdirs()) return null
+
+        val safeSongId = songId.replace(Regex("[^A-Za-z0-9_-]"), "_")
+        val artworkFile = File(artworkDirectory, "$safeSongId.img")
+        artworkFile.writeBytes(artworkBytes)
+        return Uri.fromFile(artworkFile).toString()
     }
 
     private fun readMetadata(cursor: Cursor, columnIndex: Int, fallback: String): String {
