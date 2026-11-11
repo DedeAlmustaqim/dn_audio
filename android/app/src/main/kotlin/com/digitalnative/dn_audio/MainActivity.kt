@@ -83,6 +83,13 @@ class MainActivity : AudioServiceActivity() {
         }
     }
 
+    private fun readMetadata(cursor: Cursor, columnIndex: Int, fallback: String): String {
+        val value = cursor.getString(columnIndex)?.trim()
+        return value
+            ?.takeIf { it.isNotEmpty() && !it.equals(MediaStore.UNKNOWN_STRING, ignoreCase = true) }
+            ?: fallback
+    }
+
     private fun queryAudioFiles(): List<Map<String, Any?>> {
         val collection = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(
@@ -125,9 +132,9 @@ class MainActivity : AudioServiceActivity() {
                 songs.add(
                     mapOf(
                         "id" to id.toString(),
-                        "title" to (it.getString(titleColumn) ?: "Unknown title"),
-                        "artist" to (it.getString(artistColumn) ?: "Unknown artist"),
-                        "album" to (it.getString(albumColumn) ?: "Unknown album"),
+                        "title" to readMetadata(it, titleColumn, "Unknown title"),
+                        "artist" to readMetadata(it, artistColumn, "Unknown artist"),
+                        "album" to readMetadata(it, albumColumn, "Unknown album"),
                         "duration" to it.getLong(durationColumn),
                         "size" to it.getLong(sizeColumn),
                         "uri" to contentUri.toString(),
