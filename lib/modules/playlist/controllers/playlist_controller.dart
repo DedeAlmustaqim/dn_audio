@@ -36,13 +36,14 @@ class PlaylistController extends GetxController {
   }
 
   Future<List<PlaylistSong>> loadPlaylistSongs(int playlistId) async {
+    errorMessage.value = null;
     try {
       final songs = await _repository.getPlaylistSongs(playlistId);
       playlistSongs[playlistId] = songs;
       return songs;
     } catch (_) {
       errorMessage.value = 'Unable to load songs in this playlist.';
-      return const [];
+      rethrow;
     }
   }
 
