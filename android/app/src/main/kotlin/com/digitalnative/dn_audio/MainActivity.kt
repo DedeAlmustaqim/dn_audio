@@ -22,11 +22,37 @@ import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : AudioServiceActivity() {
     private val channelName = "dn_audio/audio_library"
+    private val audioEffectsChannelName = "dn_audio/audio_effects"
     private val permissionRequestCode = 7412
     private var permissionResult: MethodChannel.Result? = null
+    private val audioEffectsManager = AudioEffectsManager()
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, audioEffectsChannelName)
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "attachSession" -> {
+                        val sessionId = call.argument<Int>("sessionId")
+                        if (sessionId == null) {
+                            result.error(
+                                "invalid_arguments",
+                                "A valid sessionId is required.",
+                                null
+                            )
+                        } else {
+                            result.success(audioEffectsManager.attachSession(sessionId))
+                        }
+                    }
+                    "getCapabilities" -> result.success(audioEffectsManager.getCapabilities())
+                    "release" -> {
+                        audioEffectsManager.release()
+                        result.success(true)
+                    }
+                    else -> result.notImplemented()
+                }
+            }
+
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, channelName)
             .setMethodCallHandler { call, result ->
                 when (call.method) {
