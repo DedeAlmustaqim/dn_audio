@@ -7,6 +7,7 @@ import '../widgets/song_artwork.dart';
 import '../../playlist/controllers/playlist_controller.dart';
 import '../controllers/library_controller.dart';
 import '../models/song.dart';
+import '../models/library_collection.dart';
 
 class LibraryView extends GetView<LibraryController> {
   const LibraryView({super.key});
