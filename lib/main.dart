@@ -10,7 +10,7 @@ import 'modules/player/services/dn_audio_handler.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final audioHandler = await AudioService.init(
+  final handler = await AudioService.init(
     builder: DnAudioHandler.new,
     config: const AudioServiceConfig(
       androidNotificationChannelId: 'com.digitalnative.dn_audio.channel.audio',
@@ -21,7 +21,6 @@ Future<void> main() async {
     ),
   );
 
-  final handler = audioHandler as DnAudioHandler;
   await handler.configureAudioSession();
 
   Get.put<DnAudioHandler>(handler, permanent: true);
