@@ -249,7 +249,7 @@ Album Detail, Artist Detail, Queue, Sleep Timer and Settings should follow the s
 
 | Component | Design guidance |
 |---|---|
-| Primary button | Amber fill, dark readable label, 48–52 dp height |
+| Primary button | White fill, near-black readable label, 48–52 dp height |
 | Secondary button | Subtle surface or outline; no competing accent |
 | Icon button | Consistent icon family and 48 dp touch target |
 | Song row | Artwork, two-line metadata, optional trailing action |
@@ -314,7 +314,7 @@ Current theme uses a dark palette with purple accent (`#B794F6`). This is the cu
 ### Final stage — UI/UX polish
 1. Reconfirm this design direction against the finished feature set.
 2. Finalize design tokens and typography.
-3. Build reusable components and migrate the app theme from purple to amber.
+3. Build reusable components and migrate the app theme from purple to monochrome.
 4. Polish Home and Library.
 5. Polish Now Playing and Mini Player.
 6. Polish Playlists and Playlist Detail.
@@ -337,7 +337,7 @@ Current theme uses a dark palette with purple accent (`#B794F6`). This is the cu
 | Product identity | DN Audio by Digital Native Dev |
 | Tagline | Your Music. Your Experience. |
 | Visual style | Premium Editorial |
-| Accent color | Monochrome (`#F2A65A` proposed) |
+| Accent color | Monochrome — black, white and grey |
 | Overall theme | Premium Dark |
 | Scope | Entire application |
 | Implementation timing | Final polish stage, after feature development |
