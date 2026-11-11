@@ -24,7 +24,12 @@ class Song {
   factory Song.fromMap(Map<dynamic, dynamic> map) {
     String readText(String key, String fallback) {
       final value = map[key]?.toString().trim();
-      return value == null || value.isEmpty ? fallback : value;
+      if (value == null ||
+          value.isEmpty ||
+          value.toLowerCase() == '<unknown>') {
+        return fallback;
+      }
+      return value;
     }
 
     int readInt(String key) {
