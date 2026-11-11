@@ -8,9 +8,14 @@ import '../services/dn_audio_handler.dart';
 import '../controllers/equalizer_controller.dart';
 
 class EqualizerView extends StatefulWidget {
-  const EqualizerView({super.key, this.isBottomSheet = true});
+  const EqualizerView({
+    super.key,
+    this.isBottomSheet = true,
+    this.compact = false,
+  });
 
   final bool isBottomSheet;
+  final bool compact;
 
   @override
   State<EqualizerView> createState() => _EqualizerViewState();
@@ -266,9 +271,11 @@ class _EqualizerViewState extends State<EqualizerView> {
     return SafeArea(
       top: false,
       child: SizedBox(
-        height: widget.isBottomSheet
-          ? MediaQuery.sizeOf(context).height * 0.84
-          : double.infinity,
+        height: widget.compact
+            ? MediaQuery.sizeOf(context).height * 0.52
+            : widget.isBottomSheet
+                ? MediaQuery.sizeOf(context).height * 0.84
+                : double.infinity,
         child: StreamBuilder<AudioEffectsCapabilities>(
           stream: service.capabilitiesStream,
           initialData: service.capabilities,
@@ -341,13 +348,136 @@ class _EqualizerViewState extends State<EqualizerView> {
                 ),
                 const Divider(color: AppColors.border, height: 1),
                 Expanded(
-                  child: _buildContent(capabilities, equalizer),
+                  child: widget.compact
+                      ? _buildQuickContent(context, capabilities, equalizer)
+                      : _buildContent(capabilities, equalizer),
                 ),
               ],
             );
           },
         ),
       ),
+    );
+  }
+
+  Widget _buildQuickContent(
+    BuildContext context,
+    AudioEffectsCapabilities capabilities,
+    AudioEffectCapability equalizer,
+  ) {
+    if (!capabilities.available ||
+        (!equalizer.supported &&
+            !capabilities.bassBoost.supported &&
+            !capabilities.virtualizer.supported)) {
+      return _UnavailableState(
+        message: capabilities.error ??
+            equalizer.error ??
+            'Equalizer belum tersedia pada sesi audio ini.',
+        onRefresh: _refreshCapabilities,
+        isRefreshing: _isRefreshing,
+      );
+    }
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(22, 16, 22, 22),
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceElevated,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Row(
+            children: [
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Equalizer', style: TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w700)),
+                    SizedBox(height: 3),
+                    Text('Master audio control', style: TextStyle(
+                      color: AppColors.textSecondary, fontSize: 11)),
+                  ],
+                ),
+              ),
+              Switch.adaptive(
+                value: equalizer.enabled,
+                activeThumbColor: AppColors.primary,
+                onChanged: equalizer.supported ? _toggleEqualizer : null,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
+        const Text(
+          'QUICK PRESETS',
+          style: TextStyle(
+            color: AppColors.textSecondary,
+            fontSize: 10,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 1.5,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: AudioEqualizerPreset.presets.map((preset) {
+            final selected =
+                _equalizerController.selectedPresetId.value == preset.id;
+            return ChoiceChip(
+              label: Text(preset.name),
+              selected: selected,
+              onSelected: equalizer.enabled && !_isApplyingPreset
+                  ? (value) {
+                      if (value) _applyPreset(preset, equalizer);
+                    }
+                  : null,
+              selectedColor: AppColors.primary.withValues(alpha: 0.22),
+              backgroundColor: AppColors.surfaceElevated,
+              side: BorderSide(
+                color: selected ? AppColors.primary : AppColors.border,
+              ),
+              labelStyle: TextStyle(
+                color: selected
+                    ? AppColors.primary
+                    : AppColors.textSecondary,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+              showCheckmark: false,
+            );
+          }).toList(growable: false),
+        ),
+        if (_isApplyingPreset) ...[
+          const SizedBox(height: 12),
+          const LinearProgressIndicator(minHeight: 2),
+        ],
+        if (_message != null) ...[
+          const SizedBox(height: 12),
+          Text(
+            _message!,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.redAccent, fontSize: 12),
+          ),
+        ],
+        const SizedBox(height: 18),
+        OutlinedButton.icon(
+          onPressed: () {
+            Navigator.of(context).pop();
+            showModalBottomSheet<void>(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: AppColors.surface,
+              builder: (_) => const EqualizerView(),
+            );
+          },
+          icon: const Icon(Icons.tune_rounded),
+          label: const Text('Open full equalizer'),
+        ),
+      ],
     );
   }
 
