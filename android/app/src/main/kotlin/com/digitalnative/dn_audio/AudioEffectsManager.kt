@@ -62,7 +62,8 @@ class AudioEffectsManager {
                         "index" to index,
                         "centerFrequencyHz" to eq.getCenterFreq(band) / 1000,
                         "minFrequencyHz" to frequencyRange[0] / 1000,
-                        "maxFrequencyHz" to frequencyRange[1] / 1000
+                        "maxFrequencyHz" to frequencyRange[1] / 1000,
+                        "levelMillibels" to eq.getBandLevel(band).toInt()
                     )
                 }
                 mapOf(
@@ -135,6 +136,48 @@ class AudioEffectsManager {
             "virtualizer" to virtualizerInfo
         )
     }
+
+    @Synchronized
+    fun setEqualizerEnabled(enabled: Boolean): Map<String, Any?> {
+        val effect = equalizer ?: return equalizerOperationFailure("equalizer_unavailable")
+        return try {
+            effect.enabled = enabled
+            equalizerOperationSuccess()
+        } catch (error: Exception) {
+            equalizerOperationFailure(error.javaClass.simpleName)
+        }
+    }
+
+    @Synchronized
+    fun setBandLevel(bandIndex: Int, levelMillibels: Int): Map<String, Any?> {
+        val effect = equalizer ?: return equalizerOperationFailure("equalizer_unavailable")
+        return try {
+            if (bandIndex !in 0 until effect.numberOfBands.toInt()) {
+                return equalizerOperationFailure("invalid_band_index")
+            }
+
+            val range = effect.bandLevelRange
+            if (levelMillibels < range[0].toInt() || levelMillibels > range[1].toInt()) {
+                return equalizerOperationFailure("level_out_of_range")
+            }
+
+            effect.setBandLevel(bandIndex.toShort(), levelMillibels.toShort())
+            equalizerOperationSuccess()
+        } catch (error: Exception) {
+            equalizerOperationFailure(error.javaClass.simpleName)
+        }
+    }
+
+    private fun equalizerOperationSuccess(): Map<String, Any?> = mapOf(
+        "success" to true,
+        "capabilities" to getCapabilities()
+    )
+
+    private fun equalizerOperationFailure(error: String): Map<String, Any?> = mapOf(
+        "success" to false,
+        "error" to error,
+        "capabilities" to getCapabilities()
+    )
 
     @Synchronized
     fun release() {
