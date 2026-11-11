@@ -358,7 +358,7 @@ Catatan:
 
 Stage 6 telah ditutup setelah pengguna mengonfirmasi seluruh checklist album detail, artist detail, navigasi, playback, Mini Player, notifikasi, dan background playback berhasil.
 
-7.1.1 telah menambahkan native manager dan MethodChannel khusus. Langkah berikutnya adalah menghubungkan Audio Session ID dari satu-satunya `AudioPlayer` di `DnAudioHandler`, lalu mengelola perubahan session tanpa mengganggu playback.
+7.1.1 telah menambahkan native manager dan MethodChannel khusus. 7.1.2 kini menghubungkan `AudioPlayer.androidAudioSessionIdStream` ke native manager melalui `AudioEffectsService`, termasuk pergantian session dan release lifecycle. Tahap ini menunggu verifikasi lokal sebelum ditandai selesai.
 
 ---
 
