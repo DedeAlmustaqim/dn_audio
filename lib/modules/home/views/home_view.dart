@@ -350,17 +350,6 @@ class _LibraryShortcut extends StatelessWidget {
   }
 }
 
-class _PlaylistsTab extends StatelessWidget {
-  const _PlaylistsTab();
-
-  @override
-  Widget build(BuildContext context) => const _PlaceholderTab(
-        icon: Icons.queue_music_rounded,
-        title: 'Playlists',
-        description: 'Create and organize your playlists.',
-      );
-}
-
 class _EqualizerTab extends StatelessWidget {
   const _EqualizerTab();
 
