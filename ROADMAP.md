@@ -214,13 +214,25 @@ Catatan:
 
 ## 7. Stage 6 — Album Art & Metadata
 
-- Cover album
-- Artwork lagu
-- Penyempurnaan metadata
-- Tampilan album
-- Tampilan artis
+### 6.1 — Shared Artwork Resolution & Presentation
+
+- Memusatkan pemanggilan native artwork resolver dalam `ArtworkService`
+- Menggunakan cache Future per lagu agar beberapa tampilan tidak meminta artwork yang sama berulang kali
+- Menyediakan `SongArtwork` sebagai komponen visual bersama dengan fallback DN Audio
+- Menggunakan artwork yang sama pada Library, Playlist, mini player, dan Now Playing
+- Mempertahankan resolver Android MediaStore dan embedded artwork yang sudah ada
+
+**Status: Implementasi tersedia di GitHub — menunggu format, analisis, dan pengujian lokal**
+
+### 6.2 — Metadata & Album/Artist Browsing
+
+- Audit dan penyempurnaan metadata album dan artis
+- Pengelompokan lagu berdasarkan album dan artis
+- Halaman detail album dan artis
+- Navigasi dari Library ke album dan artis
 
 **Status: Belum dimulai**
+
 
 ## 8. Stage 7 — Equalizer & Audio Effects
 
@@ -253,13 +265,13 @@ Catatan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 5.6 — Persistence, Validation & Testing
+# Stage 6.1 — Shared Artwork Resolution & Presentation
 
-Stage 5.6 sedang menyempurnakan penanganan error, validasi, dan pengujian persistensi playlist. Perubahan terbaru memastikan kegagalan saat membaca lagu playlist diteruskan ke halaman pemanggil, bukan disamarkan sebagai playlist kosong. Pengujian lokal dan verifikasi persistensi SQLite masih diperlukan.
+Stage 6.1 memusatkan resolusi artwork dan menyamakan presentasinya di Library, Playlist, mini player, dan Now Playing. Implementasi tersedia di GitHub; format, analisis, dan pengujian lokal masih diperlukan. Verifikasi persistensi Stage 5.6 tetap perlu dituntaskan bila belum dilakukan.
 
 ### Urutan pekerjaan berikutnya
 
-1. Sinkronkan perubahan dan jalankan `dart format lib test`, `flutter analyze`, serta `flutter test`.
+1. Sinkronkan perubahan Stage 6.1 dan jalankan `dart format lib test`, `flutter analyze`, serta `flutter test`.
 2. Pastikan error database pada detail playlist menampilkan error state, bukan empty state.
 3. Uji persistensi: buat playlist, tutup aplikasi, buka kembali, lalu pastikan playlist dan lagu tetap tersimpan.
 4. Uji validasi nama kosong, nama duplikat, batas 50 karakter, dan lagu duplikat.
