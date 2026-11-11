@@ -92,7 +92,14 @@ Catatan pengujian perangkat:
 - Audio focus
 - Penanganan panggilan dan interupsi audio
 
-**Status: Belum dimulai**
+#### 4.4.1 — Audio Session & Audio Focus
+
+- Menambahkan dependency `audio_session`
+- Mengonfigurasi `AudioSessionConfiguration.music()` saat startup
+- Menangani event `becomingNoisyEventStream` untuk pause saat headset dilepas
+- Interupsi audio lainnya tetap ditangani oleh mekanisme bawaan `just_audio`
+
+**Status: Implementasi tersedia — menunggu pengujian perangkat**
 
 ## 6. Stage 5 — Playlist Management
 
@@ -148,18 +155,19 @@ Catatan pengujian perangkat:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 4.3 — Media Notification
+# Stage 4.4.1 — Audio Session & Audio Focus
 
-Fondasi audio service dan background playback sudah selesai serta telah diuji pada perangkat lokal. Media notification sudah muncul dan sinkronisasi Play/Pause antara notifikasi dan halaman Now Playing telah dikonfirmasi. Fokus berikutnya adalah verifikasi sinkronisasi album artwork pada Now Playing dan pengujian kontrol lainnya.
+Implementasi konfigurasi audio session dan penanganan headset yang dilepas sudah ditambahkan. Pengujian di perangkat lokal masih diperlukan. Stage 4.3 tetap memiliki checklist stabilisasi yang belum seluruhnya diverifikasi.
 
 ### Urutan pekerjaan berikutnya
 
-1. Periksa pembacaan metadata artis agar tidak menampilkan `<unknown>` jika informasi tersedia.
-2. Uji resolver artwork pada lagu dengan embedded cover dan lagu tanpa cover.
-3. Uji Next/Previous dan progress dari notification shade.
-4. Tandai Stage 4.3 selesai setelah metadata, artwork, dan seluruh kontrol terverifikasi.
-5. Lanjutkan Stage 4.4 — Lock Screen & Audio Focus.
-6. Setelah seluruh Stage 4 selesai, masuk ke Stage 5 — Playlist Management.
+1. Uji konfigurasi audio session dan pastikan playback normal.
+2. Uji pause otomatis saat headset kabel atau perangkat audio dilepas.
+3. Uji interupsi panggilan dan audio dari aplikasi lain.
+4. Lanjutkan Stage 4.4.2 — Headset & Bluetooth Controls.
+5. Lanjutkan Stage 4.4.3 — Lock Screen Experience.
+6. Selesaikan checklist Stage 4.3 yang masih tertunda sebelum menandai Stage 4 selesai.
+7. Setelah seluruh Stage 4 selesai, masuk ke Stage 5 — Playlist Management.
 
 ---
 
