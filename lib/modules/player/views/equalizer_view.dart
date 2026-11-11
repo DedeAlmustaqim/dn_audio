@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../models/audio_effects_capabilities.dart';
+import '../models/audio_equalizer_preset.dart';
 import '../services/dn_audio_handler.dart';
 
 class EqualizerView extends StatefulWidget {
@@ -18,6 +19,8 @@ class _EqualizerViewState extends State<EqualizerView> {
   bool _isRefreshing = false;
   bool _isToggling = false;
   String? _message;
+  String? _selectedPresetId = 'flat';
+  bool _isApplyingPreset = false;
 
   @override
   void initState() {
@@ -50,6 +53,52 @@ class _EqualizerViewState extends State<EqualizerView> {
     });
   }
 
+  Future<void> _applyPreset(
+    AudioEqualizerPreset preset,
+    AudioEffectCapability equalizer,
+  ) async {
+    if (_isApplyingPreset || !equalizer.enabled) return;
+    final minLevel = equalizer.minLevelMillibels;
+    final maxLevel = equalizer.maxLevelMillibels;
+    if (minLevel == null || maxLevel == null) return;
+
+    final levels = preset.levelsForBands(
+      equalizer.bands,
+      minLevelMillibels: minLevel,
+      maxLevelMillibels: maxLevel,
+    );
+    setState(() {
+      _isApplyingPreset = true;
+      _selectedPresetId = null;
+      _draftLevels
+        ..clear()
+        ..addAll({for (final entry in levels.entries) entry.key: entry.value.toDouble()});
+      _message = null;
+    });
+
+    var success = true;
+    for (final entry in levels.entries) {
+      final applied = await _handler.audioEffectsService.setBandLevel(
+        entry.key,
+        entry.value,
+      );
+      if (!applied) {
+        success = false;
+        break;
+      }
+    }
+
+    if (!mounted) return;
+    setState(() {
+      _isApplyingPreset = false;
+      _draftLevels.clear();
+      _selectedPresetId = success ? preset.id : null;
+      _message = success
+          ? null
+          : 'Preset tidak dapat diterapkan sepenuhnya. Coba pilih ulang.';
+    });
+  }
+
   Future<void> _applyBandLevel(int index, double value) async {
     final success = await _handler.audioEffectsService.setBandLevel(
       index,
@@ -58,6 +107,7 @@ class _EqualizerViewState extends State<EqualizerView> {
     if (!mounted) return;
     setState(() {
       _draftLevels.remove(index);
+      _selectedPresetId = null;
       _message = success ? null : 'Level band gagal diterapkan.';
     });
   }
@@ -227,6 +277,67 @@ class _EqualizerViewState extends State<EqualizerView> {
         Row(
           children: [
             const Text(
+              'SOUND PRESETS',
+              style: TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1.5,
+              ),
+            ),
+            const Spacer(),
+            if (_isApplyingPreset)
+              const SizedBox(
+                width: 15,
+                height: 15,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: AudioEqualizerPreset.presets.map((preset) {
+            return ChoiceChip(
+              label: Text(preset.name),
+              selected: _selectedPresetId == preset.id,
+              onSelected: equalizer.enabled && !_isApplyingPreset
+                  ? (selected) {
+                      if (selected) _applyPreset(preset, equalizer);
+                    }
+                  : null,
+              selectedColor: AppColors.primary.withValues(alpha: 0.22),
+              backgroundColor: AppColors.surfaceElevated,
+              side: BorderSide(
+                color: _selectedPresetId == preset.id
+                    ? AppColors.primary
+                    : AppColors.border,
+              ),
+              labelStyle: TextStyle(
+                color: _selectedPresetId == preset.id
+                    ? AppColors.primary
+                    : AppColors.textSecondary,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+              showCheckmark: false,
+            );
+          }).toList(growable: false),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          AudioEqualizerPreset.findById(_selectedPresetId)?.description ??
+              'Pilih preset untuk menyesuaikan karakter suara.',
+          style: const TextStyle(
+            color: AppColors.textSecondary,
+            fontSize: 11,
+          ),
+        ),
+        const SizedBox(height: 22),
+        Row(
+          children: [
+            const Text(
               'FREQUENCY BANDS',
               style: TextStyle(
                 color: AppColors.textSecondary,
@@ -282,12 +393,12 @@ class _EqualizerViewState extends State<EqualizerView> {
                   value: safeValue,
                   activeColor: AppColors.primary,
                   inactiveColor: AppColors.border,
-                  onChanged: equalizer.enabled
+                  onChanged: equalizer.enabled && !_isApplyingPreset
                       ? (value) {
                           setState(() => _draftLevels[band.index] = value);
                         }
                       : null,
-                  onChangeEnd: equalizer.enabled
+                  onChangeEnd: equalizer.enabled && !_isApplyingPreset
                       ? (value) => _applyBandLevel(band.index, value)
                       : null,
                 ),
@@ -298,16 +409,11 @@ class _EqualizerViewState extends State<EqualizerView> {
         const SizedBox(height: 8),
         Center(
           child: TextButton.icon(
-            onPressed: equalizer.enabled
-                ? () {
-                    for (final band in equalizer.bands) {
-                      _draftLevels[band.index] = 0;
-                    }
-                    setState(() {});
-                    for (final band in equalizer.bands) {
-                      _applyBandLevel(band.index, 0);
-                    }
-                  }
+            onPressed: equalizer.enabled && !_isApplyingPreset
+                ? () => _applyPreset(
+                      AudioEqualizerPreset.findById('flat')!,
+                      equalizer,
+                    )
                 : null,
             icon: const Icon(Icons.restart_alt_rounded, size: 18),
             label: const Text('Reset flat'),
