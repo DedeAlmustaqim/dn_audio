@@ -225,14 +225,35 @@ Catatan:
 - Pengujian perangkat oleh pengguna: seluruh checklist A–F dinyatakan lolos
 - Perbaikan tambahan: keyboard pencarian ditutup saat lagu dipilih dari hasil pencarian
 
-**Status: Pengujian fungsional A–F lolos — perbaikan keyboard pencarian menunggu verifikasi lokal**
+**Status: Selesai — pengguna mengonfirmasi pengujian perangkat A–F dan perbaikan keyboard bersih**
 
 ### 6.2 — Metadata & Album/Artist Browsing
 
-- Audit dan penyempurnaan metadata album dan artis
-- Pengelompokan lagu berdasarkan album dan artis
-- Halaman detail album dan artis
-- Navigasi dari Library ke album dan artis
+#### 6.2.1 — Metadata Identity & Collection Grouping
+
+- Menambahkan `albumId` dan `artistId` dari Android MediaStore ke model `Song`
+- Menjadikan ID MediaStore sebagai identitas utama album dan artis
+- Menyediakan fallback grouping berdasarkan nama album + artis dan nama artis yang dinormalisasi
+- Menurunkan koleksi album dan artis dari daftar lagu yang sudah dimuat
+- Menambahkan unit test untuk parsing ID dan pengelompokan koleksi
+
+**Status: Implementasi tersedia di GitHub — menunggu format, analisis, dan pengujian lokal**
+
+#### 6.2.2 — Album & Artist Browsing UI
+
+- Menambahkan navigasi Songs, Albums, dan Artists di Library
+- Menampilkan daftar album dengan artwork, nama album, artis, dan jumlah lagu
+- Menampilkan daftar artis dengan identitas visual dan jumlah lagu/album
+- Menyediakan empty state dan pencarian yang konsisten
+
+**Status: Belum dimulai**
+
+#### 6.2.3 — Album & Artist Detail
+
+- Halaman detail album dengan artwork dan daftar lagu
+- Halaman detail artis dengan daftar album dan lagu
+- Pemutaran album/artis melalui `PlayerController.playPlaylist()`
+- Navigasi detail yang konsisten dengan pola GetX DN Audio
 
 **Status: Belum dimulai**
 
@@ -268,18 +289,18 @@ Catatan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 6.1 — Shared Artwork Resolution & Presentation
+# Stage 6.2.1 — Metadata Identity & Collection Grouping
 
-Stage 6.1 memusatkan resolusi artwork dan menyamakan presentasinya di Library, Playlist, mini player, dan Now Playing. Implementasi tersedia di GitHub; format, analisis, dan pengujian lokal masih diperlukan. Verifikasi persistensi Stage 5.6 tetap perlu dituntaskan bila belum dilakukan.
+Stage 6.1 telah dinyatakan selesai oleh pengguna. Stage 6.2.1 menambahkan identitas album/artis dari MediaStore dan membentuk koleksi album/artis dari data lagu lokal. Implementasi tersedia di GitHub; format, analisis, dan pengujian lokal masih menunggu.
 
 ### Urutan pekerjaan berikutnya
 
-1. Sinkronkan perubahan Stage 6.1 dan jalankan `dart format lib test`, `flutter analyze`, serta `flutter test`.
-2. Pastikan error database pada detail playlist menampilkan error state, bukan empty state.
-3. Uji persistensi: buat playlist, tutup aplikasi, buka kembali, lalu pastikan playlist dan lagu tetap tersimpan.
-4. Uji validasi nama kosong, nama duplikat, batas 50 karakter, dan lagu duplikat.
-5. Verifikasi operasi hapus playlist menghapus relasi lagu terkait.
-6. Setelah hasil lokal bersih, lanjutkan penyelesaian Stage 5.6. Pengujian Stage 4 yang tertunda tetap dijadwalkan ketika perangkat headset tersedia.
+1. Sinkronkan perubahan Stage 6.2.1 dan jalankan `dart format lib test`, `flutter analyze`, serta `flutter test`.
+2. Pastikan parsing `albumId` dan `artistId` berjalan pada perangkat Android.
+3. Verifikasi grouping album dan artis, termasuk fallback metadata tanpa ID.
+4. Lanjutkan Stage 6.2.2 — Album & Artist Browsing UI.
+5. Selesaikan Stage 6.2.3 — Album & Artist Detail dan pengujian playback.
+6. Verifikasi persistensi Stage 5.6 bila belum dituntaskan; pengujian Stage 4 yang tertunda tetap dijadwalkan ketika perangkat headset tersedia.
 ---
 
 ## Aturan Penyelesaian Tahap
