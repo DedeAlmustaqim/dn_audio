@@ -100,6 +100,7 @@ class PlayerController extends GetxController {
     playbackError.value = null;
     position.value = Duration.zero;
     currentSong.value = song;
+    currentArtworkUri.value = null;
 
     try {
       await handler.loadPlaylist(songs, selectedIndex);
