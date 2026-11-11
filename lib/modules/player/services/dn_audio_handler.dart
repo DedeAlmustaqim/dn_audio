@@ -14,6 +14,8 @@ class DnAudioHandler extends BaseAudioHandler
   final AudioPlayer player = AudioPlayer();
   final AudioEffectsService _audioEffectsService = AudioEffectsService();
 
+  AudioEffectsService get audioEffectsService => _audioEffectsService;
+
   StreamSubscription<PlaybackEvent>? _playbackEventSubscription;
   StreamSubscription<SequenceState>? _sequenceStateSubscription;
   StreamSubscription<void>? _becomingNoisySubscription;
