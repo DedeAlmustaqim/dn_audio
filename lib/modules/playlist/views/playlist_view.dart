@@ -110,95 +110,13 @@ class PlaylistView extends GetView<PlaylistController> {
     Playlist? playlist,
   }) async {
     controller.errorMessage.value = null;
-    final textController = TextEditingController(text: playlist?.name ?? '');
-    final formKey = GlobalKey<FormState>();
-
     await showDialog<void>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(playlist == null ? 'Create playlist' : 'Rename playlist'),
-        content: Form(
-          key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: textController,
-                autofocus: true,
-                maxLength: 50,
-                textCapitalization: TextCapitalization.sentences,
-                decoration: const InputDecoration(
-                  hintText: 'Playlist name',
-                  counterText: '',
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Playlist name is required.';
-                  }
-                  if (value.trim().length > 50) {
-                    return 'Maximum 50 characters.';
-                  }
-                  return null;
-                },
-                onFieldSubmitted: (_) async {
-                  if (formKey.currentState?.validate() != true) return;
-                  final success = playlist == null
-                      ? await controller.createPlaylist(textController.text)
-                      : await controller.renamePlaylist(
-                          playlist.id,
-                          textController.text,
-                        );
-                  if (success && dialogContext.mounted) {
-                    Navigator.of(dialogContext).pop();
-                  }
-                },
-              ),
-              const SizedBox(height: 8),
-              Obx(() {
-                final error = controller.errorMessage.value;
-                if (error == null) return const SizedBox.shrink();
-                return Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    error,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                      fontSize: 12,
-                    ),
-                  ),
-                );
-              }),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
-          ),
-          Obx(
-            () => FilledButton(
-              onPressed: controller.isSaving.value
-                  ? null
-                  : () async {
-                      if (formKey.currentState?.validate() != true) return;
-                      final success = playlist == null
-                          ? await controller.createPlaylist(textController.text)
-                          : await controller.renamePlaylist(
-                              playlist.id,
-                              textController.text,
-                            );
-                      if (success && dialogContext.mounted) {
-                        Navigator.of(dialogContext).pop();
-                      }
-                    },
-              child: Text(playlist == null ? 'Create' : 'Save'),
-            ),
-          ),
-        ],
+      builder: (_) => _PlaylistNameDialog(
+        controller: controller,
+        playlist: playlist,
       ),
     );
-    textController.dispose();
   }
 
   Future<void> _confirmDelete(
@@ -231,6 +149,126 @@ class PlaylistView extends GetView<PlaylistController> {
     if (confirmed == true) {
       await controller.deletePlaylist(playlist.id);
     }
+  }
+}
+
+class _PlaylistNameDialog extends StatefulWidget {
+  const _PlaylistNameDialog({
+    required this.controller,
+    this.playlist,
+  });
+
+  final PlaylistController controller;
+  final Playlist? playlist;
+
+  @override
+  State<_PlaylistNameDialog> createState() => _PlaylistNameDialogState();
+}
+
+class _PlaylistNameDialogState extends State<_PlaylistNameDialog> {
+  late final TextEditingController _textController;
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _textController = TextEditingController(
+      text: widget.playlist?.name ?? '',
+    );
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    if (widget.controller.isSaving.value ||
+        _formKey.currentState?.validate() != true) {
+      return;
+    }
+
+    final playlist = widget.playlist;
+    final success = playlist == null
+        ? await widget.controller.createPlaylist(_textController.text)
+        : await widget.controller.renamePlaylist(
+            playlist.id,
+            _textController.text,
+          );
+
+    if (success && mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final playlist = widget.playlist;
+
+    return AlertDialog(
+      title: Text(playlist == null ? 'Create playlist' : 'Rename playlist'),
+      content: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: _textController,
+                autofocus: true,
+                maxLength: 50,
+                textCapitalization: TextCapitalization.sentences,
+                decoration: const InputDecoration(
+                  hintText: 'Playlist name',
+                  counterText: '',
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Playlist name is required.';
+                  }
+                  if (value.trim().length > 50) {
+                    return 'Maximum 50 characters.';
+                  }
+                  return null;
+                },
+                onFieldSubmitted: (_) => _submit(),
+              ),
+              const SizedBox(height: 8),
+              Obx(() {
+                final error = widget.controller.errorMessage.value;
+                if (error == null) return const SizedBox.shrink();
+                return Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    error,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                      fontSize: 12,
+                    ),
+                  ),
+                );
+              }),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: widget.controller.isSaving.value
+              ? null
+              : () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
+        ),
+        Obx(
+          () => FilledButton(
+            onPressed:
+                widget.controller.isSaving.value ? null : _submit,
+            child: Text(playlist == null ? 'Create' : 'Save'),
+          ),
+        ),
+      ],
+    );
   }
 }
 
