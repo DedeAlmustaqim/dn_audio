@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../library/views/library_view.dart';
 import '../../player/views/player_mini_bar.dart';
+import '../../playlist/views/playlist_view.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -21,7 +22,7 @@ class HomeView extends GetView<HomeController> {
             children: const [
               _HomeTab(),
               LibraryView(),
-              _PlaylistsTab(),
+              PlaylistView(),
               _EqualizerTab(),
             ],
           ),
