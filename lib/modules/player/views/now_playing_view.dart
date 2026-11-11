@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
@@ -46,7 +48,10 @@ class NowPlayingView extends GetView<PlayerController> {
                       borderRadius: BorderRadius.circular(28),
                       border: Border.all(color: AppColors.border),
                     ),
-                    child: const Icon(Icons.graphic_eq_rounded, size: 112, color: AppColors.primary),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(27),
+                      child: _buildAlbumArtwork(controller.currentArtworkUri.value),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 34),
@@ -172,8 +177,31 @@ class NowPlayingView extends GetView<PlayerController> {
       ),
     );
   }
+  Widget _buildAlbumArtwork(Uri? artworkUri) {
+    if (artworkUri != null && artworkUri.scheme == 'file') {
+      return Image.file(
+        File(artworkUri.toFilePath()),
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+        errorBuilder: (_, __, ___) => const _ArtworkPlaceholder(),
+      );
+    }
+    return const _ArtworkPlaceholder();
+  }
+
 }
 
+class _ArtworkPlaceholder extends StatelessWidget {
+  const _ArtworkPlaceholder();
+
+  @override
+  Widget build(BuildContext context) => Container(
+        color: AppColors.surfaceElevated,
+        alignment: Alignment.center,
+        child: const Icon(Icons.graphic_eq_rounded, size: 112, color: AppColors.primary),
+      );
+}
 
 class _LabeledPlayerControl extends StatelessWidget {
   const _LabeledPlayerControl({
