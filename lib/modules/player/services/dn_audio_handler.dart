@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:flutter/services.dart';
 
 import '../../library/models/song.dart';
 
@@ -11,6 +12,8 @@ class DnAudioHandler extends BaseAudioHandler
 
   StreamSubscription<PlaybackEvent>? _playbackEventSubscription;
   StreamSubscription<SequenceState>? _sequenceStateSubscription;
+  static const MethodChannel _artworkChannel = MethodChannel('dn_audio/audio_library');
+  int _artworkRequestId = 0;
 
   DnAudioHandler() {
     _playbackEventSubscription =
@@ -41,19 +44,42 @@ class DnAudioHandler extends BaseAudioHandler
     return uri != null && uri.hasScheme ? uri : null;
   }
 
-  MediaItem _toMediaItem(Song song) => MediaItem(
+  MediaItem _toMediaItem(Song song, {Uri? artworkUri}) => MediaItem(
         id: song.contentUri,
         title: song.title,
         artist: song.artist,
         album: song.album,
         duration: Duration(milliseconds: song.durationMs),
-        artUri: _parseArtworkUri(song.albumArtUri),
+        artUri: artworkUri,
         extras: {'songId': song.id},
       );
 
   void _broadcastCurrentMediaItem(SequenceState state) {
     final tag = state.currentSource?.tag;
-    if (tag is Song) mediaItem.add(_toMediaItem(tag));
+    if (tag is! Song) return;
+
+    final requestId = ++_artworkRequestId;
+    mediaItem.add(_toMediaItem(tag));
+    unawaited(_resolveCurrentArtwork(tag, requestId));
+  }
+
+  Future<void> _resolveCurrentArtwork(Song song, int requestId) async {
+    try {
+      final resolvedUri = await _artworkChannel.invokeMethod<String>(
+        'resolveArtwork',
+        {'contentUri': song.contentUri, 'songId': song.id},
+      );
+      if (requestId != _artworkRequestId || resolvedUri == null) return;
+
+      final artworkUri = _parseArtworkUri(resolvedUri);
+      if (artworkUri != null) {
+        mediaItem.add(_toMediaItem(song, artworkUri: artworkUri));
+      }
+    } on PlatformException {
+      // Artwork is optional; a resolution failure must not interrupt playback.
+    } on MissingPluginException {
+      // Keep playback functional if the native artwork resolver is unavailable.
+    }
   }
 
   void _broadcastPlaybackState(PlaybackEvent event) {
