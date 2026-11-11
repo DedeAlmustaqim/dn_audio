@@ -1,5 +1,3 @@
-import 'package:sqflite/sqflite.dart';
-
 import '../models/playlist.dart';
 import 'playlist_database.dart';
 
