@@ -31,9 +31,9 @@ class AudioEffectsManager {
         if (attachedSessionId != sessionId) {
             releaseEffects()
             attachedSessionId = sessionId
-            equalizer = createEffect("equalizer") { Equalizer(0, sessionId) }
-            bassBoost = createEffect("bassBoost") { BassBoost(0, sessionId) }
-            virtualizer = createEffect("virtualizer") { Virtualizer(0, sessionId) }
+            equalizer = createEffect { Equalizer(0, sessionId) }
+            bassBoost = createEffect { BassBoost(0, sessionId) }
+            virtualizer = createEffect { Virtualizer(0, sessionId) }
         }
 
         return getCapabilities()
@@ -147,15 +147,18 @@ class AudioEffectsManager {
         }
     }
 
-    private fun <T : AudioEffect> createEffect(
-        name: String,
-        factory: () -> T
-    ): T? {
-        return try {
-            factory().also { effect ->
-                effect.enabled = false
-            }
+    private fun <T : AudioEffect> createEffect(factory: () -> T): T? {
+        val effect = try {
+            factory()
         } catch (_: Exception) {
+            return null
+        }
+
+        return try {
+            effect.enabled = false
+            effect
+        } catch (_: Exception) {
+            releaseSafely(effect)
             null
         }
     }
