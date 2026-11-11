@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:dn_audio/modules/library/models/song.dart';
 import 'package:dn_audio/modules/playlist/controllers/playlist_controller.dart';
 import 'package:dn_audio/modules/playlist/models/playlist.dart';
+import 'package:dn_audio/modules/playlist/models/playlist_song.dart';
 import 'package:dn_audio/modules/playlist/services/playlist_repository.dart';
 
 void main() {
@@ -99,6 +100,26 @@ void main() {
       controller.onClose();
     });
 
+    test('loads songs for a playlist', () async {
+      final repository = _FakePlaylistRepository();
+      final controller = PlaylistController(repository: repository);
+      await Future<void>.delayed(Duration.zero);
+      final songs = await controller.loadPlaylistSongs(1);
+      expect(songs, hasLength(1));
+      expect(controller.playlistSongs[1], hasLength(1));
+      controller.onClose();
+    });
+
+    test('removes a song and refreshes playlist songs', () async {
+      final repository = _FakePlaylistRepository();
+      final controller = PlaylistController(repository: repository);
+      await Future<void>.delayed(Duration.zero);
+      final result = await controller.removeSongFromPlaylist(1, 'content://media/audio/1');
+      expect(result, isTrue);
+      expect(repository.removedSong, (1, 'content://media/audio/1'));
+      controller.onClose();
+    });
+
     test('renames and deletes selected playlist', () async {
       final repository = _FakePlaylistRepository();
       final controller = PlaylistController(repository: repository);
@@ -118,9 +139,11 @@ class _FakePlaylistRepository extends PlaylistRepository {
   final createdNames = <String>[];
   (int, String)? renamed;
   (int, Song)? addedSong;
+  (int, String)? removedSong;
   int? deletedId;
   Exception? createError;
   Exception? addSongError;
+  final testSong = const Song(id: 'song-1', title: 'Test Track', artist: 'Test Artist', album: 'Test Album', durationMs: 180000, contentUri: 'content://media/audio/1', albumArtUri: null, sizeBytes: 1000, dateAdded: 1);
 
   @override
   Future<List<Playlist>> getPlaylists() async {
@@ -137,6 +160,11 @@ class _FakePlaylistRepository extends PlaylistRepository {
   }
 
   @override
+  Future<List<PlaylistSong>> getPlaylistSongs(int playlistId) async => [
+    PlaylistSong(playlistId: playlistId, song: testSong, position: 0),
+  ];
+
+  @override
   Future<int> createPlaylist(String name) async {
     if (createError != null) throw createError!;
     createdNames.add(name);
@@ -147,6 +175,11 @@ class _FakePlaylistRepository extends PlaylistRepository {
   Future<void> addSongToPlaylist(int playlistId, Song song) async {
     if (addSongError != null) throw addSongError!;
     addedSong = (playlistId, song);
+  }
+
+  @override
+  Future<void> removeSongFromPlaylist(int playlistId, String contentUri) async {
+    removedSong = (playlistId, contentUri);
   }
 
   @override
