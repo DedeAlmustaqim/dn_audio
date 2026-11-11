@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../library/views/library_view.dart';
 import '../../player/views/player_mini_bar.dart';
+import '../../player/views/equalizer_view.dart';
 import '../../playlist/views/playlist_view.dart';
 import '../controllers/home_controller.dart';
 
@@ -354,11 +355,7 @@ class _EqualizerTab extends StatelessWidget {
   const _EqualizerTab();
 
   @override
-  Widget build(BuildContext context) => const _PlaceholderTab(
-        icon: Icons.equalizer_rounded,
-        title: 'Equalizer',
-        description: 'Shape your sound with audio controls.',
-      );
+  Widget build(BuildContext context) => const EqualizerView(isBottomSheet: false);
 }
 
 class _PlaceholderTab extends StatelessWidget {
