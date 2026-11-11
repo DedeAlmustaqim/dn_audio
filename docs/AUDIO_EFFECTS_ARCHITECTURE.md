@@ -61,7 +61,7 @@ A missing or invalid session ID means effects are unavailable for now; it is not
 - Catch native initialization and parameter errors and return a structured unsupported/error result.
 - Do not request audio recording permission; these effects process the player's output session.
 
-## 6. MethodChannel Contract (proposed)
+## 6. MethodChannel Contract
 
 Channel: `dn_audio/audio_effects`
 
@@ -75,7 +75,17 @@ Initial methods:
 - `setVirtualizer`: receives enabled state and strength within the device-reported range.
 - `release`: releases all effect instances.
 
-The exact response model and error codes will be finalized with the first native implementation. Method calls must be idempotent where practical.
+### Implemented in Stage 7.1.1
+
+Channel: `dn_audio/audio_effects`
+
+- `attachSession`: accepts `sessionId`, releases effects from a previous session when the ID changes, then creates supported effect instances.
+- `getCapabilities`: returns support flags and basic device-reported Equalizer band/frequency/level metadata, plus BassBoost and Virtualizer support information.
+- `release`: releases all native effect instances and clears the attached session.
+
+The channel is registered separately from `dn_audio/audio_library` in `MainActivity`. Flutter session-stream binding and effect controls are intentionally deferred to later substages.
+
+All effect types are initialized independently. If one effect cannot be created, other supported effects remain available. A failed effect initialization is treated as an unavailable optional capability, not as a playback failure.
 
 ## 7. Non-Goals for Stage 7.1
 
