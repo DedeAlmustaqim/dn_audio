@@ -141,6 +141,35 @@ Catatan:
 - Next/Previous mengikuti urutan playlist
 - Penyimpanan permanen menggunakan SQLite
 
+#### 5.1 — Playlist Architecture & Database
+
+- Menambahkan SQLite melalui `sqflite`
+- Menyiapkan database lokal khusus playlist
+- Tabel `playlists` untuk identitas dan timestamp playlist
+- Tabel `playlist_songs` untuk relasi playlist, snapshot metadata lagu, dan urutan pemutaran
+- Foreign key cascade agar detail lagu ikut terhapus saat playlist dihapus
+- Indeks untuk pencarian dan pengurutan lagu dalam playlist
+
+**Status: Fondasi database diimplementasikan — menunggu `flutter pub get`, analisis, dan pengujian lokal**
+
+#### 5.2 — Create, Rename & Delete Playlist
+
+**Status: Belum dimulai**
+
+#### 5.3 — Add & Remove Songs
+
+**Status: Belum dimulai**
+
+#### 5.4 — Playlist Detail & Song List
+
+**Status: Belum dimulai**
+
+#### 5.5 — Playlist Playback & Queue
+
+**Status: Belum dimulai**
+
+#### 5.6 — Persistence, Validation & Testing
+
 **Status: Belum dimulai**
 
 ## 7. Stage 6 — Album Art & Metadata
@@ -184,7 +213,19 @@ Catatan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 4.4.1 — Audio Session & Audio Focus
+# Stage 5.1 — Playlist Architecture & Database
+
+Audit menemukan belum ada lapisan database SQLite untuk playlist. Model `Song` telah menyediakan identitas dan `contentUri`; playback dikelola oleh satu `DnAudioHandler`. Fondasi database playlist disiapkan secara terpisah tanpa mengubah jalur playback yang sudah ada.
+
+### Urutan pekerjaan berikutnya
+
+1. Sinkronkan dependency dan jalankan analisis serta pengujian lokal.
+2. Lanjutkan Stage 5.2 — Create, Rename & Delete Playlist.
+3. Lanjutkan Stage 5.3 — Add & Remove Songs.
+4. Lanjutkan Stage 5.4 — Playlist Detail & Song List.
+5. Lanjutkan Stage 5.5 — Playlist Playback & Queue.
+6. Selesaikan validasi persistence dan pengujian Stage 5.6.
+7. Pengujian Stage 4 yang tertunda tetap dijadwalkan ketika perangkat headset tersedia.
 
 Implementasi konfigurasi audio session dan penanganan headset yang dilepas sudah tersedia di branch `main`. Pengujian perangkat ditunda karena headset belum tersedia. Stage 4.3 masih memiliki checklist stabilisasi kontrol notifikasi dan metadata yang perlu diverifikasi.
 
