@@ -13,6 +13,8 @@ void main() {
         'duration': 125000,
         'uri': 'content://media/external/audio/media/42',
         'albumArtUri': 'content://media/external/audio/albumart/7',
+        'albumId': 7,
+        'artistId': 12,
         'size': 2048000,
         'dateAdded': 1730000000,
       });
@@ -24,6 +26,8 @@ void main() {
       expect(song.durationMs, 125000);
       expect(song.contentUri, 'content://media/external/audio/media/42');
       expect(song.albumArtUri, 'content://media/external/audio/albumart/7');
+      expect(song.albumId, 7);
+      expect(song.artistId, 12);
       expect(song.sizeBytes, 2048000);
       expect(song.dateAdded, 1730000000);
       expect(song.durationLabel, '2:05');
@@ -49,6 +53,8 @@ void main() {
       expect(song.durationMs, 0);
       expect(song.contentUri, isEmpty);
       expect(song.albumArtUri, isNull);
+      expect(song.albumId, isNull);
+      expect(song.artistId, isNull);
       expect(song.sizeBytes, 0);
       expect(song.dateAdded, 0);
       expect(song.durationLabel, '0:00');
