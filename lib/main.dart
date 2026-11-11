@@ -1,4 +1,5 @@
 import 'package:audio_service/audio_service.dart';
+import 'package:audio_session/audio_session.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -21,7 +22,10 @@ Future<void> main() async {
     ),
   );
 
-  Get.put<DnAudioHandler>(audioHandler as DnAudioHandler, permanent: true);
+  final handler = audioHandler as DnAudioHandler;
+  await handler.configureAudioSession();
+
+  Get.put<DnAudioHandler>(handler, permanent: true);
   runApp(const DnAudioApp());
 }
 
