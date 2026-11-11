@@ -21,6 +21,8 @@ class _EqualizerViewState extends State<EqualizerView> {
   String? _message;
   String? _selectedPresetId = 'flat';
   bool _isApplyingPreset = false;
+  bool _isUpdatingOptionalEffect = false;
+  final Map<String, double> _optionalDraftStrength = {};
 
   @override
   void initState() {
@@ -97,6 +99,129 @@ class _EqualizerViewState extends State<EqualizerView> {
           ? null
           : 'Preset tidak dapat diterapkan sepenuhnya. Coba pilih ulang.';
     });
+  }
+
+  Future<void> _setOptionalEffect({
+    required bool isBassBoost,
+    required bool enabled,
+    required int strength,
+  }) async {
+    if (_isUpdatingOptionalEffect) return;
+    setState(() {
+      _isUpdatingOptionalEffect = true;
+      _message = null;
+    });
+    final success = isBassBoost
+        ? await _handler.audioEffectsService.setBassBoost(
+            enabled: enabled, strength: strength)
+        : await _handler.audioEffectsService.setVirtualizer(
+            enabled: enabled, strength: strength);
+    if (!mounted) return;
+    setState(() {
+      _isUpdatingOptionalEffect = false;
+      if (!success) {
+        _message = isBassBoost
+            ? 'Bass enhancement gagal diterapkan.'
+            : 'Virtualizer gagal diterapkan.';
+      }
+    });
+  }
+
+  Widget _buildOptionalEffectCard({
+    required String title,
+    required String description,
+    required AudioEffectCapability capability,
+    required bool isBassBoost,
+  }) {
+    if (!capability.supported) return const SizedBox.shrink();
+    final minStrength = capability.minStrength ?? 0;
+    final maxStrength = capability.maxStrength ?? 1000;
+    final strength = (_optionalDraftStrength[isBassBoost ? 'bass' : 'virtual'] ??
+            (capability.strength ?? minStrength).toDouble())
+        .clamp(minStrength.toDouble(), maxStrength.toDouble())
+        .toDouble();
+
+    return Container(
+      margin: const EdgeInsets.only(top: 14),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceElevated,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 4),
+                    Text(description, style: const TextStyle(
+                      color: AppColors.textSecondary, fontSize: 11)),
+                  ],
+                ),
+              ),
+              Switch.adaptive(
+                value: capability.enabled,
+                activeColor: AppColors.primary,
+                onChanged: _isUpdatingOptionalEffect
+                    ? null
+                    : (enabled) => _setOptionalEffect(
+                          isBassBoost: isBassBoost,
+                          enabled: enabled,
+                          strength: strength.round()),
+              ),
+            ],
+          ),
+          if (capability.strengthSupported == true &&
+              maxStrength > minStrength) ...[
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const Text('INTENSITY', style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1.2)),
+                const Spacer(),
+                Text('\${(strength / 10).round()}%', style: const TextStyle(
+                  color: AppColors.primary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700)),
+              ],
+            ),
+            Slider(
+              min: minStrength.toDouble(),
+              max: maxStrength.toDouble(),
+              value: strength,
+              activeColor: AppColors.primary,
+              inactiveColor: AppColors.border,
+              onChanged: capability.enabled && !_isUpdatingOptionalEffect
+                  ? (value) => setState(() {
+                        _optionalDraftStrength[isBassBoost ? 'bass' : 'virtual'] = value;
+                      })
+                  : null,
+              onChangeEnd: capability.enabled && !_isUpdatingOptionalEffect
+                  ? (value) => _setOptionalEffect(
+                        isBassBoost: isBassBoost,
+                        enabled: capability.enabled,
+                        strength: value.round())
+                  : null,
+            ),
+          ] else ...[
+            const SizedBox(height: 8),
+            const Text(
+              'Perangkat hanya menyediakan kontrol ON/OFF untuk efek ini.',
+              style: TextStyle(color: AppColors.textSecondary, fontSize: 11)),
+          ],
+        ],
+      ),
+    );
   }
 
   Future<void> _applyBandLevel(int index, double value) async {
@@ -203,19 +328,14 @@ class _EqualizerViewState extends State<EqualizerView> {
     AudioEffectsCapabilities capabilities,
     AudioEffectCapability equalizer,
   ) {
-    if (!capabilities.available || !equalizer.supported) {
+    if (!capabilities.available ||
+        (!equalizer.supported &&
+            !capabilities.bassBoost.supported &&
+            !capabilities.virtualizer.supported)) {
       return _UnavailableState(
         message: capabilities.error ??
             equalizer.error ??
             'Equalizer belum tersedia pada sesi audio ini.',
-        onRefresh: _refreshCapabilities,
-        isRefreshing: _isRefreshing,
-      );
-    }
-
-    if (equalizer.bands.isEmpty) {
-      return _UnavailableState(
-        message: 'Perangkat tidak melaporkan konfigurasi band Equalizer.',
         onRefresh: _refreshCapabilities,
         isRefreshing: _isRefreshing,
       );
@@ -418,6 +538,18 @@ class _EqualizerViewState extends State<EqualizerView> {
             icon: const Icon(Icons.restart_alt_rounded, size: 18),
             label: const Text('Reset flat'),
           ),
+        ),
+        _buildOptionalEffectCard(
+          title: 'Bass Enhancement',
+          description: 'Perkuat frekuensi rendah',
+          capability: capabilities.bassBoost,
+          isBassBoost: true,
+        ),
+        _buildOptionalEffectCard(
+          title: 'Virtualizer',
+          description: 'Efek ruang dan keluasan suara',
+          capability: capabilities.virtualizer,
+          isBassBoost: false,
         ),
         if (_message != null) ...[
           const SizedBox(height: 12),
