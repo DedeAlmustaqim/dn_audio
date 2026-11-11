@@ -13,7 +13,26 @@ class LibraryView extends GetView<LibraryController> {
 
   @override
   Widget build(BuildContext context) => Obx(() {
+        final section = controller.librarySection.value;
         final visibleSongs = controller.filteredSongs;
+        final visibleAlbums = controller.filteredAlbums;
+        final visibleArtists = controller.filteredArtists;
+        final hasResults = section == 'songs'
+            ? visibleSongs.isNotEmpty
+            : section == 'albums'
+                ? visibleAlbums.isNotEmpty
+                : visibleArtists.isNotEmpty;
+        final collectionCount = section == 'songs'
+            ? controller.songs.length
+            : section == 'albums'
+                ? controller.albums.length
+                : controller.artists.length;
+        final sectionLabel = section == 'songs'
+            ? 'songs'
+            : section == 'albums'
+                ? 'albums'
+                : 'artists';
+
         return CustomScrollView(
           slivers: [
             SliverPadding(
@@ -32,23 +51,40 @@ class LibraryView extends GetView<LibraryController> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      '${controller.songs.length} songs on this device',
+                      '$collectionCount $sectionLabel on this device',
                       style: const TextStyle(
                         color: AppColors.textSecondary,
                         fontSize: 13,
                       ),
                     ),
                     const SizedBox(height: 20),
-                    _SearchField(onChanged: controller.updateSearch),
+                    _SearchField(
+                      onChanged: controller.updateSearch,
+                      hintText: section == 'songs'
+                          ? 'Search songs, artists, albums...'
+                          : section == 'albums'
+                              ? 'Search albums or artists...'
+                              : 'Search artists...',
+                    ),
                     const SizedBox(height: 18),
                     Row(
                       children: [
-                        const Text(
-                          'All songs',
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w700,
-                          ),
+                        _LibrarySectionChip(
+                          label: 'Songs',
+                          selected: section == 'songs',
+                          onTap: () => controller.selectLibrarySection('songs'),
+                        ),
+                        const SizedBox(width: 8),
+                        _LibrarySectionChip(
+                          label: 'Albums',
+                          selected: section == 'albums',
+                          onTap: () => controller.selectLibrarySection('albums'),
+                        ),
+                        const SizedBox(width: 8),
+                        _LibrarySectionChip(
+                          label: 'Artists',
+                          selected: section == 'artists',
+                          onTap: () => controller.selectLibrarySection('artists'),
                         ),
                         const Spacer(),
                         IconButton(
@@ -104,16 +140,24 @@ class LibraryView extends GetView<LibraryController> {
                       'Audio files stored on your device will appear here after scanning.',
                 ),
               )
-            else if (visibleSongs.isEmpty)
-              const SliverFillRemaining(
+            else if (!hasResults)
+              SliverFillRemaining(
                 hasScrollBody: false,
                 child: _InfoState(
                   icon: Icons.search_off_rounded,
-                  title: 'No matching songs',
-                  message: 'Try another song, artist, or album name.',
+                  title: controller.searchQuery.value.isNotEmpty
+                      ? 'No matching $sectionLabel'
+                      : 'No $sectionLabel yet',
+                  message: controller.searchQuery.value.isNotEmpty
+                      ? 'Try another search term.'
+                      : section == 'albums'
+                          ? 'Albums from your local music will appear here.'
+                          : section == 'artists'
+                              ? 'Artists from your local music will appear here.'
+                              : 'Your songs will appear here.',
                 ),
               )
-            else
+            else if (section == 'songs')
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
                 sliver: SliverList.separated(
@@ -125,6 +169,33 @@ class LibraryView extends GetView<LibraryController> {
                     onAddToPlaylist: () =>
                         _showAddToPlaylistSheet(context, visibleSongs[index]),
                   ),
+                ),
+              )
+            else if (section == 'albums')
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                sliver: SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 18,
+                    crossAxisSpacing: 14,
+                    childAspectRatio: 0.76,
+                  ),
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => _AlbumCard(album: visibleAlbums[index]),
+                    childCount: visibleAlbums.length,
+                  ),
+                ),
+              )
+            else
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                sliver: SliverList.separated(
+                  itemCount: visibleArtists.length,
+                  separatorBuilder: (_, _) =>
+                      const Divider(height: 1, indent: 78),
+                  itemBuilder: (context, index) =>
+                      _ArtistTile(artist: visibleArtists[index]),
                 ),
               ),
           ],
@@ -245,17 +316,123 @@ class LibraryView extends GetView<LibraryController> {
   }
 }
 
+class _LibrarySectionChip extends StatelessWidget {
+  const _LibrarySectionChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Material(
+        color: selected ? AppColors.primary.withValues(alpha: 0.16) : AppColors.surface,
+        borderRadius: BorderRadius.circular(12),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            child: Text(
+              label,
+              style: TextStyle(
+                color: selected ? AppColors.primary : AppColors.textSecondary,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ),
+      );
+}
+
+class _AlbumCard extends StatelessWidget {
+  const _AlbumCard({required this.album});
+
+  final AlbumCollection album;
+
+  @override
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: SizedBox(
+                width: double.infinity,
+                child: SongArtwork(song: album.artworkSong, iconSize: 42),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            album.title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 3),
+          Text(
+            album.artist,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
+          ),
+          const SizedBox(height: 3),
+          Text(
+            '${album.songCount} songs',
+            style: const TextStyle(color: AppColors.textSecondary, fontSize: 11),
+          ),
+        ],
+      );
+}
+
+class _ArtistTile extends StatelessWidget {
+  const _ArtistTile({required this.artist});
+
+  final ArtistCollection artist;
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
+        leading: ClipOval(
+          child: SizedBox(
+            width: 54,
+            height: 54,
+            child: SongArtwork(song: artist.artworkSong, iconSize: 24),
+          ),
+        ),
+        title: Text(
+          artist.name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+        ),
+        subtitle: Text(
+          '${artist.albumCount} albums · ${artist.songCount} songs',
+          style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
+        ),
+      );
+}
+
 class _SearchField extends StatelessWidget {
-  const _SearchField({required this.onChanged});
+  const _SearchField({
+    required this.onChanged,
+    required this.hintText,
+  });
 
   final ValueChanged<String> onChanged;
+  final String hintText;
 
   @override
   Widget build(BuildContext context) => TextField(
         onChanged: onChanged,
         style: const TextStyle(fontSize: 14),
         decoration: InputDecoration(
-          hintText: 'Search songs, artists, albums...',
+          hintText: hintText,
           prefixIcon: const Icon(Icons.search_rounded),
           filled: true,
           fillColor: AppColors.surface,
