@@ -95,7 +95,6 @@ class PlayerController extends GetxController {
     if (selectedIndex < 0) return;
 
     _initializePlayer();
-    final player = _player!;
     final handler = _audioHandler!;
     playbackError.value = null;
     position.value = Duration.zero;
@@ -188,7 +187,7 @@ class PlayerController extends GetxController {
   String formatDuration(Duration value) {
     final minutes = value.inMinutes;
     final seconds = value.inSeconds.remainder(60);
-    return '${minutes}:${seconds.toString().padLeft(2, '0')}';
+    return '$minutes:${seconds.toString().padLeft(2, '0')}';
   }
 
   @override
