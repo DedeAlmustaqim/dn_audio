@@ -306,6 +306,17 @@ Catatan:
 
 **Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian, dan build Android lokal**
 
+#### 7.1.3 — Capability Detection & Error Handling
+
+- Menambahkan model bertipe `AudioEffectsCapabilities`, `AudioEffectCapability`, dan `AudioEffectBandCapability` untuk membaca respons native secara aman
+- Mengambil jumlah band, frekuensi tengah, rentang frekuensi, rentang level, dan jumlah preset sesuai data perangkat
+- Menyediakan snapshot kemampuan terbaru dan stream perubahan capability melalui `AudioEffectsService`
+- Menambahkan pemanggilan `getCapabilities` serta fallback unavailable ketika channel tidak tersedia atau terjadi platform error
+- Menambahkan alasan kegagalan per efek pada native manager agar Equalizer, BassBoost, dan Virtualizer tetap dapat dilaporkan secara independen
+- Menambahkan unit test parsing metadata band, dukungan efek opsional, publikasi capability, dan kegagalan channel
+
+**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian, dan build Android lokal**
+
 ### 7.2 — Equalizer Engine & Controls
 
 - Membuat dan mengelola band equalizer berdasarkan kemampuan perangkat
