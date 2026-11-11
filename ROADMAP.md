@@ -359,12 +359,16 @@ Catatan:
 
 ### 7.5 — Persistence, UI & Device Stabilization
 
-- Menyimpan preferensi efek audio secara lokal
-- Membangun halaman Equalizer dengan gaya visual DN Audio
+- Menyediakan repository SQLite lokal terpisah untuk preferensi efek audio
+- Menyimpan status Equalizer, preset, level band, BassBoost, dan Virtualizer
+- Menambahkan EqualizerController sebagai pengelola preferensi dan pemulihan efek saat session baru aktif
+- Menghubungkan tab Equalizer Home ke halaman Equalizer lengkap
+- Mempertahankan akses Equalizer dari Playing Now melalui bottom sheet
+- Menjaga kedua entry point menggunakan DnAudioHandler dan AudioEffectsService yang sama
 - Menguji efek saat lagu berganti, queue berubah, aplikasi background, dan session audio diperbarui
 - Memastikan playback tetap berjalan ketika efek tidak tersedia atau gagal diinisialisasi
 
-**Status: Belum dimulai**
+**Status: Implementasi fondasi persistence dan integrasi halaman tersedia di GitHub — menunggu analisis, pengujian lokal, dan verifikasi perangkat**
 
 ## 9. Stage 8 — Sleep Timer
 
@@ -388,9 +392,9 @@ Catatan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 7.4 — Bass Enhancement & Virtualizer
+# Stage 7.5 — Persistence, UI & Device Stabilization
 
-Stage 7.3 — Preset Audio telah dinyatakan clean oleh pengguna. Stage 7.4 menambahkan kontrol BassBoost dan Virtualizer secara independen, mengikuti dukungan perangkat dan menggunakan audio session yang sama dengan playback engine utama. Implementasi 7.4 menunggu verifikasi lokal.
+Stage 7.4 telah dinyatakan clean oleh pengguna. Stage 7.5 sedang mengintegrasikan halaman Equalizer lengkap pada tab Home, akses ringkas melalui Playing Now, penyimpanan preferensi lokal, dan pemulihan efek saat audio session berubah.
 
 ---
 
