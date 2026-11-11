@@ -82,7 +82,7 @@ Catatan pengujian perangkat:
 - Judul lagu, progress, durasi, dan kontrol media sudah tampil.
 - Metadata artis masih terbaca sebagai `<unknown>` pada lagu yang diuji.
 - Artwork notification kini memiliki resolver native: embedded artwork terlebih dahulu, lalu fallback MediaStore album art; hasil disimpan di cache aplikasi.
-- Now Playing kini mendengarkan `MediaItem.artUri` dari `DnAudioHandler` dan menampilkan file artwork yang sama; verifikasi tampilan di perangkat masih menunggu.
+- Now Playing kini mendengarkan `MediaItem.artUri` dari `DnAudioHandler`; pengguna telah mengonfirmasi artwork tampil di halaman Now Playing.
 - Sinkronisasi status Play/Pause antara Now Playing dan notifikasi sudah berhasil diuji.
 
 ### 4.4 — Lock Screen & Audio Focus
@@ -99,7 +99,36 @@ Catatan pengujian perangkat:
 - Menangani event `becomingNoisyEventStream` untuk pause saat headset dilepas
 - Interupsi audio lainnya tetap ditangani oleh mekanisme bawaan `just_audio`
 
-**Status: Implementasi tersedia — menunggu pengujian perangkat**
+**Status: Implementasi tersedia di GitHub — pengujian perangkat ditunda**
+
+Catatan:
+- Pengujian headset kabel dan Bluetooth belum dilakukan karena perangkat headset belum tersedia.
+- Pengujian interupsi panggilan dan audio dari aplikasi lain juga masih tertunda.
+- Jangan tandai substage ini selesai sebelum pengujian perangkat dilakukan.
+
+#### 4.4.2 — Headset & Bluetooth Controls
+
+- Memastikan tombol media headset dapat mengontrol playback
+- Memastikan tombol media Bluetooth dapat mengontrol playback
+- Memastikan event perubahan koneksi audio ditangani dengan aman
+
+**Status: Belum dimulai**
+
+#### 4.4.3 — Lock Screen Experience
+
+- Memastikan judul, artis, album, dan artwork tampil di lock screen
+- Memastikan Play/Pause, Next/Previous dapat digunakan dari lock screen
+- Memastikan status playback tetap sinkron
+
+**Status: Belum dimulai**
+
+#### 4.4.4 — Audio Interruption & Stabilization
+
+- Menangani interupsi panggilan dan audio dari aplikasi lain
+- Memastikan perilaku playback setelah interupsi
+- Pengujian akhir audio focus dan perubahan perangkat audio
+
+**Status: Belum dimulai**
 
 ## 6. Stage 5 — Playlist Management
 
@@ -157,17 +186,17 @@ Catatan pengujian perangkat:
 
 # Stage 4.4.1 — Audio Session & Audio Focus
 
-Implementasi konfigurasi audio session dan penanganan headset yang dilepas sudah ditambahkan. Pengujian di perangkat lokal masih diperlukan. Stage 4.3 tetap memiliki checklist stabilisasi yang belum seluruhnya diverifikasi.
+Implementasi konfigurasi audio session dan penanganan headset yang dilepas sudah tersedia di branch `main`. Pengujian perangkat ditunda karena headset belum tersedia. Stage 4.3 masih memiliki checklist stabilisasi kontrol notifikasi dan metadata yang perlu diverifikasi.
 
 ### Urutan pekerjaan berikutnya
 
-1. Uji konfigurasi audio session dan pastikan playback normal.
-2. Uji pause otomatis saat headset kabel atau perangkat audio dilepas.
-3. Uji interupsi panggilan dan audio dari aplikasi lain.
-4. Lanjutkan Stage 4.4.2 — Headset & Bluetooth Controls.
-5. Lanjutkan Stage 4.4.3 — Lock Screen Experience.
-6. Selesaikan checklist Stage 4.3 yang masih tertunda sebelum menandai Stage 4 selesai.
-7. Setelah seluruh Stage 4 selesai, masuk ke Stage 5 — Playlist Management.
+1. Lanjutkan implementasi Stage 4.4.2 — Headset & Bluetooth Controls; pengujian fisik dilakukan kemudian.
+2. Implementasikan Stage 4.4.3 — Lock Screen Experience.
+3. Implementasikan Stage 4.4.4 — Audio Interruption & Stabilization.
+4. Saat perangkat headset tersedia, uji audio session, headset, Bluetooth, panggilan, dan interupsi audio.
+5. Selesaikan checklist Stage 4.3 yang masih tertunda.
+6. Tandai Stage 4 selesai hanya setelah seluruh implementasi dan pengujian terverifikasi.
+7. Setelah Stage 4 selesai, masuk ke Stage 5 — Playlist Management.
 
 ---
 
