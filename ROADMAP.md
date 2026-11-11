@@ -297,7 +297,14 @@ Catatan:
 
 #### 7.1.2 — Session Binding & Lifecycle
 
-**Status: Belum dimulai**
+- Menambahkan `AudioEffectsService` sebagai pemilik kontrak MethodChannel `dn_audio/audio_effects` di sisi Flutter
+- Menghubungkan `AudioPlayer.androidAudioSessionIdStream` dari `DnAudioHandler` yang sudah ada tanpa membuat player atau audio pipeline baru
+- Menserialisasi event session agar event duplikat atau perubahan cepat tidak menyebabkan attach native berjalan bersamaan
+- Melakukan attach saat session ID valid, release saat session menjadi null, dan release saat handler ditutup
+- Menangani kegagalan MethodChannel sebagai kegagalan fitur opsional tanpa mengubah status playback
+- Menambahkan unit test untuk deduplikasi session, pergantian session, release pada session null, dan disposal
+
+**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian, dan build Android lokal**
 
 ### 7.2 — Equalizer Engine & Controls
 
