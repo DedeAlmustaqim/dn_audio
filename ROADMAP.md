@@ -284,7 +284,7 @@ Catatan:
 - Melepaskan instance efek lama dengan aman saat session berubah atau service ditutup
 - Menangani perangkat/API yang tidak mendukung efek tanpa mengganggu playback
 
-**Status: Rancangan arsitektur ditetapkan — implementasi menunggu persetujuan desain dan tahap berikutnya**
+**Status: Rancangan arsitektur ditetapkan — siap implementasi native bridge dan session binding**
 
 ### 7.2 — Equalizer Engine & Controls
 
