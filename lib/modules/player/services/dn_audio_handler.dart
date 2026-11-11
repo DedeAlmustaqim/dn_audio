@@ -7,10 +7,12 @@ import '../../library/services/artwork_service.dart';
 import 'package:just_audio/just_audio.dart';
 
 import '../../library/models/song.dart';
+import 'audio_effects_service.dart';
 
 class DnAudioHandler extends BaseAudioHandler
     with QueueHandler, SeekHandler {
   final AudioPlayer player = AudioPlayer();
+  final AudioEffectsService _audioEffectsService = AudioEffectsService();
 
   StreamSubscription<PlaybackEvent>? _playbackEventSubscription;
   StreamSubscription<SequenceState>? _sequenceStateSubscription;
@@ -22,6 +24,9 @@ class DnAudioHandler extends BaseAudioHandler
         player.playbackEventStream.listen(_broadcastPlaybackState);
     _sequenceStateSubscription =
         player.sequenceStateStream.listen(_broadcastCurrentMediaItem);
+    _audioEffectsService.bindSessionStream(
+      player.androidAudioSessionIdStream,
+    );
   }
 
   Future<void> configureAudioSession() async {
@@ -198,6 +203,7 @@ class DnAudioHandler extends BaseAudioHandler
     await _playbackEventSubscription?.cancel();
     await _sequenceStateSubscription?.cancel();
     await _becomingNoisySubscription?.cancel();
+    await _audioEffectsService.dispose();
     await player.dispose();
   }
 }
