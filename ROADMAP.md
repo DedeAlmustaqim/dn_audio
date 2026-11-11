@@ -241,12 +241,15 @@ Catatan:
 
 #### 6.2.2 — Album & Artist Browsing UI
 
-- Menambahkan navigasi Songs, Albums, dan Artists di Library
-- Menampilkan daftar album dengan artwork, nama album, artis, dan jumlah lagu
-- Menampilkan daftar artis dengan identitas visual dan jumlah lagu/album
-- Menyediakan empty state dan pencarian yang konsisten
+- Menambahkan navigasi Songs, Albums, dan Artists di dalam Library
+- Menampilkan daftar album dalam grid dua kolom dengan artwork, nama album, artis, dan jumlah lagu
+- Menampilkan daftar artis dalam list dengan artwork representatif, nama artis, jumlah album, dan jumlah lagu
+- Menyediakan pencarian yang mengikuti tab aktif untuk lagu, album, maupun artis
+- Menyediakan empty state untuk koleksi kosong dan hasil pencarian yang tidak ditemukan
+- Memakai kembali SongArtwork dan koleksi turunan dari LibraryController tanpa scan MediaStore tambahan
+- Navigasi ke halaman detail album/artis ditangani pada Stage 6.2.3
 
-**Status: Belum dimulai**
+**Status: Implementasi tersedia di GitHub — menunggu format, analisis, dan pengujian lokal**
 
 #### 6.2.3 — Album & Artist Detail
 
@@ -289,17 +292,16 @@ Catatan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 6.2.1 — Metadata Identity & Collection Grouping
+# Stage 6.2.2 — Album & Artist Browsing UI
 
-Stage 6.1 telah dinyatakan selesai oleh pengguna. Stage 6.2.1 menambahkan identitas album/artis dari MediaStore dan membentuk koleksi album/artis dari data lagu lokal. Implementasi tersedia di GitHub; format, analisis, dan pengujian lokal masih menunggu.
+Stage 6.2.1 menyediakan identitas album/artis dari MediaStore dan grouping koleksi dari daftar lagu lokal. Stage 6.2.2 menambahkan tampilan Songs, Albums, dan Artists di Library, termasuk pencarian sesuai tab aktif, artwork representatif, jumlah lagu/album, dan empty state. Implementasi UI tersedia di GitHub; format, analisis, dan pengujian lokal masih menunggu.
 
 ### Urutan pekerjaan berikutnya
 
-1. Sinkronkan perubahan Stage 6.2.1 dan jalankan `dart format lib test`, `flutter analyze`, serta `flutter test`.
-2. Pastikan parsing `albumId` dan `artistId` berjalan pada perangkat Android.
-3. Verifikasi grouping album dan artis, termasuk fallback metadata tanpa ID.
-4. Lanjutkan Stage 6.2.2 — Album & Artist Browsing UI.
-5. Selesaikan Stage 6.2.3 — Album & Artist Detail dan pengujian playback.
+1. Sinkronkan perubahan Stage 6.2.2 dan jalankan `dart format lib test`, `flutter analyze`, serta `flutter test`.
+2. Uji pergantian tab Songs, Albums, dan Artists serta hasil pencarian masing-masing.
+3. Verifikasi artwork album dan identitas visual artis pada perangkat Android.
+4. Lanjutkan Stage 6.2.3 — Album & Artist Detail dan pengujian playback.
 6. Verifikasi persistensi Stage 5.6 bila belum dituntaskan; pengujian Stage 4 yang tertunda tetap dijadwalkan ketika perangkat headset tersedia.
 ---
 
