@@ -377,11 +377,11 @@ Catatan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 7.1 — Audio Effects Architecture & Capability Discovery
+# Stage 7.2 — Equalizer Engine & Controls
 
 Stage 6 telah ditutup setelah pengguna mengonfirmasi seluruh checklist album detail, artist detail, navigasi, playback, Mini Player, notifikasi, dan background playback berhasil.
 
-7.1.1 telah menambahkan native manager dan MethodChannel khusus. 7.1.2 menghubungkan session ID player ke native manager. 7.1.3 menambahkan model capability bertipe, deteksi kemampuan perangkat, dan pelaporan error per efek. Seluruh implementasi 7.1 menunggu verifikasi lokal sebelum dinyatakan selesai.
+Stage 7.1 telah dinyatakan selesai oleh pengguna setelah konfirmasi clean untuk 7.1.1, 7.1.2, dan 7.1.3. Stage 7.2 menyediakan operasi native dan service Flutter untuk mengaktifkan Equalizer serta mengatur level band berdasarkan capability perangkat. Implementasi 7.2 menunggu verifikasi lokal.
 
 ---
 
