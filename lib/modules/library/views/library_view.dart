@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../player/controllers/player_controller.dart';
+import '../widgets/song_artwork.dart';
 import '../../playlist/controllers/playlist_controller.dart';
 import '../controllers/library_controller.dart';
 import '../models/song.dart';
@@ -287,16 +288,12 @@ class _SongTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-        leading: Container(
-          width: 48,
-          height: 48,
-          decoration: BoxDecoration(
-            color: AppColors.surfaceElevated,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: const Icon(
-            Icons.music_note_rounded,
-            color: AppColors.primary,
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: SizedBox(
+            width: 48,
+            height: 48,
+            child: SongArtwork(song: song, iconSize: 22),
           ),
         ),
         title: Text(
