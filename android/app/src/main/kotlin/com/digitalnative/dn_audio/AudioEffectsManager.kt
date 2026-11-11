@@ -95,7 +95,8 @@ class AudioEffectsManager {
                     "enabled" to bass.enabled,
                     "strengthSupported" to bass.strengthSupported,
                     "minStrength" to 0,
-                    "maxStrength" to 1000
+                    "maxStrength" to 1000,
+                    "strength" to bass.roundedStrength.toInt()
                 )
             } catch (error: Exception) {
                 mapOf(
@@ -117,7 +118,8 @@ class AudioEffectsManager {
                     "enabled" to virtual.enabled,
                     "strengthSupported" to virtual.strengthSupported,
                     "minStrength" to 0,
-                    "maxStrength" to 1000
+                    "maxStrength" to 1000,
+                    "strength" to virtual.roundedStrength.toInt()
                 )
             } catch (error: Exception) {
                 mapOf(
@@ -167,6 +169,58 @@ class AudioEffectsManager {
             equalizerOperationFailure(error.javaClass.simpleName)
         }
     }
+
+    @Synchronized
+    fun setBassBoost(enabled: Boolean, strength: Int): Map<String, Any?> {
+        val effect = bassBoost ?: return effectOperationFailure("bassBoost", "effect_unavailable")
+        return try {
+            if (strength !in 0..1000) {
+                return effectOperationFailure("bassBoost", "strength_out_of_range")
+            }
+            if (effect.strengthSupported) {
+                val status = effect.setStrength(strength.toShort())
+                if (status != AudioEffect.SUCCESS) {
+                    return effectOperationFailure("bassBoost", "set_strength_failed_$status")
+                }
+            }
+            effect.enabled = enabled
+            effectOperationSuccess()
+        } catch (error: Exception) {
+            effectOperationFailure("bassBoost", error.javaClass.simpleName)
+        }
+    }
+
+    @Synchronized
+    fun setVirtualizer(enabled: Boolean, strength: Int): Map<String, Any?> {
+        val effect = virtualizer ?: return effectOperationFailure("virtualizer", "effect_unavailable")
+        return try {
+            if (strength !in 0..1000) {
+                return effectOperationFailure("virtualizer", "strength_out_of_range")
+            }
+            if (effect.strengthSupported) {
+                val status = effect.setStrength(strength.toShort())
+                if (status != AudioEffect.SUCCESS) {
+                    return effectOperationFailure("virtualizer", "set_strength_failed_$status")
+                }
+            }
+            effect.enabled = enabled
+            effectOperationSuccess()
+        } catch (error: Exception) {
+            effectOperationFailure("virtualizer", error.javaClass.simpleName)
+        }
+    }
+
+    private fun effectOperationSuccess(): Map<String, Any?> = mapOf(
+        "success" to true,
+        "capabilities" to getCapabilities()
+    )
+
+    private fun effectOperationFailure(effect: String, error: String): Map<String, Any?> = mapOf(
+        "success" to false,
+        "effect" to effect,
+        "error" to error,
+        "capabilities" to getCapabilities()
+    )
 
     private fun equalizerOperationSuccess(): Map<String, Any?> = mapOf(
         "success" to true,
