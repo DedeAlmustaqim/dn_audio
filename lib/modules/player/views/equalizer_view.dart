@@ -5,9 +5,12 @@ import '../../../core/constants/app_colors.dart';
 import '../models/audio_effects_capabilities.dart';
 import '../models/audio_equalizer_preset.dart';
 import '../services/dn_audio_handler.dart';
+import '../controllers/equalizer_controller.dart';
 
 class EqualizerView extends StatefulWidget {
-  const EqualizerView({super.key});
+  const EqualizerView({super.key, this.isBottomSheet = true});
+
+  final bool isBottomSheet;
 
   @override
   State<EqualizerView> createState() => _EqualizerViewState();
@@ -15,6 +18,7 @@ class EqualizerView extends StatefulWidget {
 
 class _EqualizerViewState extends State<EqualizerView> {
   late final DnAudioHandler _handler;
+  late final EqualizerController _equalizerController;
   final Map<int, double> _draftLevels = {};
   bool _isRefreshing = false;
   bool _isToggling = false;
@@ -28,6 +32,8 @@ class _EqualizerViewState extends State<EqualizerView> {
   void initState() {
     super.initState();
     _handler = Get.find<DnAudioHandler>();
+    _equalizerController = Get.find<EqualizerController>();
+    _selectedPresetId = _equalizerController.selectedPresetId.value;
     _refreshCapabilities();
   }
 
@@ -46,6 +52,11 @@ class _EqualizerViewState extends State<EqualizerView> {
     });
     final success =
         await _handler.audioEffectsService.setEqualizerEnabled(enabled);
+    if (success) {
+      await _equalizerController.persistCurrentSettings(
+        presetId: _selectedPresetId ?? 'custom',
+      );
+    }
     if (!mounted) return;
     setState(() {
       _isToggling = false;
@@ -90,6 +101,9 @@ class _EqualizerViewState extends State<EqualizerView> {
       }
     }
 
+    if (success) {
+      await _equalizerController.persistCurrentSettings(presetId: preset.id);
+    }
     if (!mounted) return;
     setState(() {
       _isApplyingPreset = false;
@@ -116,6 +130,11 @@ class _EqualizerViewState extends State<EqualizerView> {
             enabled: enabled, strength: strength)
         : await _handler.audioEffectsService.setVirtualizer(
             enabled: enabled, strength: strength);
+    if (success) {
+      await _equalizerController.persistCurrentSettings(
+        presetId: _selectedPresetId ?? 'custom',
+      );
+    }
     if (!mounted) return;
     setState(() {
       _isUpdatingOptionalEffect = false;
@@ -229,6 +248,9 @@ class _EqualizerViewState extends State<EqualizerView> {
       index,
       value.round(),
     );
+    if (success) {
+      await _equalizerController.persistCurrentSettings(presetId: 'custom');
+    }
     if (!mounted) return;
     setState(() {
       _draftLevels.remove(index);
@@ -244,7 +266,9 @@ class _EqualizerViewState extends State<EqualizerView> {
     return SafeArea(
       top: false,
       child: SizedBox(
-        height: MediaQuery.sizeOf(context).height * 0.84,
+        height: widget.isBottomSheet
+          ? MediaQuery.sizeOf(context).height * 0.84
+          : double.infinity,
         child: StreamBuilder<AudioEffectsCapabilities>(
           stream: service.capabilitiesStream,
           initialData: service.capabilities,
@@ -258,15 +282,18 @@ class _EqualizerViewState extends State<EqualizerView> {
                   padding: const EdgeInsets.fromLTRB(22, 14, 16, 12),
                   child: Column(
                     children: [
-                      Container(
-                        width: 42,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: AppColors.border,
-                          borderRadius: BorderRadius.circular(4),
+                      if (widget.isBottomSheet) ...[
+                        Container(
+                          width: 42,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: AppColors.border,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 22),
+                        const SizedBox(height: 22),
+                      ] else
+                        const SizedBox(height: 8),
                       Row(
                         children: [
                           const Expanded(
@@ -421,7 +448,7 @@ class _EqualizerViewState extends State<EqualizerView> {
           children: AudioEqualizerPreset.presets.map((preset) {
             return ChoiceChip(
               label: Text(preset.name),
-              selected: _selectedPresetId == preset.id,
+              selected: _equalizerController.selectedPresetId.value == preset.id,
               onSelected: equalizer.enabled && !_isApplyingPreset
                   ? (selected) {
                       if (selected) _applyPreset(preset, equalizer);
@@ -430,7 +457,7 @@ class _EqualizerViewState extends State<EqualizerView> {
               selectedColor: AppColors.primary.withValues(alpha: 0.22),
               backgroundColor: AppColors.surfaceElevated,
               side: BorderSide(
-                color: _selectedPresetId == preset.id
+                color: _equalizerController.selectedPresetId.value == preset.id
                     ? AppColors.primary
                     : AppColors.border,
               ),
@@ -447,7 +474,7 @@ class _EqualizerViewState extends State<EqualizerView> {
         ),
         const SizedBox(height: 8),
         Text(
-          AudioEqualizerPreset.findById(_selectedPresetId)?.description ??
+          AudioEqualizerPreset.findById(_equalizerController.selectedPresetId.value)?.description ??
               'Pilih preset untuk menyesuaikan karakter suara.',
           style: const TextStyle(
             color: AppColors.textSecondary,
