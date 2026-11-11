@@ -253,12 +253,16 @@ Catatan:
 
 #### 6.2.3 — Album & Artist Detail
 
-- Halaman detail album dengan artwork dan daftar lagu
-- Halaman detail artis dengan daftar album dan lagu
-- Pemutaran album/artis melalui `PlayerController.playPlaylist()`
-- Navigasi detail yang konsisten dengan pola GetX DN Audio
+- Menambahkan halaman detail album dengan artwork besar, metadata, jumlah lagu, dan daftar lagu
+- Menambahkan halaman detail artis dengan artwork representatif, jumlah album/lagu, daftar album, dan seluruh lagu artis
+- Menambahkan navigasi dari kartu album dan baris artis ke halaman detail
+- Menambahkan navigasi dari album di halaman artis ke detail album
+- Menambahkan Play all pada detail album dan artis
+- Pemilihan lagu memulai playback dari indeks terpilih dan mempertahankan urutan koleksi melalui `PlayerController.playPlaylist()`
+- Menggunakan kembali SongArtwork, tema DN Audio, dan PlayerMiniBar
+- Menyediakan empty state untuk koleksi yang tidak memiliki lagu
 
-**Status: Belum dimulai**
+**Status: Implementasi tersedia di GitHub — menunggu format, analisis, dan pengujian lokal**
 
 
 ## 8. Stage 7 — Equalizer & Audio Effects
@@ -292,17 +296,19 @@ Catatan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 6.2.2 — Album & Artist Browsing UI
+# Stage 6.2.3 — Album & Artist Detail
 
-Stage 6.2.1 menyediakan identitas album/artis dari MediaStore dan grouping koleksi dari daftar lagu lokal. Stage 6.2.2 menambahkan tampilan Songs, Albums, dan Artists di Library, termasuk pencarian sesuai tab aktif, artwork representatif, jumlah lagu/album, dan empty state. Implementasi UI tersedia di GitHub; format, analisis, dan pengujian lokal masih menunggu.
+Stage 6.2.3 menambahkan halaman detail album dan artis, navigasi antar koleksi, daftar lagu, serta pemutaran koleksi dan lagu terpilih melalui PlayerController. Implementasi tersedia di GitHub; format, analisis, dan pengujian lokal masih menunggu.
 
 ### Urutan pekerjaan berikutnya
 
-1. Sinkronkan perubahan Stage 6.2.2 dan jalankan `dart format lib test`, `flutter analyze`, serta `flutter test`.
-2. Uji pergantian tab Songs, Albums, dan Artists serta hasil pencarian masing-masing.
-3. Verifikasi artwork album dan identitas visual artis pada perangkat Android.
-4. Lanjutkan Stage 6.2.3 — Album & Artist Detail dan pengujian playback.
-6. Verifikasi persistensi Stage 5.6 bila belum dituntaskan; pengujian Stage 4 yang tertunda tetap dijadwalkan ketika perangkat headset tersedia.
+1. Sinkronkan perubahan Stage 6.2.3 dan jalankan `dart format lib test`, `flutter analyze`, serta `flutter test`.
+2. Uji navigasi dari Albums ke detail album dan dari Artists ke detail artis.
+3. Uji navigasi album dari detail artis ke detail album.
+4. Uji Play all dan pemilihan lagu pada detail album maupun artis.
+5. Pastikan Mini Player, artwork, dan playback queue tetap konsisten.
+6. Setelah verifikasi lokal, lanjutkan audit akhir Stage 6.2.
+
 ---
 
 ## Aturan Penyelesaian Tahap
