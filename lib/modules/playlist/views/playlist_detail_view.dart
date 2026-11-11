@@ -83,7 +83,10 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      bottomNavigationBar: const PlayerMiniBar(),
+      bottomNavigationBar: const SafeArea(
+        top: false,
+        child: PlayerMiniBar(),
+      ),
       appBar: AppBar(
         backgroundColor: AppColors.background,
         title: const Text('Playlist'),
