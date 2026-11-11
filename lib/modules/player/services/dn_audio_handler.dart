@@ -51,7 +51,13 @@ class DnAudioHandler extends BaseAudioHandler
   }
 
   Future<void> loadPlaylist(List<Song> songs, int initialIndex) async {
-    queue.add(songs.map(_toMediaItem).toList(growable: false));
+    if (songs.isEmpty) {
+      throw ArgumentError('Cannot load an empty playlist.');
+    }
+    if (initialIndex < 0 || initialIndex >= songs.length) {
+      throw RangeError.index(initialIndex, songs, 'initialIndex');
+    }
+
     await player.setAudioSources(
       songs
           .map((song) => AudioSource.uri(
@@ -62,6 +68,7 @@ class DnAudioHandler extends BaseAudioHandler
       initialIndex: initialIndex,
       initialPosition: Duration.zero,
     );
+    queue.add(songs.map(_toMediaItem).toList(growable: false));
     _broadcastCurrentMediaItem(player.sequenceState);
     _broadcastPlaybackState(player.playbackEvent);
   }
