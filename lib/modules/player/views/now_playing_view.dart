@@ -5,6 +5,8 @@ import 'package:just_audio/just_audio.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../library/widgets/song_artwork.dart';
 import '../controllers/player_controller.dart';
+import '../services/dn_audio_handler.dart';
+import 'equalizer_view.dart';
 
 class NowPlayingView extends GetView<PlayerController> {
   const NowPlayingView({super.key});
@@ -34,7 +36,16 @@ class NowPlayingView extends GetView<PlayerController> {
                   const Spacer(),
                   const Text('NOW PLAYING', style: TextStyle(fontSize: 11, letterSpacing: 2, color: AppColors.textSecondary, fontWeight: FontWeight.w700)),
                   const Spacer(),
-                  const SizedBox(width: 48),
+                  IconButton(
+                    tooltip: 'Equalizer',
+                    onPressed: () => showModalBottomSheet<void>(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: AppColors.surface,
+                      builder: (_) => const EqualizerView(),
+                    ),
+                    icon: const Icon(Icons.tune_rounded),
+                  ),
                 ]),
                 const Spacer(),
                 AspectRatio(
