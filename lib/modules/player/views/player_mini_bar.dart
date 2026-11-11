@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../library/widgets/song_artwork.dart';
 import '../controllers/player_controller.dart';
 import 'now_playing_view.dart';
 
@@ -31,14 +32,13 @@ class PlayerMiniBar extends GetView<PlayerController> {
             ),
             child: Row(
               children: [
-                Container(
-                  width: 42,
-                  height: 42,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.14),
-                    borderRadius: BorderRadius.circular(10),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: SizedBox(
+                    width: 42,
+                    height: 42,
+                    child: SongArtwork(song: song, iconSize: 22),
                   ),
-                  child: const Icon(Icons.music_note_rounded, color: AppColors.primary),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
