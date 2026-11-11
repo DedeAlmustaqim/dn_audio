@@ -9,6 +9,8 @@ class Song {
     required this.albumArtUri,
     required this.sizeBytes,
     required this.dateAdded,
+    this.albumId,
+    this.artistId,
   });
 
   final String id;
@@ -20,6 +22,8 @@ class Song {
   final int sizeBytes;
   final int dateAdded;
   final String? albumArtUri;
+  final int? albumId;
+  final int? artistId;
 
   factory Song.fromMap(Map<dynamic, dynamic> map) {
     String readText(String key, String fallback) {
@@ -38,6 +42,11 @@ class Song {
       return int.tryParse(value?.toString() ?? '') ?? 0;
     }
 
+    int? readOptionalId(String key) {
+      final value = readInt(key);
+      return value > 0 ? value : null;
+    }
+
     final artUri = map['albumArtUri']?.toString().trim();
 
     return Song(
@@ -50,6 +59,8 @@ class Song {
       albumArtUri: artUri == null || artUri.isEmpty ? null : artUri,
       sizeBytes: readInt('size'),
       dateAdded: readInt('dateAdded'),
+      albumId: readOptionalId('albumId'),
+      artistId: readOptionalId('artistId'),
     );
   }
 
