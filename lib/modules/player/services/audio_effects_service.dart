@@ -128,8 +128,8 @@ class AudioEffectsService {
         debugPrint('DN Audio: unexpected native audio effects release error: $error');
       }
       _attachedSessionId = null;
-      _requestedSessionId = null;
     }
+    _requestedSessionId = null;
     _publishCapabilities(const AudioEffectsCapabilities(available: false));
     await _capabilitiesController.close();
   }
