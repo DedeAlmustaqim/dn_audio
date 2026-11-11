@@ -343,15 +343,19 @@ Catatan:
 - Menggunakan perintah band yang sama pada AudioEffectsService dan session native aktif
 - Menambahkan unit test untuk pemetaan Flat, kurva preset, pembatasan rentang, dan ID preset tidak dikenal
 
-**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian, dan build Android lokal**
+**Status: Selesai — pengguna mengonfirmasi pengujian lokal clean**
 
 ### 7.4 — Bass Enhancement & Virtualizer
 
-- Kontrol BassBoost jika didukung
-- Kontrol Virtualizer jika didukung
-- Pengaturan intensitas dan status aktif
+- Menambahkan operasi native untuk mengaktifkan/menonaktifkan BassBoost dan Virtualizer secara independen
+- Menambahkan pengaturan intensitas menggunakan rentang standar Android 0–1000 dan membaca `strengthSupported` dari perangkat
+- Melaporkan status aktif dan kekuatan aktual kedua efek melalui capability snapshot
+- Menambahkan validasi sesi, dukungan efek, kemampuan strength, dan rentang sebelum perintah diterapkan
+- Menambahkan API service Flutter dan unit test untuk command, sinkronisasi capability, serta validasi
+- Menambahkan kontrol toggle dan slider intensitas pada halaman Equalizer; slider hanya aktif jika perangkat mendukung strength control
+- Mempertahankan satu `AudioEffectsService`, satu audio session, dan satu `AudioPlayer` milik `DnAudioHandler`
 
-**Status: Belum dimulai**
+**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian, dan build Android lokal**
 
 ### 7.5 — Persistence, UI & Device Stabilization
 
@@ -384,9 +388,9 @@ Catatan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 7.3 — Preset Audio
+# Stage 7.4 — Bass Enhancement & Virtualizer
 
-Stage 7.2 telah dinyatakan clean oleh pengguna. Stage 7.3 menambahkan preset DN Audio yang dipetakan ke konfigurasi band aktual perangkat, dengan interpolasi frekuensi logaritmik dan pembatasan rentang level perangkat. Implementasi preset menunggu verifikasi lokal.
+Stage 7.3 — Preset Audio telah dinyatakan clean oleh pengguna. Stage 7.4 menambahkan kontrol BassBoost dan Virtualizer secara independen, mengikuti dukungan perangkat dan menggunakan audio session yang sama dengan playback engine utama. Implementasi 7.4 menunggu verifikasi lokal.
 
 ---
 
