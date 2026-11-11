@@ -65,6 +65,22 @@ void main() {
       expect(controller.artists.firstWhere((artist) => artist.id == 'artist:20').albumCount, 1);
     });
 
+    test('filters album and artist collections using the active search query', () async {
+      final controller = LibraryController(service: _CollectionAudioLibraryService());
+
+      await controller.ensureLoaded();
+      controller.updateSearch('album one');
+
+      expect(controller.filteredAlbums, hasLength(1));
+      expect(controller.filteredAlbums.single.title, 'Album One');
+      expect(controller.filteredArtists, isEmpty);
+
+      controller.updateSearch('artist two');
+
+      expect(controller.filteredArtists, hasLength(1));
+      expect(controller.filteredArtists.single.name, 'Artist Two');
+    });
+
     test('uses normalized album and artist labels when IDs are unavailable', () async {
       final controller = LibraryController(service: _FallbackCollectionAudioLibraryService());
 
