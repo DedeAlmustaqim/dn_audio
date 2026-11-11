@@ -181,7 +181,16 @@ Catatan:
 
 #### 5.4 — Playlist Detail & Song List
 
-**Status: Belum dimulai**
+- Menambahkan halaman detail playlist dengan navigasi dari daftar playlist
+- Menampilkan nama playlist dan jumlah lagu
+- Memuat daftar lagu dari SQLite sesuai urutan posisi
+- Menampilkan empty state dan opsi refresh
+- Menyediakan menu Remove from playlist pada setiap lagu
+- Menambahkan konfirmasi sebelum lagu dihapus
+- Memperbarui daftar lagu dan jumlah lagu setelah penghapusan
+- Menambahkan unit test controller untuk load playlist songs dan remove song
+
+**Status: Implementasi tersedia di GitHub — menunggu analisis dan pengujian lokal**
 
 #### 5.5 — Playlist Playback & Queue
 
@@ -232,32 +241,18 @@ Catatan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 5.3 — Add & Remove Songs
+# Stage 5.4 — Playlist Detail & Song List
 
-Stage 5.1 dan 5.2 menyediakan database serta CRUD playlist. Stage 5.3 menambahkan operasi repository/controller untuk add/remove lagu dan UI untuk memilih playlist dari Music Library. Pengujian lokal masih diperlukan; UI remove song akan hadir pada halaman detail playlist di Stage 5.4.
+Stage 5.4 menambahkan halaman detail playlist, daftar lagu berdasarkan urutan SQLite, empty state, refresh, dan penghapusan lagu dengan konfirmasi. Implementasi tersedia di GitHub dan masih menunggu analisis serta pengujian lokal.
 
 ### Urutan pekerjaan berikutnya
 
 1. Sinkronkan perubahan dan jalankan `flutter pub get`, `dart format`, `flutter analyze`, serta `flutter test`.
-2. Verifikasi create, rename, delete, validasi nama kosong/duplikat, dan persistensi setelah aplikasi dibuka ulang.
-3. Verifikasi penambahan lagu dari Music Library ke playlist, termasuk validasi duplikat dan persistensi.
-4. Lanjutkan Stage 5.4 — Playlist Detail & Song List, termasuk UI untuk menghapus lagu.
-5. Lanjutkan Stage 5.5 — Playlist Playback & Queue.
-6. Selesaikan validasi persistence dan pengujian Stage 5.6.
-7. Pengujian Stage 4 yang tertunda tetap dijadwalkan ketika perangkat headset tersedia.
-
-Implementasi konfigurasi audio session dan penanganan headset yang dilepas sudah tersedia di branch `main`. Pengujian perangkat ditunda karena headset belum tersedia. Stage 4.3 masih memiliki checklist stabilisasi kontrol notifikasi dan metadata yang perlu diverifikasi.
-
-### Urutan pekerjaan berikutnya
-
-1. Lanjutkan implementasi Stage 4.4.2 — Headset & Bluetooth Controls; pengujian fisik dilakukan kemudian.
-2. Implementasikan Stage 4.4.3 — Lock Screen Experience.
-3. Implementasikan Stage 4.4.4 — Audio Interruption & Stabilization.
-4. Saat perangkat headset tersedia, uji audio session, headset, Bluetooth, panggilan, dan interupsi audio.
-5. Selesaikan checklist Stage 4.3 yang masih tertunda.
-6. Tandai Stage 4 selesai hanya setelah seluruh implementasi dan pengujian terverifikasi.
-7. Setelah Stage 4 selesai, masuk ke Stage 5 — Playlist Management.
-
+2. Verifikasi navigasi dari daftar playlist ke halaman detail.
+3. Verifikasi daftar lagu, urutan lagu, empty state, refresh, dan penghapusan lagu.
+4. Lanjutkan Stage 5.5 — Playlist Playback & Queue.
+5. Selesaikan validasi persistence dan pengujian Stage 5.6.
+6. Pengujian Stage 4 yang tertunda tetap dijadwalkan ketika perangkat headset tersedia.
 ---
 
 ## Aturan Penyelesaian Tahap
