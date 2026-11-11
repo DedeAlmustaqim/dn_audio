@@ -206,7 +206,11 @@ Catatan:
 
 #### 5.6 — Persistence, Validation & Testing
 
-**Status: Belum dimulai**
+- Memperbaiki propagasi error saat memuat lagu playlist agar kegagalan database tidak dianggap sebagai playlist kosong
+- Menambahkan unit test untuk memastikan error pemuatan lagu diteruskan ke halaman pemanggil dan pesan error controller tetap tersedia
+- Melanjutkan pengujian persistensi SQLite, validasi CRUD, dan konsistensi queue pada perangkat
+
+**Status: Implementasi penyempurnaan tersedia di GitHub — pengujian lokal dan verifikasi persistensi masih menunggu**
 
 ## 7. Stage 6 — Album Art & Metadata
 
@@ -249,18 +253,18 @@ Catatan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 5.5 — Playlist Playback & Queue
+# Stage 5.6 — Persistence, Validation & Testing
 
-Stage 5.5 menambahkan pemutaran seluruh lagu playlist, pemutaran dari lagu yang dipilih, dan sinkronisasi antrean audio_service dengan urutan playlist. Semua pemutaran tetap menggunakan satu DnAudioHandler dan satu AudioPlayer. Implementasi tersedia di GitHub dan masih menunggu analisis serta pengujian lokal.
+Stage 5.6 sedang menyempurnakan penanganan error, validasi, dan pengujian persistensi playlist. Perubahan terbaru memastikan kegagalan saat membaca lagu playlist diteruskan ke halaman pemanggil, bukan disamarkan sebagai playlist kosong. Pengujian lokal dan verifikasi persistensi SQLite masih diperlukan.
 
 ### Urutan pekerjaan berikutnya
 
 1. Sinkronkan perubahan dan jalankan `dart format lib test`, `flutter analyze`, serta `flutter test`.
-2. Verifikasi tombol Play all pada playlist berisi beberapa lagu.
-3. Verifikasi tap lagu tertentu memulai lagu tersebut, lalu Next/Previous mengikuti urutan playlist.
-4. Verifikasi playlist kosong tidak dapat memulai playback.
-5. Lanjutkan Stage 5.6 — Persistence, Validation & Testing.
-6. Pengujian Stage 4 yang tertunda tetap dijadwalkan ketika perangkat headset tersedia.
+2. Pastikan error database pada detail playlist menampilkan error state, bukan empty state.
+3. Uji persistensi: buat playlist, tutup aplikasi, buka kembali, lalu pastikan playlist dan lagu tetap tersimpan.
+4. Uji validasi nama kosong, nama duplikat, batas 50 karakter, dan lagu duplikat.
+5. Verifikasi operasi hapus playlist menghapus relasi lagu terkait.
+6. Setelah hasil lokal bersih, lanjutkan penyelesaian Stage 5.6. Pengujian Stage 4 yang tertunda tetap dijadwalkan ketika perangkat headset tersedia.
 ---
 
 ## Aturan Penyelesaian Tahap
