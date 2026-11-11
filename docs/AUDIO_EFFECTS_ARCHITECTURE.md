@@ -105,6 +105,16 @@ The channel is registered separately from `dn_audio/audio_library` in `MainActiv
 - Native initialization failures now include per-effect error reasons; one unsupported effect does not hide the others.
 - Added tests for capability parsing, device-reported band metadata, independent optional-effect support, capability publication, and channel failure handling.
 
+### Implemented in Stage 7.2 — Equalizer Engine & Controls
+
+- Added native `setEqualizerEnabled` and `setBandLevel` operations to the existing audio-effects channel.
+- Native commands validate the active Equalizer instance, band index, and device-reported millibel range before applying changes.
+- Capability responses now include each band's current level and the Equalizer enabled state so Flutter can resynchronize after a command.
+- Added `AudioEffectsService` methods that reject unsupported or out-of-range requests and treat channel failures as optional-feature failures.
+- Added service tests for command arguments, capability refresh, and range validation.
+
+No Equalizer UI or persisted user profile is introduced in this stage; those remain in Stage 7.5.
+
 All effect types are initialized independently. If one effect cannot be created, other supported effects remain available. A failed effect initialization is treated as an unavailable optional capability, not as a playback failure.
 
 ## 7. Non-Goals for Stage 7.1
