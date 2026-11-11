@@ -242,6 +242,113 @@ void main() {
     await sessionIds.close();
   });
 
+  test('sends BassBoost and Virtualizer commands and refreshes capability state', () async {
+    final calls = <MethodCall>[];
+    messenger.setMockMethodCallHandler(channel, (call) async {
+      calls.add(call);
+      final bassEnabled = call.method == 'setBassBoost'
+          ? call.arguments['enabled'] == true
+          : false;
+      final virtualEnabled = call.method == 'setVirtualizer'
+          ? call.arguments['enabled'] == true
+          : false;
+      return {
+        'success': true,
+        'capabilities': {
+          'available': true,
+          'sessionId': 707,
+          'equalizer': {'supported': false},
+          'bassBoost': {
+            'supported': true,
+            'enabled': bassEnabled,
+            'strengthSupported': true,
+            'minStrength': 0,
+            'maxStrength': 1000,
+            'strength': call.method == 'setBassBoost'
+                ? call.arguments['strength']
+                : 400,
+          },
+          'virtualizer': {
+            'supported': true,
+            'enabled': virtualEnabled,
+            'strengthSupported': true,
+            'minStrength': 0,
+            'maxStrength': 1000,
+            'strength': call.method == 'setVirtualizer'
+                ? call.arguments['strength']
+                : 250,
+          },
+        },
+      };
+    });
+
+    final service = AudioEffectsService(channel: channel);
+    final sessionIds = StreamController<int?>();
+    service.bindSessionStream(sessionIds.stream);
+    sessionIds.add(707);
+    await Future<void>.delayed(const Duration(milliseconds: 10));
+
+    expect(
+      await service.setBassBoost(enabled: true, strength: 650),
+      isTrue,
+    );
+    expect(
+      await service.setVirtualizer(enabled: true, strength: 300),
+      isTrue,
+    );
+    expect(calls.map((call) => call.method).toList(), [
+      'attachSession',
+      'setBassBoost',
+      'setVirtualizer',
+    ]);
+    expect(calls[1].arguments, {'enabled': true, 'strength': 650});
+    expect(calls[2].arguments, {'enabled': true, 'strength': 300});
+    expect(service.capabilities.bassBoost.enabled, isFalse);
+    expect(service.capabilities.virtualizer.enabled, isTrue);
+    expect(service.capabilities.virtualizer.strength, 300);
+
+    await service.dispose();
+    await sessionIds.close();
+  });
+
+  test('rejects unsupported optional effects and out-of-range strengths', () async {
+    final calls = <MethodCall>[];
+    messenger.setMockMethodCallHandler(channel, (call) async {
+      calls.add(call);
+      return {
+        'available': true,
+        'sessionId': 808,
+        'equalizer': {'supported': false},
+        'bassBoost': {
+          'supported': true,
+          'strengthSupported': true,
+          'minStrength': 0,
+          'maxStrength': 1000,
+        },
+        'virtualizer': {'supported': false},
+      };
+    });
+
+    final service = AudioEffectsService(channel: channel);
+    final sessionIds = StreamController<int?>();
+    service.bindSessionStream(sessionIds.stream);
+    sessionIds.add(808);
+    await Future<void>.delayed(const Duration(milliseconds: 10));
+
+    expect(
+      await service.setBassBoost(enabled: true, strength: 1200),
+      isFalse,
+    );
+    expect(
+      await service.setVirtualizer(enabled: true, strength: 500),
+      isFalse,
+    );
+    expect(calls.map((call) => call.method).toList(), ['attachSession']);
+
+    await service.dispose();
+    await sessionIds.close();
+  });
+
   test('reports channel failures as unavailable without throwing', () async {
     messenger.setMockMethodCallHandler(channel, (call) async {
       throw PlatformException(code: 'effect_channel_error');
