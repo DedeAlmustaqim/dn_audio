@@ -167,7 +167,17 @@ Catatan:
 
 #### 5.3 — Add & Remove Songs
 
-**Status: Belum dimulai**
+- Menambahkan operasi repository untuk mengambil lagu playlist berdasarkan urutan posisi
+- Menambahkan lagu ke playlist dengan snapshot metadata lokal
+- Mencegah lagu yang sama ditambahkan dua kali ke playlist yang sama berdasarkan content URI
+- Menempatkan lagu baru pada posisi terakhir playlist
+- Menghapus lagu dari playlist dan memperbarui timestamp playlist
+- Menambahkan aksi controller untuk add/remove lagu serta penanganan error duplikat
+- Menambahkan tombol Add to playlist pada setiap lagu di Music Library
+- Menampilkan pemilih playlist melalui bottom sheet
+- Menambahkan unit test controller untuk proses penambahan lagu dan validasi duplikat
+
+**Status: Implementasi tersedia di GitHub — menunggu analisis dan pengujian lokal. UI penghapusan lagu akan diselesaikan bersama tampilan detail playlist pada Stage 5.4.**
 
 #### 5.4 — Playlist Detail & Song List
 
@@ -222,16 +232,16 @@ Catatan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 5.2 — Create, Rename & Delete Playlist
+# Stage 5.3 — Add & Remove Songs
 
-Fondasi database dan model playlist tersedia. Stage 5.2 menambahkan repository SQLite untuk operasi CRUD, validasi nama, controller GetX, serta tab Playlists dengan dialog create/rename dan konfirmasi delete. Pengujian lokal masih diperlukan.
+Stage 5.1 dan 5.2 menyediakan database serta CRUD playlist. Stage 5.3 menambahkan operasi repository/controller untuk add/remove lagu dan UI untuk memilih playlist dari Music Library. Pengujian lokal masih diperlukan; UI remove song akan hadir pada halaman detail playlist di Stage 5.4.
 
 ### Urutan pekerjaan berikutnya
 
 1. Sinkronkan perubahan dan jalankan `flutter pub get`, `dart format`, `flutter analyze`, serta `flutter test`.
 2. Verifikasi create, rename, delete, validasi nama kosong/duplikat, dan persistensi setelah aplikasi dibuka ulang.
-3. Lanjutkan Stage 5.3 — Add & Remove Songs.
-4. Lanjutkan Stage 5.4 — Playlist Detail & Song List.
+3. Verifikasi penambahan lagu dari Music Library ke playlist, termasuk validasi duplikat dan persistensi.
+4. Lanjutkan Stage 5.4 — Playlist Detail & Song List, termasuk UI untuk menghapus lagu.
 5. Lanjutkan Stage 5.5 — Playlist Playback & Queue.
 6. Selesaikan validasi persistence dan pengujian Stage 5.6.
 7. Pengujian Stage 4 yang tertunda tetap dijadwalkan ketika perangkat headset tersedia.
