@@ -61,6 +61,7 @@ A missing or invalid session ID means effects are unavailable for now; it is not
 - Treat Equalizer, BassBoost and Virtualizer as independently optional.
 - Treat platform presets as device-specific. DN Audio presets will be mapped to available bands in a later stage.
 - Catch native initialization and parameter errors and return a structured unsupported/error result.
+- Preserve per-effect failure reasons so Flutter can distinguish unavailable effects independently.
 - Do not request audio recording permission; these effects process the player's output session.
 
 ## 6. MethodChannel Contract
@@ -95,6 +96,14 @@ The channel is registered separately from `dn_audio/audio_library` in `MainActiv
 - Attached a new positive session ID, released the native manager when the stream becomes null, and released the active session during handler disposal.
 - Treated native channel failures as optional-effect failures and logged them without changing playback state.
 - Added service tests for duplicate IDs, session replacement, null-session release, and disposal.
+
+### Implemented in Stage 7.1.3
+
+- Added typed Flutter models for effect and band capabilities; the band list and ranges are parsed from native device data rather than a fixed layout.
+- Exposed the latest capability snapshot and a broadcast capability stream from `AudioEffectsService`.
+- Added an explicit `getCapabilities` request and safe unavailable-state reporting for missing channel responses and platform errors.
+- Native initialization failures now include per-effect error reasons; one unsupported effect does not hide the others.
+- Added tests for capability parsing, device-reported band metadata, independent optional-effect support, capability publication, and channel failure handling.
 
 All effect types are initialized independently. If one effect cannot be created, other supported effects remain available. A failed effect initialization is treated as an unavailable optional capability, not as a playback failure.
 
