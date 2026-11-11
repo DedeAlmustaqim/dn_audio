@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../player/controllers/player_controller.dart';
 import '../controllers/playlist_controller.dart';
 import '../models/playlist.dart';
 import '../models/playlist_song.dart';
@@ -17,6 +18,7 @@ class PlaylistDetailView extends StatefulWidget {
 
 class _PlaylistDetailViewState extends State<PlaylistDetailView> {
   late final PlaylistController _controller;
+  late final PlayerController _playerController;
   bool _isLoading = true;
   String? _loadError;
 
@@ -24,6 +26,7 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
   void initState() {
     super.initState();
     _controller = Get.find<PlaylistController>();
+    _playerController = Get.find<PlayerController>();
     _loadSongs();
   }
 
@@ -135,6 +138,24 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
                       ),
                     ),
                     const SizedBox(height: 20),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.icon(
+                        onPressed: songs.isEmpty
+                            ? null
+                            : () => _playerController.playPlaylist(
+                                  songs.map((item) => item.song).toList(),
+                                ),
+                        icon: const Icon(Icons.play_arrow_rounded),
+                        label: const Text('Play all'),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                     const Divider(color: AppColors.border),
                   ],
                 ),
@@ -178,6 +199,10 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
                   itemBuilder: (context, index) {
                     final item = songs[index];
                     return ListTile(
+                      onTap: () => _playerController.playPlaylist(
+                        songs.map((entry) => entry.song).toList(),
+                        initialIndex: index,
+                      ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 6,
                         vertical: 4,
