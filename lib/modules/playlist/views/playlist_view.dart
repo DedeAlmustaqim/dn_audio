@@ -288,54 +288,57 @@ class _PlaylistTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 11),
-      decoration: BoxDecoration(
+      child: Material(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(17),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: ListTile(
-        onTap: () => Get.to(() => PlaylistDetailView(playlist: playlist)),
-        contentPadding: const EdgeInsets.fromLTRB(14, 5, 5, 5),
-        leading: Container(
-          width: 48,
-          height: 48,
-          decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.13),
-            borderRadius: BorderRadius.circular(13),
-          ),
-          child: const Icon(
-            Icons.queue_music_rounded,
-            color: AppColors.primary,
-          ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(17),
+          side: const BorderSide(color: AppColors.border),
         ),
-        title: Text(
-          playlist.name,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontWeight: FontWeight.w700),
-        ),
-        subtitle: Text(
-          '${playlist.songCount} songs',
-          style: const TextStyle(
-            color: AppColors.textSecondary,
-            fontSize: 12,
-          ),
-        ),
-        trailing: PopupMenuButton<String>(
-          onSelected: (value) {
-            if (value == 'rename') onRename();
-            if (value == 'delete') onDelete();
-          },
-          itemBuilder: (context) => const [
-            PopupMenuItem(
-              value: 'rename',
-              child: Text('Rename'),
+        clipBehavior: Clip.antiAlias,
+        child: ListTile(
+          onTap: () => Get.to(() => PlaylistDetailView(playlist: playlist)),
+          contentPadding: const EdgeInsets.fromLTRB(14, 5, 5, 5),
+          leading: Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.13),
+              borderRadius: BorderRadius.circular(13),
             ),
-            PopupMenuItem(
-              value: 'delete',
-              child: Text('Delete'),
+            child: const Icon(
+              Icons.queue_music_rounded,
+              color: AppColors.primary,
             ),
-          ],
+          ),
+          title: Text(
+            playlist.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontWeight: FontWeight.w700),
+          ),
+          subtitle: Text(
+            '${playlist.songCount} songs',
+            style: const TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 12,
+            ),
+          ),
+          trailing: PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'rename') onRename();
+              if (value == 'delete') onDelete();
+            },
+            itemBuilder: (context) => const [
+              PopupMenuItem(
+                value: 'rename',
+                child: Text('Rename'),
+              ),
+              PopupMenuItem(
+                value: 'delete',
+                child: Text('Delete'),
+              ),
+            ],
+          ),
         ),
       ),
     );
