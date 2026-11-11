@@ -222,7 +222,10 @@ Catatan:
 - Menggunakan artwork yang sama pada Library, Playlist, mini player, dan Now Playing
 - Mempertahankan resolver Android MediaStore dan embedded artwork yang sudah ada
 
-**Status: Implementasi tersedia di GitHub — menunggu format, analisis, dan pengujian lokal**
+- Pengujian perangkat oleh pengguna: seluruh checklist A–F dinyatakan lolos
+- Perbaikan tambahan: keyboard pencarian ditutup saat lagu dipilih dari hasil pencarian
+
+**Status: Pengujian fungsional A–F lolos — perbaikan keyboard pencarian menunggu verifikasi lokal**
 
 ### 6.2 — Metadata & Album/Artist Browsing
 
