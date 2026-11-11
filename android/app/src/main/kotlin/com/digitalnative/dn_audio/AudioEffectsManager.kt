@@ -178,10 +178,8 @@ class AudioEffectsManager {
                 return effectOperationFailure("bassBoost", "strength_out_of_range")
             }
             if (effect.strengthSupported) {
-                val status = effect.setStrength(strength.toShort())
-                if (status != AudioEffect.SUCCESS) {
-                    return effectOperationFailure("bassBoost", "set_strength_failed_$status")
-                }
+                // Android's setStrength() returns Unit; failures are surfaced as exceptions.
+                effect.setStrength(strength.toShort())
             }
             effect.enabled = enabled
             effectOperationSuccess()
@@ -198,10 +196,8 @@ class AudioEffectsManager {
                 return effectOperationFailure("virtualizer", "strength_out_of_range")
             }
             if (effect.strengthSupported) {
-                val status = effect.setStrength(strength.toShort())
-                if (status != AudioEffect.SUCCESS) {
-                    return effectOperationFailure("virtualizer", "set_strength_failed_$status")
-                }
+                // Android's setStrength() returns Unit; failures are surfaced as exceptions.
+                effect.setStrength(strength.toShort())
             }
             effect.enabled = enabled
             effectOperationSuccess()
