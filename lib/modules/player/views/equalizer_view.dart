@@ -462,7 +462,7 @@ class _EqualizerViewState extends State<EqualizerView> {
                     : AppColors.border,
               ),
               labelStyle: TextStyle(
-                color: _selectedPresetId == preset.id
+                color: _equalizerController.selectedPresetId.value == preset.id
                     ? AppColors.primary
                     : AppColors.textSecondary,
                 fontSize: 12,
