@@ -90,22 +90,33 @@ class PlayerController extends GetxController {
   }
 
   Future<void> playSong(Song song, List<Song> songs) async {
-    if (songs.isEmpty) return;
     final selectedIndex = songs.indexWhere((item) => item.id == song.id);
     if (selectedIndex < 0) return;
+    await playPlaylist(songs, initialIndex: selectedIndex);
+  }
+
+  Future<void> playPlaylist(
+    List<Song> songs, {
+    int initialIndex = 0,
+  }) async {
+    if (songs.isEmpty ||
+        initialIndex < 0 ||
+        initialIndex >= songs.length) {
+      return;
+    }
 
     _initializePlayer();
     final handler = _audioHandler!;
     playbackError.value = null;
     position.value = Duration.zero;
-    currentSong.value = song;
+    currentSong.value = songs[initialIndex];
     currentArtworkUri.value = null;
 
     try {
-      await handler.loadPlaylist(songs, selectedIndex);
+      await handler.loadPlaylist(songs, initialIndex);
       unawaited(_playSafely(handler));
     } catch (error) {
-      _setPlaybackError('Could not play this song: $error');
+      _setPlaybackError('Could not play this playlist: $error');
     }
   }
 
