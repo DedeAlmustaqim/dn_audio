@@ -4,6 +4,11 @@ import android.Manifest
 import android.content.ContentUris
 import android.content.pm.PackageManager
 import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Typeface
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
@@ -145,15 +150,50 @@ class MainActivity : AudioServiceActivity() {
             }
         }
 
-        if (artworkBytes.isNullOrEmpty()) return null
-
         val artworkDirectory = File(cacheDir, "dn_audio_artwork")
         if (!artworkDirectory.exists() && !artworkDirectory.mkdirs()) return null
 
         val safeSongId = songId.replace(Regex("[^A-Za-z0-9_-]"), "_")
-        val artworkFile = File(artworkDirectory, "$safeSongId.img")
-        artworkFile.writeBytes(artworkBytes)
+        val artworkFile = File(artworkDirectory, "$safeSongId.png")
+        if (!artworkBytes.isNullOrEmpty()) {
+            artworkFile.writeBytes(artworkBytes)
+        } else {
+            createArtworkPlaceholder(artworkFile)
+        }
         return Uri.fromFile(artworkFile).toString()
+    }
+
+    private fun createArtworkPlaceholder(file: File) {
+        val size = 512
+        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        canvas.drawColor(Color.rgb(21, 21, 29))
+
+        val circlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.rgb(155, 110, 243)
+        }
+        canvas.drawCircle(size / 2f, size / 2f - 18f, 142f, circlePaint)
+
+        val notePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.WHITE
+            textAlign = Paint.Align.CENTER
+            textSize = 220f
+            typeface = Typeface.create("sans-serif", Typeface.BOLD)
+        }
+        canvas.drawText("♪", size / 2f, size / 2f + 58f, notePaint)
+
+        val brandPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.rgb(183, 148, 246)
+            textAlign = Paint.Align.CENTER
+            textSize = 34f
+            typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+        }
+        canvas.drawText("DN AUDIO", size / 2f, 466f, brandPaint)
+
+        file.outputStream().use { output ->
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
+        }
+        bitmap.recycle()
     }
 
     private fun readMetadata(cursor: Cursor, columnIndex: Int, fallback: String): String {
