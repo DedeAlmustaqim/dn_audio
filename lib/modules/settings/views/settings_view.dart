@@ -6,6 +6,7 @@ import '../controllers/settings_controller.dart';
 import '../models/audio_library_preferences.dart';
 import '../models/playback_preferences.dart';
 import '../../library/controllers/library_controller.dart';
+import '../../library/services/artwork_service.dart';
 import '../../player/views/equalizer_view.dart';
 
 class SettingsView extends GetView<SettingsController> {
@@ -203,6 +204,8 @@ class SettingsView extends GetView<SettingsController> {
             ),
             const SizedBox(height: 14),
             const _LibraryOverviewPanel(),
+            const SizedBox(height: 12),
+            const _ArtworkCachePanel(),
             const SizedBox(height: 32),
             const _SectionHeading(
               title: 'About',
@@ -535,5 +538,143 @@ class _LibraryOverviewPanelState extends State<_LibraryOverviewPanel> {
         ),
       );
     });
+  }
+}
+
+class _ArtworkCachePanel extends StatefulWidget {
+  const _ArtworkCachePanel();
+
+  @override
+  State<_ArtworkCachePanel> createState() => _ArtworkCachePanelState();
+}
+
+class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
+  late Future<ArtworkCacheInfo> _cacheInfoFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCacheInfo();
+  }
+
+  void _loadCacheInfo() {
+    _cacheInfoFuture = ArtworkService.getCacheInfo();
+  }
+
+  void _refreshCacheInfo() {
+    setState(_loadCacheInfo);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.image_outlined, color: AppColors.primary, size: 21),
+              const SizedBox(width: 10),
+              const Expanded(
+                child: Text(
+                  'Artwork cache',
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                ),
+              ),
+              IconButton(
+                tooltip: 'Refresh cache information',
+                onPressed: _refreshCacheInfo,
+                icon: const Icon(Icons.refresh_rounded, size: 19),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          FutureBuilder<ArtworkCacheInfo>(
+            future: _cacheInfoFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  child: LinearProgressIndicator(minHeight: 2),
+                );
+              }
+              if (snapshot.hasError) {
+                return Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        'Unable to read artwork cache information.',
+                        style: TextStyle(color: Colors.redAccent, fontSize: 12),
+                      ),
+                    ),
+                    TextButton(onPressed: _refreshCacheInfo, child: const Text('Retry')),
+                  ],
+                );
+              }
+
+              final info = snapshot.data ??
+                  const ArtworkCacheInfo(fileCount: 0, totalBytes: 0);
+              return Row(
+                children: [
+                  Expanded(
+                    child: _CacheMetric(
+                      label: 'Total size',
+                      value: info.formattedSize,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _CacheMetric(
+                      label: 'Cached files',
+                      value: info.fileCount.toString(),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            'Artwork stored locally for faster loading. This information covers the DN Audio artwork cache only.',
+            style: TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 11,
+              height: 1.4,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CacheMetric extends StatelessWidget {
+  const _CacheMetric({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          value,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          label,
+          style: const TextStyle(color: AppColors.textSecondary, fontSize: 11),
+        ),
+      ],
+    );
   }
 }
