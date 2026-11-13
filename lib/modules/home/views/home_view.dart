@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../library/controllers/library_controller.dart';
 import '../../library/views/library_view.dart';
 import '../../player/controllers/player_controller.dart';
 import '../../player/views/now_playing_view.dart';
@@ -228,7 +227,10 @@ class _SearchField extends StatelessWidget {
             child: TextField(
               controller: textController,
               textInputAction: TextInputAction.search,
-              onSubmitted: onSubmitted,
+              onSubmitted: (value) {
+                onSubmitted(value);
+                FocusScope.of(context).unfocus();
+              },
               decoration: const InputDecoration(
                 hintText: 'Search songs, artists, albums...',
                 border: InputBorder.none,
@@ -238,7 +240,10 @@ class _SearchField extends StatelessWidget {
           ),
           IconButton(
             tooltip: 'Search',
-            onPressed: () => onSubmitted(textController.text),
+            onPressed: () {
+              onSubmitted(textController.text);
+              FocusScope.of(context).unfocus();
+            },
             icon: const Icon(Icons.arrow_forward_rounded),
           ),
         ],
