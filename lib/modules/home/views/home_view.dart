@@ -206,7 +206,9 @@ class _BrandHeader extends StatelessWidget {
 }
 
 class _SearchField extends StatelessWidget {
-  const _SearchField({required this.textController, required this.onSubmitted});\n\n  final TextEditingController textController;\n  final ValueChanged<String> onSubmitted;
+  const _SearchField({required this.textController, required this.onSubmitted});
+
+  final TextEditingController textController;\n  final ValueChanged<String> onSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -263,46 +265,6 @@ class _SectionHeader extends StatelessWidget {
         ),
         const Spacer(),
       ],
-    );
-  }
-}
-
-class _EmptyRecentlyPlayed extends StatelessWidget {
-  const _EmptyRecentlyPlayed();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 27, horizontal: 20),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: const Column(
-        children: [
-          Icon(
-            Icons.music_note_rounded,
-            size: 34,
-            color: AppColors.textSecondary,
-          ),
-          SizedBox(height: 10),
-          Text(
-            'Nothing playing yet',
-            style: TextStyle(fontWeight: FontWeight.w700),
-          ),
-          SizedBox(height: 5),
-          Text(
-            'Your listening history will appear here.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 12,
-              color: AppColors.textSecondary,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
