@@ -540,3 +540,23 @@ Validation still required locally:
 - Check that the shared Mini Player and bottom navigation remain visible without content/inset overlap.
 
 No library scanning rules, search matching, collection grouping, playback behavior, persistence, database schema or native audio code was changed in this slice.
+
+
+## 16. Stage 9.6.4 implementation record
+
+Completed in this slice:
+- Reworked Now Playing into an artwork-led editorial composition with a restrained monochrome header, prominent square artwork and centered track identity.
+- Applied shared spacing, radius and typography tokens to the player surface.
+- Refined the seekbar and time labels, including tabular time figures for steadier visual alignment.
+- Refined the primary play/pause control and secondary transport controls while retaining clear active states for shuffle and repeat.
+- Kept buffering feedback and playback errors visible in the player surface.
+- Preserved the existing Sleep Timer and Equalizer entry points and their callbacks.
+- Kept missing-artwork rendering delegated to the existing SongArtwork component.
+
+Validation still required locally:
+- Run `dart format lib test`, `flutter analyze` and `flutter test`.
+- Verify Now Playing on a physical device with artwork present and missing, long title/artist metadata, short and long tracks, buffering, playback errors, and compact screen height.
+- Manually verify play/pause, previous/next, seek, shuffle, repeat, Equalizer and Sleep Timer entry points.
+- Confirm background playback and Android notification/lock-screen controls remain unaffected.
+
+No playback controller, audio handler, queue, sleep timer logic, Equalizer logic, persistence, database schema or native audio code was changed in this slice.
