@@ -88,7 +88,7 @@ class SettingsView extends GetView<SettingsController> {
                           (speed) => DropdownMenuItem<double>(
                             value: speed,
                             child: Text(
-                              '${speed}×',
+                              '$speed×',
                               style: const TextStyle(fontWeight: FontWeight.w600),
                             ),
                           ),
