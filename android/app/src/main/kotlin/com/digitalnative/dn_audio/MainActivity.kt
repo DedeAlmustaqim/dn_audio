@@ -112,7 +112,8 @@ class MainActivity : AudioServiceActivity() {
                             result.error("permission_denied", "Audio permission has not been granted.", null)
                         } else {
                             try {
-                                result.success(queryAudioFiles())
+                                val extensions = call.argument<List<String>>("extensions")
+                            result.success(queryAudioFiles(extensions))
                             } catch (error: Exception) {
                                 result.error("scan_failed", error.message, null)
                             }
@@ -279,7 +280,16 @@ class MainActivity : AudioServiceActivity() {
             ?: fallback
     }
 
-    private fun queryAudioFiles(): List<Map<String, Any?>> {
+    private fun queryAudioFiles(requestedExtensions: List<String>?): List<Map<String, Any?>> {
+        val supportedExtensions = setOf("mp3", "flac", "wav", "m4a", "aac", "ogg", "opus")
+        val extensions = (requestedExtensions ?: supportedExtensions.toList())
+            .map { it.trim().lowercase().removePrefix(".") }
+            .filter { it in supportedExtensions }
+            .distinct()
+
+        // An intentionally empty selection means the user disabled every format.
+        if (extensions.isEmpty()) return emptyList()
+
         val collection = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(
             MediaStore.Audio.Media._ID,
@@ -293,11 +303,16 @@ class MainActivity : AudioServiceActivity() {
             MediaStore.Audio.Media.DATE_ADDED
         )
         val songs = mutableListOf<Map<String, Any?>>()
+        val extensionSelection = extensions.joinToString(" OR ") {
+            "LOWER(${MediaStore.Audio.Media.DISPLAY_NAME}) LIKE ?"
+        }
+        val selection = "(${MediaStore.Audio.Media.DURATION} > 0) AND ($extensionSelection)"
+        val selectionArgs = extensions.map { "%.$it" }.toTypedArray()
         val cursor: Cursor? = contentResolver.query(
             collection,
             projection,
-            "${MediaStore.Audio.Media.DURATION} > 0",
-            null,
+            selection,
+            selectionArgs,
             "${MediaStore.Audio.Media.TITLE} COLLATE NOCASE ASC"
         )
 
