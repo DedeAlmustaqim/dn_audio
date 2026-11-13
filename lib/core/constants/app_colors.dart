@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Centralized monochrome design tokens for DN Audio.
+/// Centralized monochrome and semantic color tokens for DN Audio.
 abstract final class AppColors {
   // Core surfaces.
   static const background = Color(0xFF0B0B0F);
@@ -12,15 +12,23 @@ abstract final class AppColors {
   static const textSecondary = Color(0xFFA5A1A0);
   static const textMuted = Color(0xFF77747A);
 
-  // Controls and separators.
-  static const primary = textPrimary;
-  static const primaryPressed = Color(0xFFD5D2CE);
-  // Compatibility alias for existing widgets; now intentionally monochrome.
-  static const primaryStrong = primaryPressed;
+  // Monochrome control states.
+  static const controlActive = textPrimary;
+  static const onControlActive = background;
   static const controlInactive = textMuted;
-  static const border = Color(0xFF302D2C);
+  static const controlSelectedSurface = Color(0xFF303037);
+  static const controlPressed = Color(0xFFD5D2CE);
 
-  // Semantic feedback only; these are not brand accents.
+  // Compatibility aliases for existing widgets.
+  static const primary = controlActive;
+  static const primaryPressed = controlPressed;
+  static const primaryStrong = primaryPressed;
+
+  // Borders and separators.
+  static const borderSubtle = Color(0xFF302D2C);
+  static const border = borderSubtle;
+
+  // Semantic feedback only; never use these as brand accents.
   static const success = Color(0xFF75B798);
   static const warning = Color(0xFFE2B66D);
   static const error = Color(0xFFE07A7A);
