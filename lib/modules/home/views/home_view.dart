@@ -24,11 +24,11 @@ class HomeView extends GetView<HomeController> {
         body: SafeArea(
           child: IndexedStack(
             index: index,
-            children: const [
+            children: [
               _HomeTab(controller: controller),
-              LibraryView(),
-              PlaylistView(),
-              _EqualizerTab(),
+              const LibraryView(),
+              const PlaylistView(),
+              const _EqualizerTab(),
             ],
           ),
         ),
@@ -370,45 +370,4 @@ class _EqualizerTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const EqualizerView(isBottomSheet: false);
-}
-
-class _PlaceholderTab extends StatelessWidget {
-  const _PlaceholderTab({
-    required this.icon,
-    required this.title,
-    required this.description,
-  });
-
-  final IconData icon;
-  final String title;
-  final String description;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 48, color: AppColors.primary),
-            const SizedBox(height: 16),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              description,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: AppColors.textSecondary),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
