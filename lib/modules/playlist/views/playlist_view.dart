@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
 import '../controllers/playlist_controller.dart';
 import '../models/playlist.dart';
 import 'playlist_detail_view.dart';
