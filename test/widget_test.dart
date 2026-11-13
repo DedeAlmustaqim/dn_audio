@@ -11,8 +11,8 @@ void main() {
     Get.put<DnAudioHandler>(DnAudioHandler(), permanent: true);
   });
 
-  tearDown(() async {
-    await Get.reset();
+  tearDown(() {
+    Get.reset();
   });
 
   testWidgets('DN Audio home screen renders', (WidgetTester tester) async {
