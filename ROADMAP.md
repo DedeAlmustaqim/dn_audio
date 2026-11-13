@@ -368,13 +368,48 @@ Catatan:
 - Menguji efek saat lagu berganti, queue berubah, aplikasi background, dan session audio diperbarui
 - Memastikan playback tetap berjalan ketika efek tidak tersedia atau gagal diinisialisasi
 
-**Status: Implementasi fondasi persistence dan integrasi halaman tersedia di GitHub — menunggu analisis, pengujian lokal, dan verifikasi perangkat**
+**Status: Selesai — pengguna mengonfirmasi pengujian lokal clean**
 
 ## 9. Stage 8 — Sleep Timer
 
 - Pengaturan durasi
 - Countdown
 - Otomatis menghentikan musik
+- Timer dikelola oleh audio handler agar tidak bergantung pada lifecycle halaman UI
+
+### 8.1 — Sleep Timer Architecture
+
+- Menambahkan `SleepTimerService` dengan countdown berbasis `Stopwatch` monotonic
+- Menyediakan start, cancel, remaining time, dan stream pembaruan countdown
+- Memastikan timer pengganti membatalkan timer sebelumnya dan expiry hanya dipicu satu kali
+- Mengikat service ke `DnAudioHandler` yang sama dengan playback engine utama
+- Menjeda playback saat timer berakhir tanpa menghapus queue atau membuat instance `AudioPlayer` baru
+- Membatalkan timer saat audio handler dihentikan dan melepaskan resource saat dispose
+- Menambahkan unit test untuk start, cancel, replacement, expiry, validasi durasi, dan disposal
+
+**Status: Implementasi tersedia di GitHub — menunggu analisis, pengujian lokal, dan verifikasi perangkat**
+
+### 8.2 — Timer UI & Controls
+
+- Pilihan durasi dan custom duration
+- Countdown dan indikator timer aktif
+- Cancel timer dan state setelah timer berakhir
+
+**Status: Belum dimulai**
+
+### 8.3 — Playback Integration & Fade Out
+
+- Integrasi pilihan aksi saat timer berakhir
+- Opsi Stop Playback dan Fade Out
+- Memastikan perilaku timer saat aplikasi berada di background
+
+**Status: Belum dimulai**
+
+### 8.4 — Stabilization & Testing
+
+- Pengujian timer saat lagu berganti dan queue berubah
+- Pengujian background, pembatalan, dan lifecycle audio service
+- Validasi akurasi countdown dan expiry pada perangkat
 
 **Status: Belum dimulai**
 
@@ -392,9 +427,9 @@ Catatan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 7.5 — Persistence, UI & Device Stabilization
+# Stage 8.1 — Sleep Timer Architecture
 
-Stage 7.4 telah dinyatakan clean oleh pengguna. Stage 7.5 sedang mengintegrasikan halaman Equalizer lengkap pada tab Home, akses ringkas melalui Playing Now, penyimpanan preferensi lokal, dan pemulihan efek saat audio session berubah.
+Stage 7.5 telah dinyatakan clean oleh pengguna. Stage 8.1 menyediakan countdown monotonic yang dikelola oleh DnAudioHandler, pembatalan timer, dan pause playback ketika waktu habis. Implementasi tersedia di GitHub dan menunggu verifikasi lokal.
 
 ---
 
