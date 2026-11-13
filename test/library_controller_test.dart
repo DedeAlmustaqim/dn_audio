@@ -96,6 +96,42 @@ void main() {
       expect(service.receivedExtensions, isEmpty);
     });
 
+
+    test('force refresh rescans the library', () async {
+      final service = _FakeAudioLibraryService();
+      final controller = LibraryController(
+        service: service,
+        settingsRepository: _FakeSettingsRepository(),
+      );
+
+      await controller.ensureLoaded();
+      await controller.refreshLibrary(force: true);
+
+      expect(service.scanRequests, 2);
+      expect(controller.isLoading.value, isFalse);
+    });
+
+    test('keeps the previous song list when a rescan fails', () async {
+      final service = _FakeAudioLibraryService(
+        songsToReturn: [_song('1', 'Existing Track', 'Artist', 'Album', 10, 20)],
+      );
+      final controller = LibraryController(
+        service: service,
+        settingsRepository: _FakeSettingsRepository(),
+      );
+
+      await controller.ensureLoaded();
+      expect(controller.songs, hasLength(1));
+
+      service.scanError = StateError('temporary scan failure');
+      await controller.refreshLibrary(force: true);
+
+      expect(controller.songs, hasLength(1));
+      expect(controller.songs.single.title, 'Existing Track');
+      expect(controller.errorMessage.value, isNotNull);
+      expect(controller.isLoading.value, isFalse);
+    });
+
     test('groups songs into albums and artists using MediaStore IDs', () async {
       final controller = LibraryController(
         service: _CollectionAudioLibraryService(),
@@ -208,6 +244,10 @@ Song _song(
     );
 
 class _FakeAudioLibraryService extends AudioLibraryService {
+  _FakeAudioLibraryService({this.songsToReturn = const []});
+
+  final List<Song> songsToReturn;
+  Object? scanError;
   int permissionChecks = 0;
   int permissionRequests = 0;
   int scanRequests = 0;
@@ -229,6 +269,7 @@ class _FakeAudioLibraryService extends AudioLibraryService {
   Future<List<Song>> getSongs({Set<String>? extensions}) async {
     scanRequests++;
     receivedExtensions = extensions;
-    return const [];
+    if (scanError != null) throw scanError!;
+    return songsToReturn;
   }
 }
