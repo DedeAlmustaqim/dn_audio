@@ -37,11 +37,13 @@ class HomeView extends GetView<HomeController> {
             ],
           ),
         ),
-        bottomNavigationBar: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const PlayerMiniBar(),
-            NavigationBar(
+        bottomNavigationBar: Container(
+          color: AppColors.surface,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const PlayerMiniBar(),
+              NavigationBar(
               selectedIndex: index,
               onDestinationSelected: controller.selectTab,
               destinations: const [
@@ -65,8 +67,9 @@ class HomeView extends GetView<HomeController> {
               label: 'Equalizer',
             ),
               ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       );
     });
