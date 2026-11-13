@@ -158,9 +158,7 @@ void main() {
     final calls = <MethodCall>[];
     messenger.setMockMethodCallHandler(channel, (call) async {
       calls.add(call);
-      return {
-        'success': true,
-        'capabilities': {
+      final capabilities = {
           'available': true,
           'sessionId': 505,
           'equalizer': {
@@ -185,8 +183,9 @@ void main() {
           },
           'bassBoost': {'supported': false},
           'virtualizer': {'supported': false},
-        },
-      };
+        };
+      if (call.method == 'attachSession') return capabilities;
+      return {'success': true, 'capabilities': capabilities};
     });
 
     final service = AudioEffectsService(channel: channel);
