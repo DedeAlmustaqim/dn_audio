@@ -17,6 +17,13 @@ class ArtworkService {
     return request;
   }
 
+  static Future<ArtworkCacheInfo> getCacheInfo() async {
+    final result = await _channel.invokeMethod<Map<dynamic, dynamic>>(
+      'getArtworkCacheInfo',
+    );
+    return ArtworkCacheInfo.fromMap(result ?? const {});
+  }
+
   static Future<Uri?> _resolve(Song song) async {
     try {
       final value = await _channel.invokeMethod<String>(
@@ -31,5 +38,34 @@ class ArtworkService {
     } on MissingPluginException {
       return null;
     }
+  }
+}
+
+
+class ArtworkCacheInfo {
+  const ArtworkCacheInfo({
+    required this.fileCount,
+    required this.totalBytes,
+  });
+
+  final int fileCount;
+  final int totalBytes;
+
+  factory ArtworkCacheInfo.fromMap(Map<dynamic, dynamic> map) {
+    return ArtworkCacheInfo(
+      fileCount: (map['fileCount'] as num?)?.toInt() ?? 0,
+      totalBytes: (map['totalBytes'] as num?)?.toInt() ?? 0,
+    );
+  }
+
+  String get formattedSize {
+    if (totalBytes < 1024) return '$totalBytes B';
+    if (totalBytes < 1024 * 1024) {
+      return '${(totalBytes / 1024).toStringAsFixed(1)} KB';
+    }
+    if (totalBytes < 1024 * 1024 * 1024) {
+      return '${(totalBytes / (1024 * 1024)).toStringAsFixed(2)} MB';
+    }
+    return '${(totalBytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
   }
 }
