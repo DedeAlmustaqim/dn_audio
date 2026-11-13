@@ -79,6 +79,14 @@ class SettingsView extends GetView<SettingsController> {
             if (controller.isSaving.value) ...[
               const SizedBox(height: 8),
               const LinearProgressIndicator(minHeight: 2),
+              const SizedBox(height: 6),
+              const Text(
+                'Saving and applying changes to your library…',
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 11,
+                ),
+              ),
             ],
             if (controller.errorMessage.value != null) ...[
               const SizedBox(height: 12),
