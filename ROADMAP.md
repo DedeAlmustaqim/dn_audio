@@ -556,12 +556,27 @@ Catatan koreksi lanjutan:
 
 ### 9.4 — Storage & Maintenance
 
-- Menampilkan ringkasan jumlah lagu Library.
-- Menyediakan scan ulang Library.
-- Menampilkan ukuran cache artwork jika dapat dihitung secara andal.
+#### 9.4.1 — Library Overview & Rescan
+
+- Menambahkan ringkasan jumlah lagu yang sudah terindeks pada Settings.
+- Menyediakan aksi Scan Library yang menjalankan pemindaian ulang melalui LibraryController yang sudah ada.
+- Menampilkan indikator proses dan hasil scan, termasuk kondisi izin audio tidak diberikan.
+- Mempertahankan daftar lagu sebelumnya ketika pemindaian ulang gagal.
+- Menambahkan unit test untuk pemindaian ulang dan preservasi data ketika scan gagal.
+
+**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian Flutter, dan verifikasi perangkat lokal.**
+
+#### 9.4.2 — Artwork Cache Information
+
+- Menampilkan ukuran dan jumlah file cache artwork jika dapat dihitung secara andal.
+
+**Status: Direncanakan**
+
+#### 9.4.3 — Artwork Cache Cleanup
+
 - Menyediakan clear artwork cache melalui ArtworkService/native cache path.
-- Menambahkan konfirmasi untuk tindakan yang menghapus data cache.
-- Menambahkan pengujian untuk operasi maintenance.
+- Menambahkan konfirmasi sebelum menghapus cache.
+- Memastikan artwork dapat dibuat ulang ketika dibutuhkan dan tidak menghapus file musik atau data aplikasi lain.
 
 **Status: Direncanakan**
 
@@ -597,9 +612,9 @@ Catatan koreksi lanjutan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 9.2.2 — Settings UI
+# Stage 9.4.1 — Library Overview & Rescan
 
-Halaman Settings, route, akses dari Home, pilihan format individual, penyimpanan langsung, reset default, dan unit test controller telah tersedia di GitHub. Filter belum diterapkan ke MediaStore sampai sub-tahap berikutnya. Menunggu hasil format, analisis, dan pengujian lokal.
+Library Overview & Rescan telah ditambahkan ke Settings: jumlah lagu terindeks, tombol scan ulang, indikator proses, hasil scan, serta unit test untuk rescan dan preservasi daftar lagu ketika scan gagal. Menunggu format, analisis, pengujian Flutter, dan verifikasi perangkat lokal.
 
 # Stage 9.2.1 — Preferences Foundation
 
