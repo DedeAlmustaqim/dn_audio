@@ -7,6 +7,8 @@ import '../../modules/player/controllers/player_controller.dart';
 import '../../modules/player/controllers/equalizer_controller.dart';
 import '../../modules/player/controllers/sleep_timer_controller.dart';
 import '../../modules/playlist/controllers/playlist_controller.dart';
+import '../../modules/settings/controllers/settings_controller.dart';
+import '../../modules/settings/views/settings_view.dart';
 import 'app_routes.dart';
 
 abstract final class AppPages {
@@ -21,6 +23,13 @@ abstract final class AppPages {
         Get.put<PlayerController>(PlayerController(), permanent: true);
         Get.put<EqualizerController>(EqualizerController(), permanent: true);
         Get.put<SleepTimerController>(SleepTimerController(), permanent: true);
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.settings,
+      page: () => const SettingsView(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<SettingsController>(SettingsController.new);
       }),
     ),
   ];
