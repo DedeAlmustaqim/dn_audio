@@ -620,3 +620,41 @@ Validation still required locally:
 - Verify About version/build and Open-source licenses on device, plus compact width and text scaling.
 
 No settings controller, repository, preference model, library scanner, artwork service, cache deletion behavior, audio handler, playback semantics or persistence contract was changed.
+
+
+## 20. Stage 9.6.8 — Visual QA & regression checklist
+
+Cross-screen audit finding and fix:
+- Album and Artist collection detail shared a Play All button using a white foreground over the off-white primary control surface. Updated it to use the explicit `controlActive` / `onControlActive` pair, with neutral disabled-state colors, a 52 px minimum height and pill shape.
+- Added design-system assertions for the monochrome active-control foreground/background relationship and selected-surface distinction.
+
+Visual QA scope:
+- Home: brand header, search, now-playing preview, library shortcuts, sleep timer state and bottom navigation.
+- Library: Songs / Albums / Artists switching, search, refresh, loading, permission denied, scan failure, empty library and no-results states.
+- Album / Artist detail: artwork, metadata, Play All contrast, album cards, song rows and playback selection.
+- Playlists: collection list, create/rename/delete, detail header without oversized icon, Play All contrast, track menu and remove action.
+- Player: artwork, long title/artist, seekbar, playback controls, shuffle/repeat active states, buffering and playback errors.
+- Equalizer: device capability unavailable/available, preset, band sliders, Bass Boost and Virtualizer states.
+- Sleep Timer: quick durations, custom duration, active countdown, cancel and completion.
+- Settings: playback speed, audio format toggles, reset, scan progress/errors, artwork cache clear confirmation and About.
+
+Accessibility and responsive checks:
+- Verify all IconButtons have tooltips/semantic labels and interactive controls have practical touch targets (aim for at least 48 logical px).
+- Check text contrast on primary, secondary, muted, disabled and semantic feedback states.
+- Check text scaling at 1.0x and 1.3x, narrow device width, long song/playlist names, landscape and keyboard/system insets.
+- Ensure focus order is logical and no text or controls clip/overflow.
+- Verify selected states are communicated by more than color alone where applicable.
+
+Local automated validation required:
+- `dart format lib test`
+- `flutter analyze`
+- `flutter test`
+
+Manual device regression required:
+- Complete the flows listed above on a real Android device, especially permission denial/regrant, rescan, playback queue/selection, playlist mutations, Equalizer unsupported capability, timer cancellation/completion and artwork-cache cleanup.
+- Confirm the Mini Player remains visible and does not cover scrollable content on every main tab.
+
+Limitations:
+- Repository review cannot replace runtime screenshot review, TalkBack testing, device-specific audio effects testing or manual playback regression.
+- Poppins is referenced by the app theme; confirm font assets are actually bundled and render on device rather than relying on fallback.
+- No controller, service, native audio integration, route, model, persistence or database schema was changed in this QA slice.
