@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/widgets/app_empty_state.dart';
 import '../../player/controllers/player_controller.dart';
 import '../../player/views/player_mini_bar.dart';
-import '../../library/widgets/song_artwork.dart';
+import '../../library/widgets/song_list_tile.dart';
 import '../controllers/playlist_controller.dart';
 import '../models/playlist.dart';
 import '../models/playlist_song.dart';
@@ -177,7 +178,7 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
             else if (_loadError != null)
               SliverFillRemaining(
                 hasScrollBody: false,
-                child: _DetailState(
+                child: AppEmptyState(
                   icon: Icons.error_outline_rounded,
                   title: 'Could not load playlist',
                   message: _loadError!,
@@ -188,7 +189,7 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
             else if (songs.isEmpty)
               const SliverFillRemaining(
                 hasScrollBody: false,
-                child: _DetailState(
+                child: AppEmptyState(
                   icon: Icons.music_off_rounded,
                   title: 'This playlist is empty',
                   message:
@@ -204,40 +205,12 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
                       const Divider(height: 1, indent: 66),
                   itemBuilder: (context, index) {
                     final item = songs[index];
-                    return ListTile(
+                    return SongListTile(
+                      song: item.song,
+                      artworkSize: 46,
                       onTap: () => _playerController.playPlaylist(
                         songs.map((entry) => entry.song).toList(),
                         initialIndex: index,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 4,
-                      ),
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: SizedBox(
-                          width: 46,
-                          height: 46,
-                          child: SongArtwork(song: item.song, iconSize: 21),
-                        ),
-                      ),
-                      title: Text(
-                        item.song.title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                        ),
-                      ),
-                      subtitle: Text(
-                        item.song.artist,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: AppColors.textSecondary,
-                          fontSize: 12,
-                        ),
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -287,58 +260,3 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
   }
 }
 
-class _DetailState extends StatelessWidget {
-  const _DetailState({
-    required this.icon,
-    required this.title,
-    required this.message,
-    this.actionLabel,
-    this.onAction,
-  });
-
-  final IconData icon;
-  final String title;
-  final String message;
-  final String? actionLabel;
-  final VoidCallback? onAction;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(30),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 52, color: AppColors.primary),
-            const SizedBox(height: 16),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 13,
-                height: 1.5,
-              ),
-            ),
-            if (actionLabel != null) ...[
-              const SizedBox(height: 18),
-              OutlinedButton(
-                onPressed: onAction,
-                child: Text(actionLabel!),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
