@@ -474,6 +474,11 @@ Catatan perbaikan setelah hasil `flutter analyze`:
 - Menghapus `_PlaceholderTab` yang sudah tidak digunakan.
 - Commit perbaikan: `c88ced4a64f5ee2161ffea2ab240222010d72a6c`.
 
+
+Catatan koreksi lanjutan:
+- Pull sebelumnya belum menghilangkan dua literal `\\n` pada pemanggilan dan deklarasi `_SearchField`; pola penggantian pertama tidak cocok dengan isi file sebenarnya.
+- Literal tersebut kini diganti dengan newline Dart yang benar pada commit `6251205feaeeae2d716754e93ccdd9dd8aeae8f3`.
+
 ### 9.2 — Settings Foundation & Audio Library Preferences
 
 - Membuat modul Settings mengikuti pola GetX MVC.
