@@ -71,6 +71,61 @@ void main() {
       expect(expirationCount, 1);
     });
 
+
+    test('publishes countdown updates and zero on expiry', () async {
+      final values = <Duration?>[];
+      final service = SleepTimerService(
+        onExpired: () async {},
+        tickInterval: const Duration(milliseconds: 5),
+      );
+      addTearDown(service.dispose);
+      final subscription = service.remainingTimeStream.listen(values.add);
+      addTearDown(subscription.cancel);
+
+      service.start(const Duration(milliseconds: 20));
+      await Future<void>.delayed(const Duration(milliseconds: 45));
+
+      expect(values, contains(Duration.zero));
+      expect(values.where((value) => value == Duration.zero), hasLength(1));
+    });
+
+    test('disposing an active timer cancels expiry', () async {
+      var expired = false;
+      final service = SleepTimerService(
+        onExpired: () async {
+          expired = true;
+        },
+        tickInterval: const Duration(milliseconds: 5),
+      );
+
+      service.start(const Duration(milliseconds: 30));
+      await service.dispose();
+      await Future<void>.delayed(const Duration(milliseconds: 45));
+
+      expect(service.isActive, isFalse);
+      expect(expired, isFalse);
+    });
+
+    test('cancel publishes null after an active countdown', () async {
+      final values = <Duration?>[];
+      final service = SleepTimerService(
+        onExpired: () async {},
+        tickInterval: const Duration(milliseconds: 5),
+      );
+      addTearDown(service.dispose);
+      final subscription = service.remainingTimeStream.listen(values.add);
+      addTearDown(subscription.cancel);
+
+      service.start(const Duration(seconds: 1));
+      await Future<void>.delayed(const Duration(milliseconds: 12));
+      service.cancel();
+      await Future<void>.delayed(const Duration(milliseconds: 1));
+
+      expect(values, contains(null));
+      expect(service.remainingTime, isNull);
+      expect(service.isActive, isFalse);
+    });
+
     test('rejects a zero or negative duration', () async {
       final service = SleepTimerService(onExpired: () async {});
       addTearDown(service.dispose);
