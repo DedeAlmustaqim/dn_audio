@@ -8,11 +8,13 @@ import 'package:just_audio/just_audio.dart';
 
 import '../../library/models/song.dart';
 import 'audio_effects_service.dart';
+import 'sleep_timer_service.dart';
 
 class DnAudioHandler extends BaseAudioHandler
     with QueueHandler, SeekHandler {
   final AudioPlayer player = AudioPlayer();
   final AudioEffectsService _audioEffectsService = AudioEffectsService();
+  late final SleepTimerService sleepTimerService;
 
   AudioEffectsService get audioEffectsService => _audioEffectsService;
 
@@ -22,6 +24,9 @@ class DnAudioHandler extends BaseAudioHandler
   int _artworkRequestId = 0;
 
   DnAudioHandler() {
+    sleepTimerService = SleepTimerService(
+      onExpired: _handleSleepTimerExpired,
+    );
     _playbackEventSubscription =
         player.playbackEventStream.listen(_broadcastPlaybackState);
     _sequenceStateSubscription =
@@ -44,6 +49,15 @@ class DnAudioHandler extends BaseAudioHandler
       });
     } catch (error, stackTrace) {
       debugPrint('DN Audio: audio session configuration failed: $error');
+      debugPrintStack(stackTrace: stackTrace);
+    }
+  }
+
+  Future<void> _handleSleepTimerExpired() async {
+    try {
+      await player.pause();
+    } catch (error, stackTrace) {
+      debugPrint('DN Audio: sleep timer could not pause playback: $error');
       debugPrintStack(stackTrace: stackTrace);
     }
   }
@@ -155,6 +169,7 @@ class DnAudioHandler extends BaseAudioHandler
 
   @override
   Future<void> stop() async {
+    sleepTimerService.cancel();
     await player.stop();
     await super.stop();
   }
@@ -205,6 +220,7 @@ class DnAudioHandler extends BaseAudioHandler
     await _playbackEventSubscription?.cancel();
     await _sequenceStateSubscription?.cancel();
     await _becomingNoisySubscription?.cancel();
+    await sleepTimerService.dispose();
     await _audioEffectsService.dispose();
     await player.dispose();
   }
