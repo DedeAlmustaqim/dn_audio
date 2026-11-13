@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/app_motion.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
 import '../../library/widgets/song_artwork.dart';
 import '../controllers/player_controller.dart';
 import 'now_playing_view.dart';
@@ -28,23 +31,25 @@ class PlayerMiniBar extends GetView<PlayerController> {
           ),
           child: Container(
             height: 76,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+            ),
             decoration: const BoxDecoration(
               border: Border(
-                top: BorderSide(color: AppColors.border),
+                top: BorderSide(color: AppColors.borderSubtle),
               ),
             ),
             child: Row(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: AppRadius.small,
                   child: SizedBox(
                     width: 44,
                     height: 44,
                     child: SongArtwork(song: song, iconSize: 22),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: Semantics(
                     label: 'Now playing: ${song.title}, ${song.artist}',
@@ -60,7 +65,7 @@ class PlayerMiniBar extends GetView<PlayerController> {
                             style: Theme.of(context).textTheme.titleSmall
                                 ?.copyWith(fontWeight: FontWeight.w600),
                           ),
-                          const SizedBox(height: 3),
+                          const SizedBox(height: AppSpacing.xxs),
                           Text(
                             song.artist,
                             maxLines: 1,
@@ -124,7 +129,9 @@ class _MiniPlayerControl extends StatelessWidget {
       constraints: const BoxConstraints.tightFor(width: 44, height: 48),
       padding: EdgeInsets.zero,
       icon: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 180),
+        duration: AppMotion.fast,
+        switchInCurve: AppMotion.enterCurve,
+        switchOutCurve: AppMotion.exitCurve,
         child: Icon(
           icon,
           key: ValueKey(icon),
