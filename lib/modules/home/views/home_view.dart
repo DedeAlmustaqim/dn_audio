@@ -70,7 +70,9 @@ class HomeView extends GetView<HomeController> {
 }
 
 class _HomeTab extends StatelessWidget {
-  const _HomeTab();
+  const _HomeTab({required this.controller});
+
+  final HomeController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -112,32 +114,29 @@ class _HomeTab extends StatelessWidget {
               const SizedBox(height: 26),
               _SearchField(\n                textController: controller.searchTextController,\n                onSubmitted: controller.submitSearch,\n              ),
               const SizedBox(height: 30),
-              const _SectionHeader(title: 'Recently Played'),
-              const SizedBox(height: 14),
-              const _EmptyRecentlyPlayed(),
+              const _NowPlayingSection(),
               const SizedBox(height: 30),
               const _SectionHeader(title: 'Your Library'),
               const SizedBox(height: 14),
-              const _LibraryShortcut(
+              _LibraryShortcut(
                 icon: Icons.music_note_rounded,
                 title: 'Songs',
                 subtitle: 'Your music collection',
+                onTap: () => controller.openLibrary(section: 'songs'),
               ),
-              const _LibraryShortcut(
+              _LibraryShortcut(
                 icon: Icons.album_rounded,
                 title: 'Albums',
                 subtitle: 'Browse your albums',
+                onTap: () => controller.openLibrary(section: 'albums'),
               ),
-              const _LibraryShortcut(
+              _LibraryShortcut(
                 icon: Icons.person_rounded,
                 title: 'Artists',
                 subtitle: 'Explore your artists',
+                onTap: () => controller.openLibrary(section: 'artists'),
               ),
-              const _LibraryShortcut(
-                icon: Icons.folder_rounded,
-                title: 'Folders',
-                subtitle: 'Browse device folders',
-              ),
+
             ]),
           ),
         ),
@@ -219,16 +218,26 @@ class _SearchField extends StatelessWidget {
         borderRadius: BorderRadius.circular(17),
         border: Border.all(color: AppColors.border),
       ),
-      child: const Row(
+      child: Row(
         children: [
-          Icon(Icons.search_rounded, color: AppColors.textSecondary),
-          SizedBox(width: 12),
-          Text(
-            'Search songs, artists, albums...',
-            style: TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 13,
+          const Icon(Icons.search_rounded, color: AppColors.textSecondary),
+          const SizedBox(width: 12),
+          Expanded(
+            child: TextField(
+              controller: textController,
+              textInputAction: TextInputAction.search,
+              onSubmitted: onSubmitted,
+              decoration: const InputDecoration(
+                hintText: 'Search songs, artists, albums...',
+                border: InputBorder.none,
+                isDense: true,
+              ),
             ),
+          ),
+          IconButton(
+            tooltip: 'Search',
+            onPressed: () => onSubmitted(textController.text),
+            icon: const Icon(Icons.arrow_forward_rounded),
           ),
         ],
       ),
@@ -253,14 +262,6 @@ class _SectionHeader extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        const Text(
-          'See all',
-          style: TextStyle(
-            color: AppColors.primary,
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
       ],
     );
   }
@@ -316,14 +317,20 @@ class _LibraryShortcut extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Material(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
       decoration: BoxDecoration(
-        color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -356,6 +363,37 @@ class _LibraryShortcut extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _NowPlayingSection extends StatelessWidget {
+  const _NowPlayingSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final player = Get.find<PlayerController>();
+    return Obx(() {
+      final song = player.currentSong.value;
+      if (song == null) return const SizedBox.shrink();
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const _SectionHeader(title: 'Now Playing'),
+          const SizedBox(height: 14),
+          Material(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(18),
+            child: ListTile(
+              leading: const Icon(Icons.graphic_eq_rounded, color: AppColors.primary),
+              title: Text(song.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+              subtitle: Text(song.artist, maxLines: 1, overflow: TextOverflow.ellipsis),
+              trailing: const Icon(Icons.open_in_full_rounded),
+              onTap: () => Get.to(() => const NowPlayingView()),
+            ),
+          ),
+        ],
+      );
+    });
   }
 }
 
