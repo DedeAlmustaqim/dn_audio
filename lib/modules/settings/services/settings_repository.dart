@@ -4,6 +4,7 @@ import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart';
 
 import '../models/audio_library_preferences.dart';
+import '../models/playback_preferences.dart';
 
 class SettingsRepository {
   SettingsRepository();
@@ -12,6 +13,7 @@ class SettingsRepository {
   static const _databaseVersion = 1;
   static const _tableName = 'app_settings';
   static const audioLibraryPreferencesKey = 'audio_library_preferences';
+  static const playbackPreferencesKey = 'playback_preferences';
 
   Database? _database;
 
@@ -36,19 +38,11 @@ class SettingsRepository {
   }
 
   Future<AudioLibraryPreferences> loadAudioLibraryPreferences() async {
-    final db = await _db;
-    final rows = await db.query(
-      _tableName,
-      columns: ['payload'],
-      where: 'setting_key = ?',
-      whereArgs: [audioLibraryPreferencesKey],
-      limit: 1,
-    );
-
-    if (rows.isEmpty) return AudioLibraryPreferences();
+    final payload = await _loadPayload(audioLibraryPreferencesKey);
+    if (payload == null) return AudioLibraryPreferences();
 
     try {
-      final decoded = jsonDecode(rows.first['payload'] as String);
+      final decoded = jsonDecode(payload);
       if (decoded is Map<String, dynamic>) {
         return AudioLibraryPreferences.fromMap(decoded);
       }
@@ -61,12 +55,49 @@ class SettingsRepository {
   Future<void> saveAudioLibraryPreferences(
     AudioLibraryPreferences preferences,
   ) async {
+    await _savePayload(audioLibraryPreferencesKey, preferences.toMap());
+  }
+
+  Future<PlaybackPreferences> loadPlaybackPreferences() async {
+    final payload = await _loadPayload(playbackPreferencesKey);
+    if (payload == null) return const PlaybackPreferences();
+
+    try {
+      final decoded = jsonDecode(payload);
+      if (decoded is Map<String, dynamic>) {
+        return PlaybackPreferences.fromMap(decoded);
+      }
+    } catch (_) {
+      // Invalid persisted data falls back to the normal playback speed.
+    }
+    return const PlaybackPreferences();
+  }
+
+  Future<void> savePlaybackPreferences(
+    PlaybackPreferences preferences,
+  ) async {
+    await _savePayload(playbackPreferencesKey, preferences.toMap());
+  }
+
+  Future<String?> _loadPayload(String key) async {
+    final db = await _db;
+    final rows = await db.query(
+      _tableName,
+      columns: ['payload'],
+      where: 'setting_key = ?',
+      whereArgs: [key],
+      limit: 1,
+    );
+    return rows.isEmpty ? null : rows.first['payload'] as String;
+  }
+
+  Future<void> _savePayload(String key, Map<String, dynamic> payload) async {
     final db = await _db;
     await db.insert(
       _tableName,
       {
-        'setting_key': audioLibraryPreferencesKey,
-        'payload': jsonEncode(preferences.toMap()),
+        'setting_key': key,
+        'payload': jsonEncode(payload),
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
