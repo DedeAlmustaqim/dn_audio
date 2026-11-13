@@ -545,11 +545,14 @@ Catatan koreksi lanjutan:
 
 #### 9.3.2 — Audio Experience Preferences
 
-- Audit dan integrasikan preferensi Equalizer, preset, Bass Boost, dan Virtualizer yang sudah tersedia.
-- Hindari membuat pipeline audio atau instance player tambahan.
-- Tambahkan pengujian pemulihan preferensi saat audio session berubah.
+- Memperkuat pemulihan preferensi pada setiap audio session dengan antrean session terbaru, pemeriksaan session aktif di setiap operasi, dan validasi hasil setiap efek.
+- Mencegah session baru terlewat ketika proses restore session sebelumnya masih berlangsung.
+- Menambahkan retry pemulihan untuk session aktif setelah kegagalan sementara.
+- Mengintegrasikan akses Equalizer & Effects ke Settings tanpa membuat audio player atau audio pipeline baru.
+- Mempertahankan penyimpanan SQLite yang sudah ada untuk preset, level band, Equalizer, Bass Boost, dan Virtualizer.
+- Verifikasi lokal mencakup pergantian lagu/session, pergantian preset, restart aplikasi, serta perangkat yang tidak mendukung salah satu efek.
 
-**Status: Direncanakan**
+**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian Flutter, dan verifikasi perangkat lokal.**
 
 ### 9.4 — Storage & Maintenance
 
