@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// Typography scale for the DN Audio Premium Dark design system.
+/// Semantic typography scale for the DN Audio Premium Dark design system.
 ///
-/// The Poppins family is registered here as the app-wide typeface. Its local
-/// font files must be bundled through pubspec.yaml before device verification.
+/// The Poppins family is configured app-wide. The font files still need to be
+/// bundled in the Flutter asset manifest before visual verification.
 abstract final class AppTypography {
   static const fontFamily = 'Poppins';
 
@@ -91,5 +91,23 @@ abstract final class AppTypography {
       height: 1.3,
       letterSpacing: 0.2,
     ),
+  );
+
+  /// Editorial treatment reserved for the Now Playing signature screen.
+  static const editorialTitle = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 28,
+    fontWeight: FontWeight.w700,
+    height: 1.12,
+    letterSpacing: -0.7,
+  );
+
+  /// Short overline treatment for contextual labels.
+  static const eyebrow = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 10,
+    fontWeight: FontWeight.w600,
+    height: 1.3,
+    letterSpacing: 1.2,
   );
 }
