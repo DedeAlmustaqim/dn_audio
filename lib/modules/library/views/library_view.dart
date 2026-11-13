@@ -256,17 +256,7 @@ class LibraryView extends GetView<LibraryController> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
-                  child: Container(
-                    width: 38,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: AppColors.border,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
                 const Text(
                   'Add to playlist',
                   style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800),
