@@ -490,6 +490,18 @@ Catatan koreksi lanjutan:
 - Menerapkan ulang preferensi ketika scan ulang atau aplikasi dibuka.
 - Menambahkan unit test untuk model/repository preferensi dan pemetaan filter.
 
+#### 9.2.3 — Native MediaStore Format Filtering
+
+- Mengubah MethodChannel `getSongs` agar menerima daftar extension terpilih dari Flutter.
+- Memvalidasi extension di sisi native menggunakan allowlist MP3, FLAC, WAV, M4A, AAC, OGG, dan OPUS; input tak dikenal diabaikan.
+- Menerapkan filter langsung pada query Android MediaStore menggunakan `DISPLAY_NAME` dan akhiran extension, bukan filter MIME yang dapat mengelompokkan format berbeda.
+- Mempertahankan filter durasi audio lebih dari nol dan urutan judul seperti sebelumnya.
+- Menangani pilihan kosong sebagai hasil scan kosong, bukan kembali ke semua format.
+- Menjaga pemanggilan Flutter tanpa argumen tetap kompatibel dengan default semua format.
+- Menambahkan unit test MethodChannel untuk normalisasi, pilihan kosong, dan default format.
+
+**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian Flutter, dan build Android lokal**
+
 #### 9.2.2 — Settings UI
 
 - Menambahkan halaman Settings dengan desain dark premium yang konsisten dengan DN Audio.
