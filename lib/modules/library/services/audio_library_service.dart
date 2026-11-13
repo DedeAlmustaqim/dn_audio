@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 
+import '../../settings/models/audio_library_preferences.dart';
 import '../models/song.dart';
 
 class AudioLibraryService {
@@ -13,8 +14,14 @@ class AudioLibraryService {
     return await _channel.invokeMethod<bool>('requestPermission') ?? false;
   }
 
-  Future<List<Song>> getSongs() async {
-    final result = await _channel.invokeMethod<List<dynamic>>('getSongs');
+  Future<List<Song>> getSongs({Set<String>? extensions}) async {
+    final selectedExtensions = AudioLibraryPreferences.normalizeExtensions(
+      extensions ?? AudioLibraryPreferences.defaultExtensions,
+    ).toList(growable: false);
+    final result = await _channel.invokeMethod<List<dynamic>>(
+      'getSongs',
+      {'extensions': selectedExtensions},
+    );
     return (result ?? const [])
         .whereType<Map<dynamic, dynamic>>()
         .map(Song.fromMap)
