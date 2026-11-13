@@ -403,10 +403,11 @@ Catatan:
 
 **Status: Fitur utama berjalan — perbaikan SafeArea tersedia di GitHub dan menunggu verifikasi lokal**
 
-### 8.3 — Playback Integration & Fade Out
+### 8.3 — Playback Integration (Stop Playback)
 
-- Integrasi pilihan aksi saat timer berakhir
-- Opsi Stop Playback dan Fade Out
+- Menetapkan satu perilaku saat timer berakhir: langsung menghentikan playback dengan pause
+- Tidak menyediakan Fade Out atau transisi volume bertahap
+- Memastikan expiry timer tetap menghentikan playback melalui DnAudioHandler yang sama
 - Memastikan perilaku timer saat aplikasi berada di background
 
 **Status: Belum dimulai**
