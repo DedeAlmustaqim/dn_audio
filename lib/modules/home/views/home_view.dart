@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../library/widgets/song_artwork.dart';
 import '../../library/views/library_view.dart';
 import '../../player/controllers/player_controller.dart';
 import '../../player/views/now_playing_view.dart';
@@ -83,35 +84,34 @@ class _HomeTab extends StatelessWidget {
           sliver: SliverList(
             delegate: SliverChildListDelegate([
               const _BrandHeader(),
-              const SizedBox(height: 34),
-              const Text(
-                'Your Music.',
-                style: TextStyle(
-                  fontSize: 32,
-                  height: 1.12,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -1,
-                ),
+              const SizedBox(height: 28),
+              Text(
+                'YOUR MUSIC. YOUR EXPERIENCE.',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: AppColors.textSecondary,
+                      letterSpacing: 2.0,
+                      fontWeight: FontWeight.w600,
+                    ),
               ),
-              const Text(
-                'Your Experience.',
-                style: TextStyle(
-                  fontSize: 32,
-                  height: 1.12,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -1,
-                  color: AppColors.primary,
-                ),
+              const SizedBox(height: 9),
+              Text(
+                'Music, made personal.',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontSize: 30,
+                      height: 1.08,
+                      letterSpacing: -1.1,
+                      fontWeight: FontWeight.w700,
+                    ),
               ),
-              const SizedBox(height: 10),
-              const Text(
-                'All your music, in one place.',
-                style: TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 14,
-                ),
+              const SizedBox(height: 8),
+              Text(
+                'Your offline collection, ready whenever you are.',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppColors.textSecondary,
+                      height: 1.45,
+                    ),
               ),
-              const SizedBox(height: 26),
+              const SizedBox(height: 24),
               _SearchField(
                 textController: controller.searchTextController,
                 onSubmitted: controller.submitSearch,
@@ -121,23 +121,35 @@ class _HomeTab extends StatelessWidget {
               const SizedBox(height: 30),
               const _SectionHeader(title: 'Your Library'),
               const SizedBox(height: 14),
-              _LibraryShortcut(
-                icon: Icons.music_note_rounded,
-                title: 'Songs',
-                subtitle: 'Your music collection',
-                onTap: () => controller.openLibrary(section: 'songs'),
-              ),
-              _LibraryShortcut(
-                icon: Icons.album_rounded,
-                title: 'Albums',
-                subtitle: 'Browse your albums',
-                onTap: () => controller.openLibrary(section: 'albums'),
-              ),
-              _LibraryShortcut(
-                icon: Icons.person_rounded,
-                title: 'Artists',
-                subtitle: 'Explore your artists',
-                onTap: () => controller.openLibrary(section: 'artists'),
+              Row(
+                children: [
+                  Expanded(
+                    child: _LibraryShortcut(
+                      icon: Icons.music_note_rounded,
+                      title: 'Songs',
+                      subtitle: 'Your collection',
+                      onTap: () => controller.openLibrary(section: 'songs'),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: _LibraryShortcut(
+                      icon: Icons.album_rounded,
+                      title: 'Albums',
+                      subtitle: 'Browse albums',
+                      onTap: () => controller.openLibrary(section: 'albums'),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: _LibraryShortcut(
+                      icon: Icons.person_rounded,
+                      title: 'Artists',
+                      subtitle: 'Explore artists',
+                      onTap: () => controller.openLibrary(section: 'artists'),
+                    ),
+                  ),
+                ],
               ),
 
             ]),
@@ -159,12 +171,12 @@ class _BrandHeader extends StatelessWidget {
           width: 44,
           height: 44,
           decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.14),
-            borderRadius: BorderRadius.circular(15),
+            color: AppColors.surfaceElevated,
+            borderRadius: BorderRadius.circular(14),
           ),
           child: const Icon(
             Icons.graphic_eq_rounded,
-            color: AppColors.primary,
+            color: AppColors.textPrimary,
             size: 25,
           ),
         ),
@@ -299,44 +311,38 @@ class _LibraryShortcut extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(16),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(16),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
-            child: Row(
-              children: [
-                Icon(icon, color: AppColors.primary, size: 23),
-                const SizedBox(width: 15),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-                      const SizedBox(height: 3),
-                      Text(
-                        subtitle,
-                        style: const TextStyle(
-                          color: AppColors.textSecondary,
-                          fontSize: 11,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const Icon(Icons.chevron_right_rounded, color: AppColors.textSecondary),
-              ],
-            ),
+    return Material(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(17),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(17),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 15, 10, 13),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon, color: AppColors.textPrimary, size: 21),
+              const SizedBox(height: 14),
+              Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+              const SizedBox(height: 3),
+              Text(
+                subtitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: AppColors.textSecondary,
+                      fontSize: 9,
+                    ),
+              ),
+            ],
           ),
         ),
       ),
@@ -353,20 +359,121 @@ class _NowPlayingSection extends StatelessWidget {
     return Obx(() {
       final song = player.currentSong.value;
       if (song == null) return const SizedBox.shrink();
+      final durationMs = player.duration.value.inMilliseconds;
+      final positionMs = player.position.value.inMilliseconds;
+      final progress = durationMs <= 0
+          ? 0.0
+          : (positionMs / durationMs).clamp(0.0, 1.0);
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _SectionHeader(title: 'Now Playing'),
-          const SizedBox(height: 14),
+          const _SectionHeader(title: 'Continue Listening'),
+          const SizedBox(height: 13),
           Material(
             color: AppColors.surface,
-            borderRadius: BorderRadius.circular(18),
-            child: ListTile(
-              leading: const Icon(Icons.graphic_eq_rounded, color: AppColors.primary),
-              title: Text(song.title, maxLines: 1, overflow: TextOverflow.ellipsis),
-              subtitle: Text(song.artist, maxLines: 1, overflow: TextOverflow.ellipsis),
-              trailing: const Icon(Icons.open_in_full_rounded),
+            borderRadius: BorderRadius.circular(20),
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
               onTap: () => Get.to(() => const NowPlayingView()),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(14),
+                          child: SizedBox(
+                            width: 82,
+                            height: 82,
+                            child: SongArtwork(song: song, iconSize: 30),
+                          ),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                song.title,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.w700),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                song.artist,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(color: AppColors.textSecondary),
+                              ),
+                              const SizedBox(height: 11),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.graphic_eq_rounded,
+                                    size: 15,
+                                    color: AppColors.textSecondary,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'NOW PLAYING',
+                                    style: Theme.of(context).textTheme.labelSmall
+                                        ?.copyWith(
+                                          color: AppColors.textSecondary,
+                                          letterSpacing: 1.1,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton.filled(
+                          tooltip: player.isPlaying.value ? 'Pause' : 'Play',
+                          onPressed: player.togglePlayPause,
+                          icon: Icon(
+                            player.isPlaying.value
+                                ? Icons.pause_rounded
+                                : Icons.play_arrow_rounded,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value: progress,
+                        minHeight: 3,
+                        backgroundColor: AppColors.border,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 7),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          player.formatDuration(player.position.value),
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: AppColors.textSecondary,
+                              ),
+                        ),
+                        Text(
+                          player.formatDuration(player.duration.value),
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: AppColors.textSecondary,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
