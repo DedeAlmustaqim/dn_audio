@@ -121,20 +121,6 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: 84,
-                      height: 84,
-                      decoration: const BoxDecoration(
-                        color: AppColors.surfaceElevated,
-                        borderRadius: AppRadius.large,
-                      ),
-                      child: const Icon(
-                        Icons.queue_music_rounded,
-                        color: AppColors.textPrimary,
-                        size: 40,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.xl),
                     Text(
                       'YOUR PLAYLIST',
                       style: AppTypography.eyebrow.copyWith(
