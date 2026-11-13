@@ -391,11 +391,16 @@ Catatan:
 
 ### 8.2 — Timer UI & Controls
 
-- Pilihan durasi dan custom duration
-- Countdown dan indikator timer aktif
-- Cancel timer dan state setelah timer berakhir
+- Menambahkan `SleepTimerController` sebagai state presenter bersama untuk entry point Home dan Now Playing
+- Mendaftarkan controller secara permanent pada binding Home agar countdown tetap terpantau lintas tab dan bottom sheet
+- Menambahkan bottom sheet Sleep Timer dengan pilihan cepat 15, 30, 45, 60, 90, dan 120 menit
+- Menambahkan custom duration melalui pilihan jam dan menit
+- Menampilkan status timer aktif, countdown tersisa, dan informasi ketika timer selesai
+- Menambahkan aksi Cancel Timer dan mengganti timer aktif ketika durasi baru dipilih
+- Menambahkan akses Sleep Timer dari header Home dan Now Playing dengan indikator visual saat timer aktif
+- Memakai `SleepTimerService` milik `DnAudioHandler` yang sama; tidak membuat timer atau audio engine kedua
 
-**Status: Belum dimulai**
+**Status: Implementasi tersedia di GitHub — menunggu analisis, pengujian lokal, dan verifikasi perangkat**
 
 ### 8.3 — Playback Integration & Fade Out
 
@@ -427,9 +432,9 @@ Catatan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 8.1 — Sleep Timer Architecture
+# Stage 8.2 — Sleep Timer UI & Controls
 
-Stage 7.5 telah dinyatakan clean oleh pengguna. Stage 8.1 menyediakan countdown monotonic yang dikelola oleh DnAudioHandler, pembatalan timer, dan pause playback ketika waktu habis. Implementasi tersedia di GitHub dan menunggu verifikasi lokal.
+Stage 7.5 dan Stage 8.1 telah dinyatakan clean oleh pengguna. Stage 8.2 menambahkan akses Sleep Timer dari Home dan Now Playing, pilihan durasi cepat dan custom, countdown aktif, serta pembatalan timer. Implementasi tersedia di GitHub dan menunggu verifikasi lokal.
 
 ---
 
