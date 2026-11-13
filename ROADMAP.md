@@ -557,6 +557,8 @@ Catatan koreksi lanjutan:
 
 Stage 9.1 telah dinyatakan bersih oleh pengguna. Fondasi preferensi Settings tersedia di GitHub: model AudioLibraryPreferences, SettingsRepository SQLite, dan unit test model. Menunggu format, analisis, dan pengujian lokal sebelum melanjutkan ke Settings UI.
 
+Catatan hasil pengujian lokal dari pengguna: ditemukan tiga kegagalan pada test Audio Effects, Sleep Timer, dan widget Home. Perbaikan test telah dikirim: mock attachSession kini mengikuti kontrak respons native (capabilities langsung), assertion countdown menggunakan toleransi waktu Stopwatch, dan widget test mendaftarkan DnAudioHandler sebelum membangun aplikasi. Menunggu verifikasi ulang lokal.
+
 
 
 ---
