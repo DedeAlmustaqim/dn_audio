@@ -490,6 +490,18 @@ Catatan koreksi lanjutan:
 - Menerapkan ulang preferensi ketika scan ulang atau aplikasi dibuka.
 - Menambahkan unit test untuk model/repository preferensi dan pemetaan filter.
 
+#### 9.2.2 — Settings UI
+
+- Menambahkan halaman Settings dengan desain dark premium yang konsisten dengan DN Audio.
+- Menambahkan akses Settings dari ikon gear di header Home dan route khusus `/settings`.
+- Menampilkan tujuh format audio sebagai switch individual: MP3, FLAC, WAV, M4A, AAC, OGG, dan OPUS.
+- Perubahan format disimpan langsung melalui SettingsController dan SettingsRepository SQLite; kegagalan penyimpanan mengembalikan pilihan sebelumnya serta menampilkan pesan inline.
+- Menambahkan Reset defaults, status jumlah format aktif, peringatan jika semua format dinonaktifkan, dan bagian About DN Audio.
+- Menambahkan unit test untuk load, perubahan, rollback saat gagal simpan, dan reset format.
+- UI belum memicu scan ulang atau mengubah hasil MediaStore pada tahap ini; integrasi filter dilakukan pada 9.2.3–9.2.4.
+
+**Status: Implementasi tersedia di GitHub — menunggu format, analisis, dan pengujian lokal**
+
 #### 9.2.1 — Preferences Foundation
 
 - Menambahkan model AudioLibraryPreferences dengan daftar extension yang didukung dan default MP3, FLAC, WAV, M4A, AAC, OGG, dan OPUS.
@@ -552,6 +564,10 @@ Catatan koreksi lanjutan:
 ---
 
 ## Posisi Pengembangan Saat Ini
+
+# Stage 9.2.2 — Settings UI
+
+Halaman Settings, route, akses dari Home, pilihan format individual, penyimpanan langsung, reset default, dan unit test controller telah tersedia di GitHub. Filter belum diterapkan ke MediaStore sampai sub-tahap berikutnya. Menunggu hasil format, analisis, dan pengujian lokal.
 
 # Stage 9.2.1 — Preferences Foundation
 
