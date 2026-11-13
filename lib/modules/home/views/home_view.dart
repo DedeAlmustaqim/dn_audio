@@ -10,6 +10,7 @@ import '../../player/views/equalizer_view.dart';
 import '../../player/views/sleep_timer_sheet.dart';
 import '../../player/controllers/sleep_timer_controller.dart';
 import '../../playlist/views/playlist_view.dart';
+import '../../../core/routes/app_routes.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -191,6 +192,11 @@ class _BrandHeader extends StatelessWidget {
           ],
         ),
         const Spacer(),
+        IconButton(
+          tooltip: 'Settings',
+          onPressed: () => Get.toNamed(AppRoutes.settings),
+          icon: const Icon(Icons.settings_outlined, color: AppColors.textSecondary),
+        ),
         Obx(() {
           final active = Get.find<SleepTimerController>().isActive.value;
           return IconButton(
