@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/widgets/app_loading_state.dart';
 import '../../../core/widgets/app_empty_state.dart';
 import '../../../core/widgets/app_search_field.dart';
 import '../../player/controllers/player_controller.dart';
@@ -108,9 +109,7 @@ class LibraryView extends GetView<LibraryController> {
             if (controller.isLoading.value)
               const SliverFillRemaining(
                 hasScrollBody: false,
-                child: Center(
-                  child: CircularProgressIndicator(color: AppColors.primary),
-                ),
+                child: AppLoadingState(),
               )
             else if (controller.errorMessage.value != null)
               SliverFillRemaining(
