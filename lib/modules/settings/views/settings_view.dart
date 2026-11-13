@@ -5,8 +5,8 @@ import '../../../core/constants/app_colors.dart';
 import '../controllers/settings_controller.dart';
 import '../models/audio_library_preferences.dart';
 import '../models/playback_preferences.dart';
-import '../../player/views/equalizer_view.dart';
 import '../../library/controllers/library_controller.dart';
+import '../../player/views/equalizer_view.dart';
 
 class SettingsView extends GetView<SettingsController> {
   const SettingsView({super.key});
@@ -403,7 +403,6 @@ class _InlineNotice extends StatelessWidget {
   }
 }
 
-
 class _LibraryOverviewPanel extends StatefulWidget {
   const _LibraryOverviewPanel();
 
@@ -468,7 +467,10 @@ class _LibraryOverviewPanelState extends State<_LibraryOverviewPanel> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Music library', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
+                      const Text(
+                        'Music library',
+                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                      ),
                       const SizedBox(height: 4),
                       Text(
                         '$songCount ${songCount == 1 ? 'song' : 'songs'} indexed',
@@ -480,7 +482,11 @@ class _LibraryOverviewPanelState extends State<_LibraryOverviewPanel> {
                 TextButton.icon(
                   onPressed: isScanning ? null : _scanLibrary,
                   icon: isScanning
-                      ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
                       : const Icon(Icons.refresh_rounded, size: 17),
                   label: Text(isScanning ? 'Scanning' : 'Scan library'),
                 ),
@@ -490,7 +496,10 @@ class _LibraryOverviewPanelState extends State<_LibraryOverviewPanel> {
               const SizedBox(height: 14),
               const LinearProgressIndicator(minHeight: 2),
               const SizedBox(height: 7),
-              const Text('Scanning audio files on this device…', style: TextStyle(color: AppColors.textSecondary, fontSize: 11)),
+              const Text(
+                'Scanning audio files on this device…',
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
+              ),
             ],
             if (_scanMessage != null) ...[
               const SizedBox(height: 14),
@@ -498,16 +507,22 @@ class _LibraryOverviewPanelState extends State<_LibraryOverviewPanel> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(
-                    _scanWasSuccessful ? Icons.check_circle_outline_rounded : Icons.error_outline_rounded,
+                    _scanWasSuccessful
+                        ? Icons.check_circle_outline_rounded
+                        : Icons.error_outline_rounded,
                     size: 17,
-                    color: _scanWasSuccessful ? AppColors.primary : Colors.redAccent,
+                    color: _scanWasSuccessful
+                        ? AppColors.primary
+                        : Colors.redAccent,
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       _scanMessage!,
                       style: TextStyle(
-                        color: _scanWasSuccessful ? AppColors.textSecondary : Colors.redAccent,
+                        color: _scanWasSuccessful
+                            ? AppColors.textSecondary
+                            : Colors.redAccent,
                         fontSize: 12,
                         height: 1.4,
                       ),
