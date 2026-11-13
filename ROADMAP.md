@@ -407,10 +407,12 @@ Catatan:
 
 - Menetapkan satu perilaku saat timer berakhir: langsung menghentikan playback dengan pause
 - Tidak menyediakan Fade Out atau transisi volume bertahap
-- Memastikan expiry timer tetap menghentikan playback melalui DnAudioHandler yang sama
-- Memastikan perilaku timer saat aplikasi berada di background
+- Menghubungkan callback expiry `SleepTimerService` ke `DnAudioHandler` yang mengendalikan satu `AudioPlayer` utama
+- Memastikan expiry tidak menghapus queue atau membuat audio player baru
+- Menangani kegagalan pause dengan logging agar tidak memutus lifecycle audio service
+- Memastikan perilaku timer saat aplikasi berada di background melalui audio service
 
-**Status: Belum dimulai**
+**Status: Integrasi playback sudah tersedia — menunggu verifikasi background dan pengujian lokal Stage 8.3**
 
 ### 8.4 — Stabilization & Testing
 
@@ -434,9 +436,9 @@ Catatan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 8.2 — Sleep Timer UI & Controls
+# Stage 8.3 — Playback Integration (Stop Playback)
 
-Stage 7.5 dan Stage 8.1 telah dinyatakan clean oleh pengguna. Fitur utama Stage 8.2 telah berjalan pada pengujian pengguna. Perbaikan SafeArea bagian bawah pada Sleep Timer sheet telah diterapkan di GitHub dan menunggu verifikasi lokal.
+Stage 7.5, Stage 8.1, dan fitur utama Stage 8.2 telah dinyatakan berjalan oleh pengguna. Audit Stage 8.3 memastikan expiry `SleepTimerService` memanggil `DnAudioHandler` untuk melakukan pause pada satu `AudioPlayer` tanpa menghapus queue. Perbaikan SafeArea Stage 8.2 juga telah diterapkan. Verifikasi timer ketika aplikasi berada di background masih diperlukan.
 
 ---
 
