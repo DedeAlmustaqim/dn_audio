@@ -486,7 +486,7 @@ Stage 9.6 is complete when:
 ---
 
 **Final decision:** Immersive Minimal overall · Poppins typography · Editorial Now Playing · Premium Dark monochrome palette.  
-**Implementation status:** Blueprint approved. Stage 9.6.1 implementation is in progress. Shared monochrome color aliases, Poppins semantic styles, spacing/radius/motion tokens and base Material component themes have been added. Poppins font binaries are not yet bundled; device-level typography verification remains pending.
+**Implementation status:** Blueprint approved. Stage 9.6.1 foundation and the first Stage 9.6.2 shared-component slice have been committed. Poppins font binaries are not yet bundled; device-level typography verification remains pending.
 
 
 ## 13. Stage 9.6.1 implementation record
@@ -504,3 +504,21 @@ Outstanding validation:
 - Verify contrast, text scaling and component states on-device before marking 9.6.1 complete.
 
 No playback, persistence, routing, database or native audio code was changed in this slice.
+
+
+## 14. Stage 9.6.2 implementation record
+
+Completed in this slice:
+- Refined the shared empty state with a neutral monochrome icon surface, consistent spacing and constrained message width.
+- Standardized the loading indicator and added a live-region semantic label.
+- Standardized the shared search field using design-system spacing, radius and monochrome focus treatment.
+- Standardized song list row spacing, artwork shape, text hierarchy and minimum row height.
+- Aligned Mini Player spacing, artwork shape and play-state animation timing with shared design tokens.
+- Preserved the four existing navigation destinations and all existing navigation/playback callbacks. The shared Material theme continues to define NavigationBar, buttons, icon buttons, sheets and dialogs.
+
+Remaining in Stage 9.6.2:
+- Review any screen-local button, icon-button, sheet and dialog variants that do not yet use shared theme styles.
+- Verify Mini Player and NavigationBar together on a physical device, including system insets and compact widths.
+- Run formatter, analyzer, tests and device interaction checks in the local Flutter environment.
+
+No playback engine, queue, navigation destination, persistence, database schema or native audio behavior was changed in this slice.
