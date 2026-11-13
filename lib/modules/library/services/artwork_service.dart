@@ -7,14 +7,44 @@ class ArtworkService {
 
   static const MethodChannel _channel = MethodChannel('dn_audio/audio_library');
   static final Map<String, Future<Uri?>> _cache = {};
+  static Future<int>? _clearOperation;
 
-  static Future<Uri?> resolve(Song song) {
+  static Future<Uri?> resolve(Song song) async {
+    final clearing = _clearOperation;
+    if (clearing != null) await clearing;
+
     final cached = _cache[song.id];
     if (cached != null) return cached;
 
     final request = _resolve(song);
     _cache[song.id] = request;
     return request;
+  }
+
+  static Future<int> clearCache() {
+    final activeOperation = _clearOperation;
+    if (activeOperation != null) return activeOperation;
+
+    final operation = _performCacheClear();
+    _clearOperation = operation;
+    return operation;
+  }
+
+  static Future<int> _performCacheClear() async {
+    try {
+      final pendingResolutions = _cache.values
+          .map((future) => future.then<void>((_) {}, onError: (_) {}))
+          .toList(growable: false);
+      await Future.wait(pendingResolutions);
+
+      final deletedCount = await _channel.invokeMethod<int>(
+        'clearArtworkCache',
+      );
+      _cache.clear();
+      return deletedCount ?? 0;
+    } finally {
+      _clearOperation = null;
+    }
   }
 
   static Future<ArtworkCacheInfo> getCacheInfo() async {
