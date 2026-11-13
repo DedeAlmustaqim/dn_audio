@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
 import '../controllers/sleep_timer_controller.dart';
 
 class SleepTimerSheet extends StatefulWidget {
@@ -39,10 +42,10 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
       top: false,
       child: Padding(
         padding: EdgeInsets.fromLTRB(
-          22,
-          14,
-          22,
-          22 + MediaQuery.viewInsetsOf(context).bottom,
+          AppSpacing.screenHorizontal,
+          AppSpacing.md,
+          AppSpacing.screenHorizontal,
+          AppSpacing.xl + MediaQuery.viewInsetsOf(context).bottom,
         ),
         child: SingleChildScrollView(
         child: Column(
@@ -55,23 +58,23 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 height: 4,
                 decoration: BoxDecoration(
                   color: AppColors.border,
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: AppRadius.full,
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.xl),
             Row(
               children: [
                 Container(
                   width: 46,
                   height: 46,
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.13),
-                    borderRadius: BorderRadius.circular(15),
+                    color: AppColors.controlSelectedSurface,
+                    borderRadius: AppRadius.small,
                   ),
                   child: const Icon(
                     Icons.bedtime_outlined,
-                    color: AppColors.primary,
+                    color: AppColors.controlActive,
                   ),
                 ),
                 const SizedBox(width: 14),
@@ -82,8 +85,8 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                       Text(
                         'Sleep Timer',
                         style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                       SizedBox(height: 3),
@@ -99,7 +102,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.xl),
             Obx(() {
               final active = controller.isActive.value;
               final remaining = controller.remainingTime.value;
@@ -109,18 +112,18 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
               final finished = !active && remaining == Duration.zero;
               return Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                margin: const EdgeInsets.only(bottom: 22),
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                margin: const EdgeInsets.only(bottom: AppSpacing.xl),
                 decoration: BoxDecoration(
                   color: AppColors.surfaceElevated,
-                  borderRadius: BorderRadius.circular(18),
+                  borderRadius: AppRadius.medium,
                   border: Border.all(color: AppColors.border),
                 ),
                 child: Row(
                   children: [
                     const Icon(
                       Icons.timer_outlined,
-                      color: AppColors.primary,
+                      color: AppColors.controlActive,
                       size: 25,
                     ),
                     const SizedBox(width: 12),
@@ -131,7 +134,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                           Text(
                             finished ? 'Timer finished' : 'Timer active',
                             style: const TextStyle(
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                           const SizedBox(height: 3),
@@ -152,7 +155,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                         controller.formatRemaining(remaining),
                         style: const TextStyle(
                           fontSize: 18,
-                          fontWeight: FontWeight.w800,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                   ],
@@ -164,11 +167,11 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
               style: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 10,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 1.4,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.2,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.md),
             Wrap(
               spacing: 9,
               runSpacing: 9,
@@ -181,17 +184,17 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 );
               }).toList(),
             ),
-            const SizedBox(height: 26),
+            const SizedBox(height: AppSpacing.xxxl),
             const Text(
               'CUSTOM DURATION',
               style: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 10,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 1.4,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.2,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.md),
             Row(
               children: [
                 Expanded(
@@ -213,7 +216,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             SizedBox(
               width: double.infinity,
               height: 52,
@@ -224,16 +227,16 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                           Duration(hours: _hours, minutes: _minutes),
                         ),
                 style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: AppColors.controlActive,
                   foregroundColor: AppColors.background,
                   disabledBackgroundColor: AppColors.surfaceElevated,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: AppRadius.small,
                   ),
                 ),
                 child: const Text(
                   'Start Timer',
-                  style: TextStyle(fontWeight: FontWeight.w800),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -255,7 +258,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                       foregroundColor: AppColors.textPrimary,
                       side: const BorderSide(color: AppColors.border),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: AppRadius.small,
                       ),
                     ),
                     child: const Text('Cancel Timer'),
@@ -281,17 +284,17 @@ class _DurationChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: AppColors.surfaceElevated,
-      borderRadius: BorderRadius.circular(13),
+      borderRadius: AppRadius.small,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(13),
+        borderRadius: AppRadius.small,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 13),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
           child: Text(
             label,
             style: const TextStyle(
               fontSize: 13,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),
@@ -324,11 +327,11 @@ class _DurationDropdown<T> extends StatelessWidget {
         filled: true,
         fillColor: AppColors.surfaceElevated,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: AppRadius.small,
           borderSide: const BorderSide(color: AppColors.border),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: AppRadius.small,
           borderSide: const BorderSide(color: AppColors.border),
         ),
       ),
