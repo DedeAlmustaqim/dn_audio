@@ -18,7 +18,7 @@ void main() {
     test('applies the Poppins type scale globally', () {
       final theme = AppTheme.dark;
 
-      expect(theme.fontFamily, AppTypography.fontFamily);
+      expect(theme.textTheme.displayLarge?.fontFamily, AppTypography.fontFamily);
       expect(theme.textTheme.displayLarge?.fontFamily, 'Poppins');
       expect(theme.textTheme.titleLarge?.fontFamily, 'Poppins');
       expect(theme.textTheme.bodyMedium?.fontFamily, 'Poppins');
