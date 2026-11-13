@@ -121,12 +121,18 @@ class MainActivity : AudioServiceActivity() {
                     }
                     "getArtworkCacheInfo" -> {
                         Thread {
-                            val cacheInfo = try {
-                                getArtworkCacheInfo()
-                            } catch (_: Exception) {
-                                mapOf("fileCount" to 0, "totalBytes" to 0L)
+                            try {
+                                val cacheInfo = getArtworkCacheInfo()
+                                runOnUiThread { result.success(cacheInfo) }
+                            } catch (error: Exception) {
+                                runOnUiThread {
+                                    result.error(
+                                        "cache_info_failed",
+                                        error.message ?: "Unable to read artwork cache information.",
+                                        null
+                                    )
+                                }
                             }
-                            runOnUiThread { result.success(cacheInfo) }
                         }.start()
                     }
                     "resolveArtwork" -> {
