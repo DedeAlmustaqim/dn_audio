@@ -19,7 +19,9 @@ void main() {
     test('cancel stops countdown and clears remaining time', () async {
       var expired = false;
       final service = SleepTimerService(
-        onExpired: () async => expired = true,
+        onExpired: () async {
+          expired = true;
+        },
         tickInterval: const Duration(milliseconds: 5),
       );
       addTearDown(service.dispose);
@@ -36,7 +38,9 @@ void main() {
     test('replacing a timer uses the new duration', () async {
       var expirationCount = 0;
       final service = SleepTimerService(
-        onExpired: () async => expirationCount++,
+        onExpired: () async {
+          expirationCount++;
+        },
         tickInterval: const Duration(milliseconds: 5),
       );
       addTearDown(service.dispose);
