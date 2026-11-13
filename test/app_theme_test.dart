@@ -13,6 +13,9 @@ void main() {
       expect(theme.colorScheme.secondary, AppColors.textSecondary);
       expect(theme.colorScheme.surface, AppColors.surface);
       expect(theme.dividerColor, AppColors.border);
+      expect(AppColors.controlActive, AppColors.textPrimary);
+      expect(AppColors.onControlActive, AppColors.background);
+      expect(AppColors.controlSelectedSurface, isNot(AppColors.controlActive));
     });
 
     test('applies the Poppins type scale globally', () {
