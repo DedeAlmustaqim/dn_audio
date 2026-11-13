@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import '../../library/controllers/library_controller.dart';
 import '../models/audio_library_preferences.dart';
 import '../services/settings_repository.dart';
 
@@ -50,6 +51,7 @@ class SettingsController extends GetxController {
 
     try {
       await _repository.saveAudioLibraryPreferences(next);
+      await _refreshLoadedLibrary();
     } catch (_) {
       preferences.value = previous;
       errorMessage.value = 'Could not save changes. Your previous settings were restored.';
@@ -69,12 +71,18 @@ class SettingsController extends GetxController {
 
     try {
       await _repository.saveAudioLibraryPreferences(defaults);
+      await _refreshLoadedLibrary();
     } catch (_) {
       preferences.value = previous;
       errorMessage.value = 'Could not save changes. Your previous settings were restored.';
     } finally {
       isSaving.value = false;
     }
+  }
+
+  Future<void> _refreshLoadedLibrary() async {
+    if (!Get.isRegistered<LibraryController>()) return;
+    await Get.find<LibraryController>().refreshIfLoaded();
   }
 
   @override
