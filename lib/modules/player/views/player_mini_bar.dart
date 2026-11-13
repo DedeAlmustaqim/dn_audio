@@ -19,7 +19,9 @@ class PlayerMiniBar extends GetView<PlayerController> {
       if (song == null) return const SizedBox.shrink();
 
       return Material(
-        color: AppColors.surface,
+        color: const Color(0xFFF4F3F0),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(22)),
+        clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: () => showModalBottomSheet<void>(
             context: context,
@@ -29,116 +31,84 @@ class PlayerMiniBar extends GetView<PlayerController> {
             backgroundColor: AppColors.background,
             builder: (_) => const NowPlayingView(),
           ),
-          child: Container(
-            height: 76,
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.md,
-            ),
-            decoration: const BoxDecoration(
-              border: Border(
-                top: BorderSide(color: AppColors.borderSubtle),
-              ),
-            ),
-            child: Row(
-              children: [
-                ClipRRect(
-                  borderRadius: AppRadius.small,
-                  child: SizedBox(
-                    width: 44,
-                    height: 44,
-                    child: SongArtwork(song: song, iconSize: 22),
+          child: SizedBox(
+            height: 68,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: AppRadius.small,
+                    child: SizedBox(
+                      width: 42,
+                      height: 42,
+                      child: SongArtwork(song: song, iconSize: 21),
+                    ),
                   ),
-                ),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Semantics(
-                    label: 'Now playing: ${song.title}, ${song.artist}',
-                    child: ExcludeSemantics(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            song.title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.titleSmall
-                                ?.copyWith(fontWeight: FontWeight.w600),
-                          ),
-                          const SizedBox(height: AppSpacing.xxs),
-                          Text(
-                            song.artist,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(color: AppColors.textSecondary),
-                          ),
-                        ],
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Semantics(
+                      label: 'Now playing: ${song.title}, ${song.artist}',
+                      child: ExcludeSemantics(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              song.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    color: const Color(0xFF171820),
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                            ),
+                            const SizedBox(height: AppSpacing.xxs),
+                            Text(
+                              song.artist,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: const Color(0xFF777982),
+                                  ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                _MiniPlayerControl(
-                  tooltip: 'Previous',
-                  onPressed: controller.skipPrevious,
-                  icon: Icons.skip_previous_rounded,
-                ),
-                Obx(
-                  () => _MiniPlayerControl(
-                    tooltip: controller.isPlaying.value ? 'Pause' : 'Play',
-                    onPressed: controller.togglePlayPause,
-                    icon: controller.isPlaying.value
-                        ? Icons.pause_rounded
-                        : Icons.play_arrow_rounded,
-                    emphasized: true,
-                  ),
-                ),
-                _MiniPlayerControl(
-                  tooltip: 'Next',
-                  onPressed: controller.skipNext,
-                  icon: Icons.skip_next_rounded,
-                ),
-              ],
+                  const SizedBox(width: AppSpacing.sm),
+                  Obx(() {
+                    final playing = controller.isPlaying.value;
+                    return IconButton(
+                      tooltip: playing ? 'Pause' : 'Play',
+                      onPressed: controller.togglePlayPause,
+                      style: IconButton.styleFrom(
+                        backgroundColor: const Color(0xFF171820),
+                        foregroundColor: const Color(0xFFF7F7F5),
+                        minimumSize: const Size(44, 44),
+                        maximumSize: const Size(44, 44),
+                        shape: const CircleBorder(),
+                        padding: EdgeInsets.zero,
+                      ),
+                      icon: AnimatedSwitcher(
+                        duration: AppMotion.fast,
+                        switchInCurve: AppMotion.enterCurve,
+                        switchOutCurve: AppMotion.exitCurve,
+                        child: Icon(
+                          playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                          key: ValueKey(playing),
+                          size: 24,
+                        ),
+                      ),
+                    );
+                  }),
+                ],
+              ),
             ),
           ),
         ),
       );
     });
-  }
-}
-
-class _MiniPlayerControl extends StatelessWidget {
-  const _MiniPlayerControl({
-    required this.tooltip,
-    required this.onPressed,
-    required this.icon,
-    this.emphasized = false,
-  });
-
-  final String tooltip;
-  final VoidCallback onPressed;
-  final IconData icon;
-  final bool emphasized;
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      tooltip: tooltip,
-      onPressed: onPressed,
-      visualDensity: VisualDensity.compact,
-      constraints: const BoxConstraints.tightFor(width: 44, height: 48),
-      padding: EdgeInsets.zero,
-      icon: AnimatedSwitcher(
-        duration: AppMotion.fast,
-        switchInCurve: AppMotion.enterCurve,
-        switchOutCurve: AppMotion.exitCurve,
-        child: Icon(
-          icon,
-          key: ValueKey(icon),
-          size: emphasized ? 28 : 23,
-          color: emphasized ? AppColors.textPrimary : AppColors.textSecondary,
-        ),
-      ),
-    );
   }
 }
