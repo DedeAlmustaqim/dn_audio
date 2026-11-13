@@ -135,6 +135,22 @@ class MainActivity : AudioServiceActivity() {
                             }
                         }.start()
                     }
+                    "clearArtworkCache" -> {
+                        Thread {
+                            try {
+                                val deletedCount = clearArtworkCache()
+                                runOnUiThread { result.success(deletedCount) }
+                            } catch (error: Exception) {
+                                runOnUiThread {
+                                    result.error(
+                                        "cache_clear_failed",
+                                        error.message ?: "Unable to clear artwork cache.",
+                                        null
+                                    )
+                                }
+                            }
+                        }.start()
+                    }
                     "resolveArtwork" -> {
                         val contentUri = call.argument<String>("contentUri")
                         val songId = call.argument<String>("songId")
@@ -199,6 +215,7 @@ class MainActivity : AudioServiceActivity() {
         }
     }
 
+    @Synchronized
     private fun resolveArtwork(contentUriValue: String, songId: String): String? {
         val audioUri = Uri.parse(contentUriValue)
         var artworkBytes: ByteArray? = null
@@ -271,6 +288,30 @@ class MainActivity : AudioServiceActivity() {
             }
         }
         return mapOf("fileCount" to fileCount, "totalBytes" to totalBytes)
+    }
+
+    @Synchronized
+    private fun clearArtworkCache(): Int {
+        val directory = File(cacheDir, "dn_audio_artwork")
+        if (!directory.exists()) return 0
+        require(directory.isDirectory) { "Artwork cache path is not a directory." }
+
+        val canonicalCacheRoot = cacheDir.canonicalFile
+        val canonicalDirectory = directory.canonicalFile
+        require(canonicalDirectory.parentFile == canonicalCacheRoot &&
+            canonicalDirectory.name == "dn_audio_artwork"
+        ) { "Refusing to clear an unexpected cache path." }
+
+        var deletedCount = 0
+        directory.walkBottomUp().forEach { file ->
+            if (file != directory && file.exists()) {
+                if (file.isFile) deletedCount++
+                if (!file.delete()) {
+                    throw IllegalStateException("Unable to delete artwork cache entry: ${file.name}")
+                }
+            }
+        }
+        return deletedCount
     }
 
     private fun createArtworkPlaceholder(file: File) {
