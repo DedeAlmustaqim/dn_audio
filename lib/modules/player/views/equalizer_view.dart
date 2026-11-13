@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
 import '../models/audio_effects_capabilities.dart';
 import '../models/audio_equalizer_preset.dart';
 import '../services/dn_audio_handler.dart';
@@ -171,7 +174,7 @@ class _EqualizerViewState extends State<EqualizerView> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.surfaceElevated,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: AppRadius.medium,
         border: Border.all(color: AppColors.border),
       ),
       child: Column(
@@ -193,7 +196,7 @@ class _EqualizerViewState extends State<EqualizerView> {
               ),
               Switch.adaptive(
                 value: capability.enabled,
-                activeThumbColor: AppColors.primary,
+                activeThumbColor: AppColors.controlActive,
                 onChanged: _isUpdatingOptionalEffect
                     ? null
                     : (enabled) => _setOptionalEffect(
@@ -211,11 +214,11 @@ class _EqualizerViewState extends State<EqualizerView> {
                 const Text('INTENSITY', style: TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 10,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                   letterSpacing: 1.2)),
                 const Spacer(),
                 Text('${(strength / 10).round()}%', style: const TextStyle(
-                  color: AppColors.primary,
+                  color: AppColors.controlActive,
                   fontSize: 12,
                   fontWeight: FontWeight.w700)),
               ],
@@ -224,7 +227,7 @@ class _EqualizerViewState extends State<EqualizerView> {
               min: minStrength.toDouble(),
               max: maxStrength.toDouble(),
               value: strength,
-              activeColor: AppColors.primary,
+              activeColor: AppColors.controlActive,
               inactiveColor: AppColors.border,
               onChanged: capability.enabled && !_isUpdatingOptionalEffect
                   ? (value) => setState(() {
@@ -287,7 +290,7 @@ class _EqualizerViewState extends State<EqualizerView> {
             return Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(22, 14, 16, 12),
+                  padding: const const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.md, AppSpacing.md, AppSpacing.md),
                   child: Column(
                     children: [
                       if (widget.isBottomSheet) ...[
@@ -313,16 +316,16 @@ class _EqualizerViewState extends State<EqualizerView> {
                                   style: TextStyle(
                                     color: AppColors.textSecondary,
                                     fontSize: 10,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: 2,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 1.4,
                                   ),
                                 ),
                                 SizedBox(height: 5),
                                 Text(
                                   'Sound control',
                                   style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w800,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ],
@@ -380,13 +383,13 @@ class _EqualizerViewState extends State<EqualizerView> {
     }
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(22, 16, 22, 22),
+      padding: const const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.lg, AppSpacing.screenHorizontal, AppSpacing.xl),
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
           decoration: BoxDecoration(
             color: AppColors.surfaceElevated,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: AppRadius.medium,
             border: Border.all(color: AppColors.border),
           ),
           child: Row(
@@ -405,7 +408,7 @@ class _EqualizerViewState extends State<EqualizerView> {
               ),
               Switch.adaptive(
                 value: equalizer.enabled,
-                activeThumbColor: AppColors.primary,
+                activeThumbColor: AppColors.controlActive,
                 onChanged: equalizer.supported ? _toggleEqualizer : null,
               ),
             ],
@@ -417,7 +420,7 @@ class _EqualizerViewState extends State<EqualizerView> {
           style: TextStyle(
             color: AppColors.textSecondary,
             fontSize: 10,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w600,
             letterSpacing: 1.5,
           ),
         ),
@@ -436,14 +439,14 @@ class _EqualizerViewState extends State<EqualizerView> {
                       if (value) _applyPreset(preset, equalizer);
                     }
                   : null,
-              selectedColor: AppColors.primary.withValues(alpha: 0.22),
+              selectedColor: AppColors.controlSelectedSurface,
               backgroundColor: AppColors.surfaceElevated,
               side: BorderSide(
-                color: selected ? AppColors.primary : AppColors.border,
+                color: selected ? AppColors.controlActive : AppColors.border,
               ),
               labelStyle: TextStyle(
                 color: selected
-                    ? AppColors.primary
+                    ? AppColors.controlActive
                     : AppColors.textSecondary,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
@@ -461,7 +464,7 @@ class _EqualizerViewState extends State<EqualizerView> {
           Text(
             _message!,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.redAccent, fontSize: 12),
+            style: const TextStyle(color: AppColors.error, fontSize: 12),
           ),
         ],
         const SizedBox(height: 18),
@@ -504,13 +507,13 @@ class _EqualizerViewState extends State<EqualizerView> {
     final maxLevel = (equalizer.maxLevelMillibels ?? 1500).toDouble();
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(22, 18, 22, 28),
+      padding: const const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.lg, AppSpacing.screenHorizontal, AppSpacing.xxxl),
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
             color: AppColors.surfaceElevated,
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: AppRadius.medium,
             border: Border.all(color: AppColors.border),
           ),
           child: Row(
@@ -523,7 +526,7 @@ class _EqualizerViewState extends State<EqualizerView> {
                       'Equalizer',
                       style: TextStyle(
                         fontSize: 15,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     SizedBox(height: 4),
@@ -546,7 +549,7 @@ class _EqualizerViewState extends State<EqualizerView> {
               else
                 Switch.adaptive(
                   value: equalizer.enabled,
-                  activeThumbColor: AppColors.primary,
+                  activeThumbColor: AppColors.controlActive,
                   onChanged: equalizer.supported ? _toggleEqualizer : null,
                 ),
             ],
@@ -560,7 +563,7 @@ class _EqualizerViewState extends State<EqualizerView> {
               style: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 10,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
                 letterSpacing: 1.5,
               ),
             ),
@@ -586,16 +589,16 @@ class _EqualizerViewState extends State<EqualizerView> {
                       if (selected) _applyPreset(preset, equalizer);
                     }
                   : null,
-              selectedColor: AppColors.primary.withValues(alpha: 0.22),
+              selectedColor: AppColors.controlSelectedSurface,
               backgroundColor: AppColors.surfaceElevated,
               side: BorderSide(
                 color: _equalizerController.selectedPresetId.value == preset.id
-                    ? AppColors.primary
+                    ? AppColors.controlActive
                     : AppColors.border,
               ),
               labelStyle: TextStyle(
                 color: _equalizerController.selectedPresetId.value == preset.id
-                    ? AppColors.primary
+                    ? AppColors.controlActive
                     : AppColors.textSecondary,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
@@ -621,7 +624,7 @@ class _EqualizerViewState extends State<EqualizerView> {
               style: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 10,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
                 letterSpacing: 1.5,
               ),
             ),
@@ -629,9 +632,9 @@ class _EqualizerViewState extends State<EqualizerView> {
             Text(
               '${equalizer.bands.length} BANDS',
               style: const TextStyle(
-                color: AppColors.primary,
+                color: AppColors.controlActive,
                 fontSize: 10,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ],
@@ -652,16 +655,16 @@ class _EqualizerViewState extends State<EqualizerView> {
                         _formatFrequency(band.centerFrequencyHz),
                         style: const TextStyle(
                           fontSize: 13,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
                     Text(
                       '${(safeValue / 100).toStringAsFixed(1)} dB',
                       style: const TextStyle(
-                        color: AppColors.primary,
+                        color: AppColors.controlActive,
                         fontSize: 12,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
@@ -670,7 +673,7 @@ class _EqualizerViewState extends State<EqualizerView> {
                   min: minLevel,
                   max: maxLevel > minLevel ? maxLevel : minLevel + 1,
                   value: safeValue,
-                  activeColor: AppColors.primary,
+                  activeColor: AppColors.controlActive,
                   inactiveColor: AppColors.border,
                   onChanged: equalizer.enabled && !_isApplyingPreset
                       ? (value) {
@@ -716,7 +719,7 @@ class _EqualizerViewState extends State<EqualizerView> {
             _message!,
             textAlign: TextAlign.center,
             style: const TextStyle(
-              color: Colors.redAccent,
+              color: AppColors.error,
               fontSize: 12,
             ),
           ),
