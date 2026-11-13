@@ -15,7 +15,7 @@ void main() {
 
       expect(controller.preferences.value.enabledExtensions, {'mp3', 'flac'});
       expect(controller.isLoading.value, isFalse);
-      await controller.onClose();
+      controller.onClose();
     });
 
     test('persists extension changes', () async {
@@ -27,7 +27,7 @@ void main() {
 
       expect(controller.preferences.value.isEnabled('mp3'), isFalse);
       expect(repository.saved?.isEnabled('mp3'), isFalse);
-      await controller.onClose();
+      controller.onClose();
     });
 
     test('restores previous selection when saving fails', () async {
@@ -40,7 +40,7 @@ void main() {
 
       expect(controller.preferences.value.enabledExtensions, before);
       expect(controller.errorMessage.value, isNotNull);
-      await controller.onClose();
+      controller.onClose();
     });
 
     test('reset restores and persists default formats', () async {
@@ -59,7 +59,7 @@ void main() {
         repository.saved?.enabledExtensions,
         AudioLibraryPreferences.defaultExtensions,
       );
-      await controller.onClose();
+      controller.onClose();
     });
   });
 }
