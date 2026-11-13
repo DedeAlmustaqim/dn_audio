@@ -119,6 +119,16 @@ class MainActivity : AudioServiceActivity() {
                             }
                         }
                     }
+                    "getArtworkCacheInfo" -> {
+                        Thread {
+                            val cacheInfo = try {
+                                getArtworkCacheInfo()
+                            } catch (_: Exception) {
+                                mapOf("fileCount" to 0, "totalBytes" to 0L)
+                            }
+                            runOnUiThread { result.success(cacheInfo) }
+                        }.start()
+                    }
                     "resolveArtwork" -> {
                         val contentUri = call.argument<String>("contentUri")
                         val songId = call.argument<String>("songId")
@@ -238,6 +248,23 @@ class MainActivity : AudioServiceActivity() {
             createArtworkPlaceholder(artworkFile)
         }
         return Uri.fromFile(artworkFile).toString()
+    }
+
+    private fun getArtworkCacheInfo(): Map<String, Any> {
+        val directory = File(cacheDir, "dn_audio_artwork")
+        if (!directory.exists() || !directory.isDirectory) {
+            return mapOf("fileCount" to 0, "totalBytes" to 0L)
+        }
+
+        var fileCount = 0
+        var totalBytes = 0L
+        directory.walkTopDown().forEach { file ->
+            if (file.isFile) {
+                fileCount++
+                totalBytes += file.length()
+            }
+        }
+        return mapOf("fileCount" to fileCount, "totalBytes" to totalBytes)
     }
 
     private fun createArtworkPlaceholder(file: File) {
