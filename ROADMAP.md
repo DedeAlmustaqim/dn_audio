@@ -466,7 +466,13 @@ Keputusan implementasi:
 - Menghapus shortcut Folders karena folder browsing belum tersedia.
 - Menghapus affordance See all yang belum memiliki aksi.
 
-**Status: Implementasi tersedia di GitHub — menunggu format, analisis, dan pengujian lokal**
+**Status: Perbaikan sintaks Home tersedia di GitHub — menunggu format, analisis, dan pengujian lokal ulang**
+
+Catatan perbaikan setelah hasil `flutter analyze`:
+- Menghapus `const` pada daftar child `IndexedStack` karena `_HomeTab` menerima controller runtime.
+- Memperbaiki newline yang tertulis sebagai karakter literal `\\n` pada pemanggilan `_SearchField` dan deklarasi field.
+- Menghapus `_PlaceholderTab` yang sudah tidak digunakan.
+- Commit perbaikan: `c88ced4a64f5ee2161ffea2ab240222010d72a6c`.
 
 ### 9.2 — Settings Foundation & Audio Library Preferences
 
@@ -535,7 +541,7 @@ Keputusan implementasi:
 
 # Stage 9.1 — Home Functional Completion
 
-Stage 9.0 audit selesai. Implementasi awal Stage 9.1 tersedia di GitHub: Home memuat Library saat dibuka, pencarian diarahkan ke Library, shortcut Songs/Albums/Artists berfungsi, dan placeholder Recently Played diganti dengan Now Playing yang hanya muncul ketika ada lagu aktif. Pengujian lokal masih menunggu.
+Stage 9.0 audit selesai. Implementasi Home dan perbaikan sintaks setelah hasil `flutter analyze` tersedia di GitHub. Home memuat Library saat dibuka, pencarian diarahkan ke Library, shortcut Songs/Albums/Artists berfungsi, dan placeholder Recently Played diganti dengan Now Playing yang hanya muncul ketika ada lagu aktif. Menunggu hasil `dart format`, `flutter analyze`, `flutter test`, dan verifikasi perangkat ulang.
 
 
 
