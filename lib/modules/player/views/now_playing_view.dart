@@ -38,7 +38,10 @@ class NowPlayingView extends GetView<PlayerController> {
               builder: (context, constraints) {
                 final artworkSize = math.min(
                   330.0,
-                  math.max(160.0, constraints.maxHeight * 0.39),
+                  math.min(
+                    math.max(160.0, constraints.maxHeight * 0.39),
+                    constraints.maxWidth - 44,
+                  ),
                 );
 
                 return SingleChildScrollView(
