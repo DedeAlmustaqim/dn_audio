@@ -568,9 +568,13 @@ Catatan koreksi lanjutan:
 
 #### 9.4.2 — Artwork Cache Information
 
-- Menampilkan ukuran dan jumlah file cache artwork jika dapat dihitung secara andal.
+- Menambahkan MethodChannel native untuk membaca isi direktori `cacheDir/dn_audio_artwork`.
+- Menghitung jumlah file dan total byte secara rekursif tanpa membaca atau mengubah file cache.
+- Menambahkan ArtworkCacheInfo pada ArtworkService dan format ukuran B, KB, MB, atau GB.
+- Menampilkan ukuran cache dan jumlah file pada Settings dengan indikator loading, retry saat gagal, dan refresh manual.
+- Menambahkan unit test parsing metadata dan pemformatan ukuran.
 
-**Status: Direncanakan**
+**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian Flutter, build Android, dan verifikasi perangkat lokal.**
 
 #### 9.4.3 — Artwork Cache Cleanup
 
@@ -612,9 +616,9 @@ Catatan koreksi lanjutan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 9.4.1 — Library Overview & Rescan
+# Stage 9.4.2 — Artwork Cache Information
 
-Library Overview & Rescan telah ditambahkan ke Settings: jumlah lagu terindeks, tombol scan ulang, indikator proses, hasil scan, serta unit test untuk rescan dan preservasi daftar lagu ketika scan gagal. Menunggu format, analisis, pengujian Flutter, dan verifikasi perangkat lokal.
+9.4.1 — Library Overview & Rescan telah dilanjutkan ke tahap berikutnya. 9.4.2 — Artwork Cache Information kini menampilkan ukuran dan jumlah file cache artwork melalui MethodChannel native, dengan refresh manual dan unit test model. Menunggu format, analisis, pengujian Flutter, build Android, dan verifikasi perangkat lokal.
 
 # Stage 9.2.1 — Preferences Foundation
 
