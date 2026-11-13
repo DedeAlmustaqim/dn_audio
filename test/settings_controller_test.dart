@@ -5,12 +5,83 @@ import 'package:dn_audio/modules/library/models/song.dart';
 import 'package:dn_audio/modules/library/services/audio_library_service.dart';
 import 'package:dn_audio/modules/settings/controllers/settings_controller.dart';
 import 'package:dn_audio/modules/settings/models/audio_library_preferences.dart';
+import 'package:dn_audio/modules/settings/models/playback_preferences.dart';
 import 'package:dn_audio/modules/settings/services/settings_repository.dart';
 
 void main() {
   group('SettingsController', () {
     tearDown(() async {
       await Get.reset();
+    });
+
+    test('loads and applies persisted playback speed', () async {
+      final repository = _FakeSettingsRepository(
+        initialPlayback: const PlaybackPreferences(speed: 1.5),
+      );
+      final appliedSpeeds = <double>[];
+      final controller = SettingsController(
+        repository: repository,
+        applyPlaybackSpeed: (speed) async => appliedSpeeds.add(speed),
+      );
+
+      await controller.loadPreferences();
+
+      expect(controller.playbackPreferences.value.speed, 1.5);
+      expect(appliedSpeeds, [1.5]);
+      controller.onClose();
+    });
+
+    test('persists and applies a supported playback speed', () async {
+      final repository = _FakeSettingsRepository();
+      final appliedSpeeds = <double>[];
+      final controller = SettingsController(
+        repository: repository,
+        applyPlaybackSpeed: (speed) async => appliedSpeeds.add(speed),
+      );
+      await controller.loadPreferences();
+
+      await controller.setPlaybackSpeed(1.25);
+
+      expect(controller.playbackPreferences.value.speed, 1.25);
+      expect(repository.playbackSaved?.speed, 1.25);
+      expect(appliedSpeeds.last, 1.25);
+      controller.onClose();
+    });
+
+    test('rejects unsupported playback speeds', () async {
+      final repository = _FakeSettingsRepository();
+      final appliedSpeeds = <double>[];
+      final controller = SettingsController(
+        repository: repository,
+        applyPlaybackSpeed: (speed) async => appliedSpeeds.add(speed),
+      );
+      await controller.loadPreferences();
+      appliedSpeeds.clear();
+
+      await controller.setPlaybackSpeed(1.1);
+
+      expect(controller.playbackPreferences.value.speed, 1.0);
+      expect(repository.playbackSaved, isNull);
+      expect(appliedSpeeds, isEmpty);
+      expect(controller.errorMessage.value, isNotNull);
+      controller.onClose();
+    });
+
+    test('restores previous playback speed when saving fails', () async {
+      final repository = _FakeSettingsRepository()..shouldFailPlaybackSave = true;
+      final appliedSpeeds = <double>[];
+      final controller = SettingsController(
+        repository: repository,
+        applyPlaybackSpeed: (speed) async => appliedSpeeds.add(speed),
+      );
+      await controller.loadPreferences();
+
+      await controller.setPlaybackSpeed(1.5);
+
+      expect(controller.playbackPreferences.value.speed, 1.0);
+      expect(appliedSpeeds, [1.0, 1.5, 1.0]);
+      expect(controller.errorMessage.value, isNotNull);
+      controller.onClose();
     });
 
     test('loads persisted audio formats', () async {
@@ -112,12 +183,18 @@ void main() {
 }
 
 class _FakeSettingsRepository extends SettingsRepository {
-  _FakeSettingsRepository({AudioLibraryPreferences? initial})
-      : _stored = initial ?? AudioLibraryPreferences();
+  _FakeSettingsRepository({
+    AudioLibraryPreferences? initial,
+    PlaybackPreferences? initialPlayback,
+  })  : _stored = initial ?? AudioLibraryPreferences(),
+        _playbackStored = initialPlayback ?? const PlaybackPreferences();
 
   AudioLibraryPreferences _stored;
+  PlaybackPreferences _playbackStored;
   AudioLibraryPreferences? saved;
+  PlaybackPreferences? playbackSaved;
   bool shouldFailSave = false;
+  bool shouldFailPlaybackSave = false;
 
   @override
   Future<AudioLibraryPreferences> loadAudioLibraryPreferences() async => _stored;
@@ -129,6 +206,17 @@ class _FakeSettingsRepository extends SettingsRepository {
     if (shouldFailSave) throw StateError('save failed');
     _stored = preferences;
     saved = preferences;
+  }
+
+  @override
+  Future<PlaybackPreferences> loadPlaybackPreferences() async =>
+      _playbackStored;
+
+  @override
+  Future<void> savePlaybackPreferences(PlaybackPreferences preferences) async {
+    if (shouldFailPlaybackSave) throw StateError('playback save failed');
+    _playbackStored = preferences;
+    playbackSaved = preferences;
   }
 
   @override
