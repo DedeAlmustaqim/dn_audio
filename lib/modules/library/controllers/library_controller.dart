@@ -1,15 +1,23 @@
+import 'dart:async';
+
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../settings/models/audio_library_preferences.dart';
+import '../../settings/services/settings_repository.dart';
 import '../models/song.dart';
 import '../models/library_collection.dart';
 import '../services/audio_library_service.dart';
 
 class LibraryController extends GetxController {
-  LibraryController({AudioLibraryService? service})
-      : _service = service ?? AudioLibraryService();
+  LibraryController({
+    AudioLibraryService? service,
+    SettingsRepository? settingsRepository,
+  })  : _service = service ?? AudioLibraryService(),
+        _settingsRepository = settingsRepository ?? SettingsRepository();
 
   final AudioLibraryService _service;
+  final SettingsRepository _settingsRepository;
   final songs = <Song>[].obs;
   final searchQuery = ''.obs;
   final librarySection = 'songs'.obs;
@@ -133,7 +141,14 @@ class LibraryController extends GetxController {
         return;
       }
 
-      songs.assignAll(await _service.getSongs());
+      final preferences =
+          await _settingsRepository.loadAudioLibraryPreferences();
+
+      songs.assignAll(
+        await _service.getSongs(
+          extensions: preferences.enabledExtensions,
+        ),
+      );
       _hasLoaded = true;
     } on PlatformException catch (error) {
       errorMessage.value =
@@ -146,4 +161,10 @@ class LibraryController extends GetxController {
   }
 
   void updateSearch(String value) => searchQuery.value = value;
+
+  @override
+  void onClose() {
+    unawaited(_settingsRepository.close());
+    super.onClose();
+  }
 }
