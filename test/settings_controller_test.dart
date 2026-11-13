@@ -21,7 +21,7 @@ void main() {
       final appliedSpeeds = <double>[];
       final controller = SettingsController(
         repository: repository,
-        applyPlaybackSpeed: (speed) async => appliedSpeeds.add(speed),
+        applyPlaybackSpeed: (speed) async { appliedSpeeds.add(speed); },
       );
 
       await controller.loadPreferences();
