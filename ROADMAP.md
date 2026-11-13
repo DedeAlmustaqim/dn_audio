@@ -416,11 +416,14 @@ Catatan:
 
 ### 8.4 — Stabilization & Testing
 
-- Pengujian timer saat lagu berganti dan queue berubah
-- Pengujian background, pembatalan, dan lifecycle audio service
+- Menambahkan unit test untuk publikasi countdown dan event zero saat expiry
+- Menambahkan unit test disposal ketika timer masih aktif agar callback expiry tidak terpanggil setelah service ditutup
+- Menambahkan unit test pembatalan timer aktif dan publikasi nilai null
+- Pengujian timer saat lagu berganti dan queue berubah pada perangkat
+- Pengujian background, pembatalan, dan lifecycle audio service pada perangkat
 - Validasi akurasi countdown dan expiry pada perangkat
 
-**Status: Belum dimulai**
+**Status: Unit test tambahan tersedia di GitHub — menunggu format, analisis, test lokal, dan verifikasi perangkat**
 
 ## 10. Stage 9 — Final Polish & Release
 
@@ -436,9 +439,9 @@ Catatan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 8.3 — Playback Integration (Stop Playback)
+# Stage 8.4 — Stabilization & Testing
 
-Stage 7.5, Stage 8.1, dan fitur utama Stage 8.2 telah dinyatakan berjalan oleh pengguna. Audit Stage 8.3 memastikan expiry `SleepTimerService` memanggil `DnAudioHandler` untuk melakukan pause pada satu `AudioPlayer` tanpa menghapus queue. Perbaikan SafeArea Stage 8.2 juga telah diterapkan. Verifikasi timer ketika aplikasi berada di background masih diperlukan.
+Stage 7.5, Stage 8.1, dan fitur utama Stage 8.2 telah dinyatakan berjalan oleh pengguna. Integrasi Stop Playback Stage 8.3 tersedia melalui `DnAudioHandler`. Stage 8.4 menambahkan cakupan unit test untuk stream countdown, expiry, pembatalan, dan disposal. Pengujian lokal serta verifikasi perangkat untuk pergantian lagu, queue, background, dan akurasi timer masih menunggu.
 
 ---
 
