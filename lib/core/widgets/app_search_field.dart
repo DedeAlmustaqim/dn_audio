@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../constants/app_colors.dart';
+import '../theme/app_radius.dart';
+import '../theme/app_spacing.dart';
 
 class AppSearchField extends StatelessWidget {
   const AppSearchField({
@@ -20,6 +22,11 @@ class AppSearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final border = OutlineInputBorder(
+      borderRadius: AppRadius.medium,
+      borderSide: const BorderSide(color: AppColors.borderSubtle),
+    );
+
     return TextField(
       controller: controller,
       autofocus: autofocus,
@@ -29,21 +36,27 @@ class AppSearchField extends StatelessWidget {
       style: Theme.of(context).textTheme.bodyMedium,
       decoration: InputDecoration(
         hintText: hintText,
-        prefixIcon: const Icon(Icons.search_rounded),
+        hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: AppColors.textMuted,
+            ),
+        prefixIcon: const Icon(
+          Icons.search_rounded,
+          color: AppColors.textSecondary,
+        ),
+        prefixIconConstraints: const BoxConstraints(minWidth: 48),
         filled: true,
         fillColor: AppColors.surface,
-        contentPadding: const EdgeInsets.symmetric(vertical: 15),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.border),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.md,
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.border),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.primary),
+        border: border,
+        enabledBorder: border,
+        focusedBorder: border.copyWith(
+          borderSide: const BorderSide(
+            color: AppColors.controlActive,
+            width: 1.2,
+          ),
         ),
       ),
     );
