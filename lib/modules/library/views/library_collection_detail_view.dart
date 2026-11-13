@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
 import '../../player/controllers/player_controller.dart';
 import '../../player/views/player_mini_bar.dart';
 import '../models/library_collection.dart';
@@ -26,14 +29,14 @@ class AlbumDetailView extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(22, 12, 22, 20),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.md, AppSpacing.screenHorizontal, AppSpacing.xl),
             sliver: SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Center(
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(22),
+                      borderRadius: AppRadius.artworkShape,
                       child: SizedBox(
                         width: 220,
                         height: 220,
@@ -41,25 +44,20 @@ class AlbumDetailView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 22),
+                  const SizedBox(height: AppSpacing.xxl),
                   Text(
                     album.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 27,
-                      height: 1.12,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -0.7,
-                    ),
+                    style: AppTypography.editorialTitle,
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: AppSpacing.xs),
                   Text(album.artist, style: const TextStyle(color: AppColors.textSecondary, fontSize: 14)),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: AppSpacing.xs),
                   Text('${album.songCount} songs', style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppSpacing.xl),
                   _PlayAllButton(onPressed: () => player.playPlaylist(album.songs)),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: AppSpacing.lg),
                   const Divider(color: AppColors.border),
                 ],
               ),
@@ -190,7 +188,7 @@ class _ArtistAlbumCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Material(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppRadius.medium,
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: () {
@@ -198,20 +196,20 @@ class _ArtistAlbumCard extends StatelessWidget {
             Get.to(() => AlbumDetailView(album: album));
           },
           child: Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(AppSpacing.sm),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(11),
+                    borderRadius: AppRadius.small,
                     child: SizedBox(
                       width: double.infinity,
                       child: SongArtwork(song: album.artworkSong, iconSize: 34),
                     ),
                   ),
                 ),
-                const SizedBox(height: 9),
+                const SizedBox(height: AppSpacing.sm),
                 Text(album.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
                 const SizedBox(height: 3),
                 Text('${album.songCount} songs', style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
@@ -256,7 +254,7 @@ class _SongListSliver extends StatelessWidget {
       );
     }
     return SliverPadding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 28),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.xxxl),
       sliver: SliverList.separated(
         itemCount: songs.length,
         separatorBuilder: (_, _) => const Divider(height: 1, indent: 66),
@@ -269,7 +267,7 @@ class _SongListSliver extends StatelessWidget {
             },
             contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
             leading: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: AppRadius.small,
               child: SizedBox(width: 46, height: 46, child: SongArtwork(song: song, iconSize: 21)),
             ),
             title: Text(song.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
@@ -290,11 +288,11 @@ class _DetailEmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Center(
         child: Padding(
-          padding: const EdgeInsets.all(30),
+          padding: const EdgeInsets.all(AppSpacing.xxxl),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.music_off_rounded, size: 48, color: AppColors.primary),
+              const Icon(Icons.music_off_rounded, size: 48, color: AppColors.textSecondary),
               const SizedBox(height: 14),
               Text(title, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
               const SizedBox(height: 7),
