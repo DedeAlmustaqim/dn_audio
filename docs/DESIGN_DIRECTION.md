@@ -560,3 +560,23 @@ Validation still required locally:
 - Confirm background playback and Android notification/lock-screen controls remain unaffected.
 
 No playback controller, audio handler, queue, sleep timer logic, Equalizer logic, persistence, database schema or native audio code was changed in this slice.
+
+
+## 17. Stage 9.6.5 implementation record
+
+Completed in this slice:
+- Refined the Playlists index with the shared monochrome palette, spacing and radius language.
+- Replaced the tinted playlist artwork tile with a neutral elevated surface.
+- Simplified collection rows and clarified the collection heading while retaining actual playlist names and song counts.
+- Refined Playlist Detail identity, typography, metadata and the Play All action.
+- Applied shared spacing and typography tokens to the ordered track list and duration labels.
+- Preserved create, rename, duplicate-name validation, delete confirmation, refresh/retry, Play All, indexed track playback and remove-from-playlist callbacks.
+- Kept playlist ordering and persistence delegated to the existing controller and repository.
+
+Validation still required locally:
+- Run `dart format lib test`, `flutter analyze` and `flutter test`.
+- Verify create, rename, duplicate-name validation, delete confirmation, Play All, selecting a track, removing a track and refresh on a physical device.
+- Verify empty, populated, loading and database-error states, including long playlist names and large collections.
+- Confirm the Mini Player remains visible and does not overlap playlist content.
+
+No playlist controller, repository, model, database schema, playback controller, queue semantics or persistence logic was changed in this slice.
