@@ -51,9 +51,13 @@ class AudioEffectsSettings {
       selectedPresetId: map['selectedPresetId']?.toString() ?? 'flat',
       bandLevels: bands,
       bassBoostEnabled: map['bassBoostEnabled'] == true,
-      bassBoostStrength: (map['bassBoostStrength'] as num?)?.toInt() ?? 0,
+      bassBoostStrength: map['bassBoostStrength'] is num
+          ? (map['bassBoostStrength'] as num).toInt()
+          : 0,
       virtualizerEnabled: map['virtualizerEnabled'] == true,
-      virtualizerStrength: (map['virtualizerStrength'] as num?)?.toInt() ?? 0,
+      virtualizerStrength: map['virtualizerStrength'] is num
+          ? (map['virtualizerStrength'] as num).toInt()
+          : 0,
     );
   }
 }
