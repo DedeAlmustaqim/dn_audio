@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../core/constants/app_colors.dart';
 import '../controllers/settings_controller.dart';
 import '../models/audio_library_preferences.dart';
+import '../models/playback_preferences.dart';
 
 class SettingsView extends GetView<SettingsController> {
   const SettingsView({super.key});
@@ -39,6 +40,63 @@ class SettingsView extends GetView<SettingsController> {
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
           children: [
             const _SettingsIntro(),
+            const SizedBox(height: 28),
+            const _SectionHeading(
+              title: 'Playback',
+              subtitle: 'Choose the playback speed used for your music.',
+            ),
+            const SizedBox(height: 14),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+              decoration: BoxDecoration(
+                color: AppColors.surface,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Playback speed',
+                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          'Adjust how fast your music plays.',
+                          style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  DropdownButton<double>(
+                    value: controller.playbackPreferences.value.speed,
+                    underline: const SizedBox.shrink(),
+                    borderRadius: BorderRadius.circular(14),
+                    dropdownColor: AppColors.surfaceElevated,
+                    onChanged: controller.isSaving.value
+                        ? null
+                        : (speed) {
+                            if (speed != null) controller.setPlaybackSpeed(speed);
+                          },
+                    items: PlaybackPreferences.supportedSpeeds
+                        .map(
+                          (speed) => DropdownMenuItem<double>(
+                            value: speed,
+                            child: Text(
+                              '${speed.toStringAsFixed(speed == speed.roundToDouble() ? 1 : 2)}×',
+                              style: const TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        )
+                        .toList(growable: false),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 28),
             const _SectionHeading(
               title: 'Audio Library',
