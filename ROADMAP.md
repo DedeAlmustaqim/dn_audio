@@ -564,7 +564,7 @@ Catatan koreksi lanjutan:
 - Mempertahankan daftar lagu sebelumnya ketika pemindaian ulang gagal.
 - Menambahkan unit test untuk pemindaian ulang dan preservasi data ketika scan gagal.
 
-**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian Flutter, dan verifikasi perangkat lokal.**
+**Status: Selesai — pengguna melanjutkan ke tahap 9.4.2.**
 
 #### 9.4.2 — Artwork Cache Information
 
