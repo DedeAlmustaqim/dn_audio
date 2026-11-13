@@ -15,6 +15,8 @@ abstract final class AppColors {
   // Controls and separators.
   static const primary = textPrimary;
   static const primaryPressed = Color(0xFFD5D2CE);
+  // Compatibility alias for existing widgets; now intentionally monochrome.
+  static const primaryStrong = primaryPressed;
   static const controlInactive = textMuted;
   static const border = Color(0xFF302D2C);
 
