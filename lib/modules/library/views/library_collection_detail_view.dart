@@ -232,9 +232,14 @@ class _PlayAllButton extends StatelessWidget {
           icon: const Icon(Icons.play_arrow_rounded),
           label: const Text('Play all'),
           style: FilledButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 14),
+            backgroundColor: AppColors.controlActive,
+            foregroundColor: AppColors.onControlActive,
+            disabledBackgroundColor: AppColors.surfaceElevated,
+            disabledForegroundColor: AppColors.textMuted,
+            minimumSize: const Size.fromHeight(52),
+            shape: const StadiumBorder(),
+            textStyle: Theme.of(context).textTheme.labelLarge
+                ?.copyWith(fontWeight: FontWeight.w600),
           ),
         ),
       );
