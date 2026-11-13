@@ -32,8 +32,14 @@ abstract final class AppTheme {
         titleTextStyle: AppTypography.textTheme.titleLarge,
       ),
       navigationBarTheme: NavigationBarThemeData(
+        height: 72,
         backgroundColor: AppColors.surface,
+        elevation: 0,
         indicatorColor: AppColors.textPrimary.withValues(alpha: 0.12),
+        indicatorShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+        ),
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           return AppTypography.textTheme.labelSmall!.copyWith(
             fontWeight: states.contains(WidgetState.selected)
@@ -46,6 +52,7 @@ abstract final class AppTheme {
         }),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           return IconThemeData(
+            size: 22,
             color: states.contains(WidgetState.selected)
                 ? AppColors.textPrimary
                 : AppColors.textSecondary,
