@@ -318,28 +318,17 @@ class MainActivity : AudioServiceActivity() {
         val size = 512
         val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-        canvas.drawColor(Color.rgb(21, 21, 29))
+        canvas.drawColor(Color.rgb(34, 34, 41))
 
-        val circlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.rgb(155, 110, 243)
-        }
-        canvas.drawCircle(size / 2f, size / 2f - 18f, 142f, circlePaint)
-
+        // Keep missing-artwork treatment neutral and understated.
         val notePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.WHITE
+            color = Color.rgb(165, 161, 160)
             textAlign = Paint.Align.CENTER
-            textSize = 220f
-            typeface = Typeface.create("sans-serif", Typeface.BOLD)
+            textSize = 190f
+            typeface = Typeface.create("sans-serif", Typeface.NORMAL)
         }
-        canvas.drawText("♪", size / 2f, size / 2f + 58f, notePaint)
-
-        val brandPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.rgb(183, 148, 246)
-            textAlign = Paint.Align.CENTER
-            textSize = 34f
-            typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
-        }
-        canvas.drawText("DN AUDIO", size / 2f, 466f, brandPaint)
+        val baseline = size / 2f - (notePaint.ascent() + notePaint.descent()) / 2f
+        canvas.drawText("♪", size / 2f, baseline, notePaint)
 
         file.outputStream().use { output ->
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
