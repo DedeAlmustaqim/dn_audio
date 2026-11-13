@@ -110,9 +110,13 @@ class LibraryController extends GetxController {
     return refreshLibrary();
   }
 
-  Future<void> refreshLibrary() {
+  Future<void> refreshLibrary({bool force = false}) {
     final inFlight = _refreshFuture;
-    if (inFlight != null) return inFlight;
+    if (inFlight != null) {
+      if (!force) return inFlight;
+      // If preferences change during a scan, queue one fresh scan afterward.
+      return inFlight.then((_) => refreshLibrary());
+    }
 
     late final Future<void> trackedRefresh;
     trackedRefresh = _performRefresh().whenComplete(() {
@@ -122,6 +126,11 @@ class LibraryController extends GetxController {
     });
     _refreshFuture = trackedRefresh;
     return trackedRefresh;
+  }
+
+  Future<void> refreshIfLoaded() {
+    if (!_hasLoaded) return Future<void>.value();
+    return refreshLibrary(force: true);
   }
 
   Future<void> _performRefresh() async {
