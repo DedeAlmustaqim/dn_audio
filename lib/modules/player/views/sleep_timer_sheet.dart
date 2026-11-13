@@ -151,7 +151,6 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w800,
-                          fontFeatures: [FontFeature.tabularFigures()],
                         ),
                       ),
                   ],
