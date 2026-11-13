@@ -5,6 +5,7 @@ import '../../../core/constants/app_colors.dart';
 import '../controllers/settings_controller.dart';
 import '../models/audio_library_preferences.dart';
 import '../models/playback_preferences.dart';
+import '../../player/views/equalizer_view.dart';
 
 class SettingsView extends GetView<SettingsController> {
   const SettingsView({super.key});
@@ -95,6 +96,46 @@ class SettingsView extends GetView<SettingsController> {
                         .toList(growable: false),
                   ),
                 ],
+              ),
+            ),
+            const SizedBox(height: 28),
+            const _SectionHeading(
+              title: 'Audio Experience',
+              subtitle: 'Shape the sound with your device-supported audio effects.',
+            ),
+            const SizedBox(height: 14),
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.surface,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: ListTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 6,
+                ),
+                leading: const Icon(
+                  Icons.equalizer_rounded,
+                  color: AppColors.primary,
+                ),
+                title: const Text(
+                  'Equalizer & effects',
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                ),
+                subtitle: const Text(
+                  'Presets, band levels, Bass Boost and Virtualizer',
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 11,
+                  ),
+                ),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () => Get.bottomSheet<void>(
+                  const EqualizerView(isBottomSheet: true),
+                  isScrollControlled: true,
+                  backgroundColor: AppColors.background,
+                ),
               ),
             ),
             const SizedBox(height: 28),
