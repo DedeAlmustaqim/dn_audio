@@ -363,7 +363,7 @@ class _NowPlayingSection extends StatelessWidget {
       final positionMs = player.position.value.inMilliseconds;
       final progress = durationMs <= 0
           ? 0.0
-          : (positionMs / durationMs).clamp(0.0, 1.0);
+          : (positionMs / durationMs).clamp(0.0, 1.0).toDouble();
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
