@@ -486,4 +486,21 @@ Stage 9.6 is complete when:
 ---
 
 **Final decision:** Immersive Minimal overall · Poppins typography · Editorial Now Playing · Premium Dark monochrome palette.  
-**Implementation status:** Blueprint approved for Stage 9.6; implementation begins with 9.6.1 after this document is committed and reviewed.
+**Implementation status:** Blueprint approved. Stage 9.6.1 implementation is in progress. Shared monochrome color aliases, Poppins semantic styles, spacing/radius/motion tokens and base Material component themes have been added. Poppins font binaries are not yet bundled; device-level typography verification remains pending.
+
+
+## 13. Stage 9.6.1 implementation record
+
+Initial foundation changes:
+- Added `AppSpacing`, `AppRadius` and `AppMotion` token classes.
+- Added semantic monochrome control aliases while retaining compatibility aliases for existing widgets.
+- Added dedicated editorial-title and eyebrow typography styles.
+- Standardized Material button, icon button, slider, progress, divider, navigation, dialog and snackbar themes.
+- Kept the existing dark palette and semantic feedback colors.
+
+Outstanding validation:
+- Bundle the actual Poppins font files and declare their weights in `pubspec.yaml`. No font binaries were present in the repository when this slice was implemented.
+- Run `dart format`, `flutter analyze`, `flutter test` and a device build from the developer's Flutter environment.
+- Verify contrast, text scaling and component states on-device before marking 9.6.1 complete.
+
+No playback, persistence, routing, database or native audio code was changed in this slice.
