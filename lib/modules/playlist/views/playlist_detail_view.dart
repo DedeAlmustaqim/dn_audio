@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/app_loading_state.dart';
 import '../../../core/widgets/app_empty_state.dart';
 import '../../player/controllers/player_controller.dart';
@@ -108,36 +111,41 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(22, 12, 22, 20),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.md, AppSpacing.screenHorizontal, AppSpacing.lg),
               sliver: SliverToBoxAdapter(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: 76,
-                      height: 76,
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.14),
-                        borderRadius: BorderRadius.circular(20),
+                      width: 84,
+                      height: 84,
+                      decoration: const BoxDecoration(
+                        color: AppColors.surfaceElevated,
+                        borderRadius: AppRadius.large,
                       ),
                       child: const Icon(
                         Icons.queue_music_rounded,
-                        color: AppColors.primary,
-                        size: 38,
+                        color: AppColors.textPrimary,
+                        size: 40,
                       ),
                     ),
-                    const SizedBox(height: 18),
+                    const SizedBox(height: AppSpacing.xl),
+                    Text(
+                      'YOUR PLAYLIST',
+                      style: AppTypography.eyebrow.copyWith(color: AppColors.textSecondary),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
                     Text(
                       widget.playlist.name,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 27,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: -0.7,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: -0.6,
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: AppSpacing.xs),
                     Text(
                       '${songs.length} songs',
                       style: const TextStyle(
@@ -145,7 +153,7 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
                         fontSize: 13,
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppSpacing.xl),
                     SizedBox(
                       width: double.infinity,
                       child: FilledButton.icon(
@@ -159,11 +167,11 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
                         style: FilledButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          minimumSize: const Size.fromHeight(52),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppSpacing.lg),
                     const Divider(color: AppColors.border),
                   ],
                 ),
@@ -197,7 +205,7 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
               )
             else
               SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 28),
+                padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.xxxl),
                 sliver: SliverList.separated(
                   itemCount: songs.length,
                   separatorBuilder: (_, _) =>
@@ -219,6 +227,7 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
                             style: const TextStyle(
                               color: AppColors.textSecondary,
                               fontSize: 12,
+                              fontFeatures: const [FontFeature.tabularFigures()],
                             ),
                           ),
                           PopupMenuButton<String>(
