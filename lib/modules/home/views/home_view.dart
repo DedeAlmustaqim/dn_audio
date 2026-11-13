@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../library/controllers/library_controller.dart';
 import '../../library/views/library_view.dart';
+import '../../player/controllers/player_controller.dart';
+import '../../player/views/now_playing_view.dart';
 import '../../player/views/player_mini_bar.dart';
 import '../../player/views/equalizer_view.dart';
 import '../../player/views/sleep_timer_sheet.dart';
@@ -23,7 +26,7 @@ class HomeView extends GetView<HomeController> {
           child: IndexedStack(
             index: index,
             children: const [
-              _HomeTab(),
+              _HomeTab(controller: controller),
               LibraryView(),
               PlaylistView(),
               _EqualizerTab(),
@@ -107,7 +110,7 @@ class _HomeTab extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 26),
-              const _SearchField(),
+              _SearchField(\n                textController: controller.searchTextController,\n                onSubmitted: controller.submitSearch,\n              ),
               const SizedBox(height: 30),
               const _SectionHeader(title: 'Recently Played'),
               const SizedBox(height: 14),
@@ -204,7 +207,7 @@ class _BrandHeader extends StatelessWidget {
 }
 
 class _SearchField extends StatelessWidget {
-  const _SearchField();
+  const _SearchField({required this.textController, required this.onSubmitted});\n\n  final TextEditingController textController;\n  final ValueChanged<String> onSubmitted;
 
   @override
   Widget build(BuildContext context) {
