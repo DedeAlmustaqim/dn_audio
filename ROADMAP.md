@@ -401,7 +401,7 @@ Catatan:
 - Memakai `SleepTimerService` milik `DnAudioHandler` yang sama; tidak membuat timer atau audio engine kedua
 - Menambahkan unit test untuk format countdown menit/detik, jam/menit/detik, dan nilai nol
 
-**Status: Implementasi tersedia di GitHub — menunggu analisis, pengujian lokal, dan verifikasi perangkat**
+**Status: Fitur utama berjalan — perbaikan SafeArea tersedia di GitHub dan menunggu verifikasi lokal**
 
 ### 8.3 — Playback Integration & Fade Out
 
@@ -435,7 +435,7 @@ Catatan:
 
 # Stage 8.2 — Sleep Timer UI & Controls
 
-Stage 7.5 dan Stage 8.1 telah dinyatakan clean oleh pengguna. Stage 8.2 menambahkan akses Sleep Timer dari Home dan Now Playing, pilihan durasi cepat dan custom, countdown aktif, serta pembatalan timer. Implementasi tersedia di GitHub dan menunggu verifikasi lokal.
+Stage 7.5 dan Stage 8.1 telah dinyatakan clean oleh pengguna. Fitur utama Stage 8.2 telah berjalan pada pengujian pengguna. Perbaikan SafeArea bagian bawah pada Sleep Timer sheet telah diterapkan di GitHub dan menunggu verifikasi lokal.
 
 ---
 
