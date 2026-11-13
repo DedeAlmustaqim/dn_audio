@@ -40,16 +40,15 @@ void main() {
 
     test('refreshes an already loaded library after saving preferences', () async {
       final libraryService = _FakeLibraryService();
+      final repository = _FakeSettingsRepository();
       final libraryController = LibraryController(
         service: libraryService,
-        settingsRepository: _FakeSettingsRepository(),
+        settingsRepository: repository,
       );
       await libraryController.ensureLoaded();
       Get.put<LibraryController>(libraryController);
 
-      final controller = SettingsController(
-        repository: _FakeSettingsRepository(),
-      );
+      final controller = SettingsController(repository: repository);
       await controller.loadPreferences();
 
       await controller.toggleExtension('mp3', false);
