@@ -3,7 +3,7 @@ import 'dart:async';
 /// Owns a monotonic countdown independently from any UI lifecycle.
 class SleepTimerService {
   SleepTimerService({
-    required this._onExpired,
+    required this.onExpired,
     this.tickInterval = const Duration(seconds: 1),
   }) {
     if (tickInterval <= Duration.zero) {
@@ -11,7 +11,7 @@ class SleepTimerService {
     }
   }
 
-  final Future<void> Function() _onExpired;
+  final Future<void> Function() onExpired;
   final Duration tickInterval;
   final StreamController<Duration?> _remainingController =
       StreamController<Duration?>.broadcast();
@@ -71,7 +71,7 @@ class SleepTimerService {
 
       if (!_expirationDispatched) {
         _expirationDispatched = true;
-        unawaited(_onExpired());
+        unawaited(onExpired());
       }
       return;
     }
