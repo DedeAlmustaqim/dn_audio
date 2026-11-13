@@ -53,6 +53,13 @@ class DnAudioHandler extends BaseAudioHandler
     }
   }
 
+  Future<void> setPlaybackSpeed(double speed) async {
+    if (speed <= 0) {
+      throw ArgumentError.value(speed, 'speed', 'Must be greater than zero.');
+    }
+    await player.setSpeed(speed);
+  }
+
   Future<void> _handleSleepTimerExpired() async {
     try {
       await player.pause();
