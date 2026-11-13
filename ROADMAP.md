@@ -459,7 +459,14 @@ Keputusan implementasi:
 - Menyediakan akses Settings dari header Home.
 - Menambahkan unit/widget tests untuk aksi Home dan navigasi.
 
-**Status: Direncanakan**
+- Menginisialisasi pemuatan Library ketika HomeController dibuat agar Home siap menggunakan data koleksi aktual.
+- Menghubungkan pencarian Home ke hasil pencarian Songs di Library melalui submit keyboard atau tombol search.
+- Menghubungkan shortcut Songs, Albums, dan Artists ke section Library yang sesuai.
+- Mengganti placeholder Recently Played yang belum memiliki sumber history dengan Now Playing yang hanya muncul saat ada lagu aktif.
+- Menghapus shortcut Folders karena folder browsing belum tersedia.
+- Menghapus affordance See all yang belum memiliki aksi.
+
+**Status: Implementasi tersedia di GitHub — menunggu format, analisis, dan pengujian lokal**
 
 ### 9.2 — Settings Foundation & Audio Library Preferences
 
@@ -526,9 +533,9 @@ Keputusan implementasi:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 9.0 — Release Readiness & Functional Audit
+# Stage 9.1 — Home Functional Completion
 
-Stage 8.4 telah dinyatakan clean oleh pengguna. Audit awal repository menemukan Home masih memiliki beberapa elemen statis dan belum terhubung ke fungsi Library, sedangkan preferensi format audio dan modul Settings belum tersedia. Tahap berikutnya adalah menyelesaikan fungsi Home sebelum membangun fondasi Settings dan filter format MediaStore.
+Stage 9.0 audit selesai. Implementasi awal Stage 9.1 tersedia di GitHub: Home memuat Library saat dibuka, pencarian diarahkan ke Library, shortcut Songs/Albums/Artists berfungsi, dan placeholder Recently Played diganti dengan Now Playing yang hanya muncul ketika ada lagu aktif. Pengujian lokal masih menunggu.
 
 
 
