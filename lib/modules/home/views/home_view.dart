@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
 import '../../library/widgets/song_artwork.dart';
 import '../../library/views/library_view.dart';
 import '../../player/controllers/player_controller.dart';
@@ -80,11 +83,11 @@ class _HomeTab extends StatelessWidget {
     return CustomScrollView(
       slivers: [
         SliverPadding(
-          padding: const EdgeInsets.fromLTRB(22, 18, 22, 28),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.lg, AppSpacing.screenHorizontal, AppSpacing.xxxl),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
               const _BrandHeader(),
-              const SizedBox(height: 28),
+              const SizedBox(height: AppSpacing.xxxl),
               Text(
                 'YOUR MUSIC. YOUR EXPERIENCE.',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -93,17 +96,12 @@ class _HomeTab extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
               ),
-              const SizedBox(height: 9),
+              const SizedBox(height: AppSpacing.sm),
               Text(
                 'Music, made personal.',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontSize: 30,
-                      height: 1.08,
-                      letterSpacing: -1.1,
-                      fontWeight: FontWeight.w700,
-                    ),
+                style: AppTypography.editorialTitle.copyWith(fontSize: 30),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.sm),
               Text(
                 'Your offline collection, ready whenever you are.',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -111,16 +109,16 @@ class _HomeTab extends StatelessWidget {
                       height: 1.45,
                     ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.xxl),
               _SearchField(
                 textController: controller.searchTextController,
                 onSubmitted: controller.submitSearch,
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: AppSpacing.xxxl),
               const _NowPlayingSection(),
-              const SizedBox(height: 30),
+              const SizedBox(height: AppSpacing.xxxl),
               const _SectionHeader(title: 'Your Library'),
-              const SizedBox(height: 14),
+              const SizedBox(height: AppSpacing.md),
               Row(
                 children: [
                   Expanded(
@@ -131,7 +129,7 @@ class _HomeTab extends StatelessWidget {
                       onTap: () => controller.openLibrary(section: 'songs'),
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: AppSpacing.sm),
                   Expanded(
                     child: _LibraryShortcut(
                       icon: Icons.album_rounded,
@@ -172,7 +170,7 @@ class _BrandHeader extends StatelessWidget {
           height: 44,
           decoration: BoxDecoration(
             color: AppColors.surfaceElevated,
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: AppRadius.medium,
           ),
           child: const Icon(
             Icons.graphic_eq_rounded,
@@ -180,7 +178,7 @@ class _BrandHeader extends StatelessWidget {
             size: 25,
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppSpacing.md),
         const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -238,7 +236,7 @@ class _SearchField extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 17),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(17),
+        borderRadius: AppRadius.medium,
         border: Border.all(color: AppColors.border),
       ),
       child: Row(
@@ -323,7 +321,7 @@ class _LibraryShortcut extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Icon(icon, color: AppColors.textPrimary, size: 21),
-              const SizedBox(height: 14),
+              const SizedBox(height: AppSpacing.md),
               Text(
                 title,
                 maxLines: 1,
@@ -371,18 +369,18 @@ class _NowPlayingSection extends StatelessWidget {
           const SizedBox(height: 13),
           Material(
             color: AppColors.surface,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: AppRadius.large,
             clipBehavior: Clip.antiAlias,
             child: InkWell(
               onTap: () => Get.to(() => const NowPlayingView()),
               child: Padding(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(AppSpacing.md),
                 child: Column(
                   children: [
                     Row(
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: AppRadius.small,
                           child: SizedBox(
                             width: 82,
                             height: 82,
