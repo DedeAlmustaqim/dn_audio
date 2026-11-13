@@ -578,11 +578,15 @@ Catatan koreksi lanjutan:
 
 #### 9.4.3 — Artwork Cache Cleanup
 
-- Menyediakan clear artwork cache melalui ArtworkService/native cache path.
-- Menambahkan konfirmasi sebelum menghapus cache.
-- Memastikan artwork dapat dibuat ulang ketika dibutuhkan dan tidak menghapus file musik atau data aplikasi lain.
+- Menambahkan operasi native `clearArtworkCache` yang hanya menghapus isi direktori `cacheDir/dn_audio_artwork`.
+- Memvalidasi canonical path sebelum penghapusan dan menghentikan operasi jika ada entri yang gagal dihapus.
+- Menyinkronkan proses resolve artwork dan cleanup agar operasi yang sedang berjalan selesai sebelum cache dibersihkan.
+- Menunggu seluruh resolve artwork yang sedang berjalan, membersihkan Future cache di ArtworkService, dan menahan permintaan artwork baru sampai cleanup selesai.
+- Menambahkan konfirmasi pengguna, indikator proses, hasil jumlah file yang dihapus, penanganan error, dan refresh statistik cache.
+- Menegaskan bahwa file musik, database playlist, preferensi playback/audio, serta data aplikasi lain tidak disentuh.
+- Menambahkan unit test untuk pemanggilan native cleanup dan hasil jumlah file.
 
-**Status: Direncanakan**
+**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian Flutter, build Android, dan verifikasi perangkat lokal.**
 
 ### 9.5 — About DN Audio
 
