@@ -626,6 +626,7 @@ No settings controller, repository, preference model, library scanner, artwork s
 ## 20. Stage 9.6.8 — Visual QA & regression checklist
 
 Cross-screen audit finding and fix:
+- Additional QA finding: the default/missing-artwork fallback still appears purple in the running app, which conflicts with the approved monochrome palette. The shared fallback is rendered by `SongArtwork` in `lib/modules/library/widgets/song_artwork.dart`; inspect this component and any other collection-specific artwork fallbacks during the next visual fix. Target: neutral monochrome placeholder only (black/charcoal/grey/white), with no purple tint or gradient.
 - Album and Artist collection detail shared a Play All button using a white foreground over the off-white primary control surface. Updated it to use the explicit `controlActive` / `onControlActive` pair, with neutral disabled-state colors, a 52 px minimum height and pill shape.
 - Added design-system assertions for the monochrome active-control foreground/background relationship and selected-surface distinction.
 
@@ -635,6 +636,7 @@ Visual QA scope:
 - Album / Artist detail: artwork, metadata, Play All contrast, album cards, song rows and playback selection.
 - Playlists: collection list, create/rename/delete, detail header without oversized icon, Play All contrast, track menu and remove action.
 - Player: artwork, long title/artist, seekbar, playback controls, shuffle/repeat active states, buffering and playback errors.
+- Artwork fallback: verify missing/default artwork is fully monochrome across Home, Library, Album/Artist, Playlist and Mini Player; no residual purple background, gradient, tint or icon treatment.
 - Equalizer: device capability unavailable/available, preset, band sliders, Bass Boost and Virtualizer states.
 - Sleep Timer: quick durations, custom duration, active countdown, cancel and completion.
 - Settings: playback speed, audio format toggles, reset, scan progress/errors, artwork cache clear confirmation and About.
