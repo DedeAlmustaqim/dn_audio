@@ -550,6 +550,9 @@ class _ArtworkCachePanel extends StatefulWidget {
 
 class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
   late Future<ArtworkCacheInfo> _cacheInfoFuture;
+  bool _isClearing = false;
+  String? _actionMessage;
+  bool _actionSucceeded = false;
 
   @override
   void initState() {
@@ -562,7 +565,61 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
   }
 
   void _refreshCacheInfo() {
-    setState(_loadCacheInfo);
+    setState(() {
+      _actionMessage = null;
+      _loadCacheInfo();
+    });
+  }
+
+  Future<void> _clearCache() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Clear artwork cache?'),
+        content: const Text(
+          'This removes cached album artwork stored by DN Audio. '
+          'Artwork will be generated again when needed. Your music files, '
+          'playlists, playback preferences, and listening data will not be affected.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('Clear cache'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    setState(() {
+      _isClearing = true;
+      _actionMessage = null;
+    });
+
+    try {
+      final deletedCount = await ArtworkService.clearCache();
+      if (!mounted) return;
+      setState(() {
+        _isClearing = false;
+        _actionSucceeded = true;
+        _actionMessage = 'Artwork cache cleared. ' +
+            '$deletedCount ${deletedCount == 1 ? 'file' : 'files'} removed.';
+        _loadCacheInfo();
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _isClearing = false;
+        _actionSucceeded = false;
+        _actionMessage = 'Unable to clear artwork cache. Please try again.';
+        _loadCacheInfo();
+      });
+    }
   }
 
   @override
@@ -589,7 +646,7 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
               ),
               IconButton(
                 tooltip: 'Refresh cache information',
-                onPressed: _refreshCacheInfo,
+                onPressed: _isClearing ? null : _refreshCacheInfo,
                 icon: const Icon(Icons.refresh_rounded, size: 19),
               ),
             ],
@@ -639,9 +696,58 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
               );
             },
           ),
-          const SizedBox(height: 6),
+          if (_actionMessage != null) ...[
+            const SizedBox(height: 12),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  _actionSucceeded
+                      ? Icons.check_circle_outline_rounded
+                      : Icons.error_outline_rounded,
+                  size: 17,
+                  color: _actionSucceeded
+                      ? AppColors.primary
+                      : Colors.redAccent,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    _actionMessage!,
+                    style: TextStyle(
+                      color: _actionSucceeded
+                          ? AppColors.textSecondary
+                          : Colors.redAccent,
+                      fontSize: 12,
+                      height: 1.4,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: _isClearing ? null : _clearCache,
+              icon: _isClearing
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.delete_outline_rounded, size: 18),
+              label: Text(_isClearing ? 'Clearing cache…' : 'Clear artwork cache'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.redAccent,
+                side: BorderSide(color: Colors.redAccent.withValues(alpha: 0.45)),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
           const Text(
-            'Artwork stored locally for faster loading. This information covers the DN Audio artwork cache only.',
+            'Only DN Audio artwork cache files are removed. Artwork is recreated when needed.',
             style: TextStyle(
               color: AppColors.textSecondary,
               fontSize: 11,
