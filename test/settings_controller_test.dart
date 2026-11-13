@@ -10,8 +10,8 @@ import 'package:dn_audio/modules/settings/services/settings_repository.dart';
 
 void main() {
   group('SettingsController', () {
-    tearDown(() async {
-      await Get.reset();
+    tearDown(() {
+      Get.reset();
     });
 
     test('loads and applies persisted playback speed', () async {
