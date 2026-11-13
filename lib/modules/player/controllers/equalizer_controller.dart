@@ -181,7 +181,8 @@ class EqualizerController extends GetxController {
     final sessionId = capabilities.sessionId;
     if (!capabilities.available ||
         sessionId == null ||
-        sessionId == _lastRestoredSessionId) {
+        sessionId == _lastRestoredSessionId ||
+        sessionId == _restoringSessionId) {
       return;
     }
     _pendingSessionId = sessionId;
