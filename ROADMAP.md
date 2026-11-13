@@ -590,13 +590,14 @@ Catatan koreksi lanjutan:
 
 ### 9.5 — About DN Audio
 
-- Menampilkan nama dan identitas DN Audio.
-- Menampilkan versi aplikasi dan build number dari package metadata.
+- Mengembangkan panel About pada Settings dengan identitas DN Audio dan tagline "Your Music. Your Experience."
+- Menambahkan deskripsi produk yang menjelaskan DN Audio sebagai pemutar musik offline premium.
+- Menampilkan versi aplikasi dan build number secara dinamis melalui package metadata.
 - Menampilkan Digital Native Dev sebagai developer.
-- Menyediakan deskripsi aplikasi dan lisensi open-source.
-- Menyediakan Privacy Policy ketika URL resminya sudah ditetapkan.
+- Membuka halaman lisensi pihak ketiga menggunakan halaman lisensi bawaan Flutter.
+- Tidak menampilkan tautan Privacy Policy sampai URL resmi tersedia.
 
-**Status: Direncanakan**
+**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian Flutter, dan verifikasi perangkat lokal.**
 
 ### 9.6 — Final UI/UX Polish
 
