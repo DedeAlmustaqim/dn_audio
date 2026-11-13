@@ -399,6 +399,7 @@ Catatan:
 - Menambahkan aksi Cancel Timer dan mengganti timer aktif ketika durasi baru dipilih
 - Menambahkan akses Sleep Timer dari header Home dan Now Playing dengan indikator visual saat timer aktif
 - Memakai `SleepTimerService` milik `DnAudioHandler` yang sama; tidak membuat timer atau audio engine kedua
+- Menambahkan unit test untuk format countdown menit/detik, jam/menit/detik, dan nilai nol
 
 **Status: Implementasi tersedia di GitHub — menunggu analisis, pengujian lokal, dan verifikasi perangkat**
 
