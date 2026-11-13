@@ -38,11 +38,7 @@ class HomeView extends GetView<HomeController> {
           ),
         ),
         bottomNavigationBar: Container(
-          decoration: const BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-          ),
-          clipBehavior: Clip.antiAlias,
+          color: AppColors.surface,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
