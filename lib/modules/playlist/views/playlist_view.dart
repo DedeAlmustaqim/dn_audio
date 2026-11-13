@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
 import '../controllers/playlist_controller.dart';
 import '../models/playlist.dart';
 import 'playlist_detail_view.dart';
@@ -15,7 +18,7 @@ class PlaylistView extends GetView<PlaylistController> {
       return CustomScrollView(
         slivers: [
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(22, 22, 22, 28),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.xl, AppSpacing.screenHorizontal, AppSpacing.xxxl),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 Row(
@@ -28,8 +31,8 @@ class PlaylistView extends GetView<PlaylistController> {
                             'Your Playlists',
                             style: TextStyle(
                               fontSize: 27,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: -0.7,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: -0.6,
                             ),
                           ),
                           SizedBox(height: 5),
@@ -52,7 +55,7 @@ class PlaylistView extends GetView<PlaylistController> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSpacing.xxxl),
                 if (controller.isLoading.value)
                   const Padding(
                     padding: EdgeInsets.only(top: 70),
@@ -78,11 +81,11 @@ class PlaylistView extends GetView<PlaylistController> {
                   )
                 else ...[
                   Text(
-                    '${controller.playlists.length} PLAYLISTS',
+                    'YOUR COLLECTION',
                     style: const TextStyle(
                       color: AppColors.textSecondary,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
                       letterSpacing: 1.2,
                     ),
                   ),
@@ -287,11 +290,11 @@ class _PlaylistTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 11),
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: Material(
         color: AppColors.surface,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(17),
+          borderRadius: AppRadius.medium,
           side: const BorderSide(color: AppColors.border),
         ),
         clipBehavior: Clip.antiAlias,
@@ -302,19 +305,19 @@ class _PlaylistTile extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.13),
-              borderRadius: BorderRadius.circular(13),
+              color: AppColors.surfaceElevated,
+              borderRadius: AppRadius.small,
             ),
             child: const Icon(
               Icons.queue_music_rounded,
-              color: AppColors.primary,
+              color: AppColors.textPrimary,
             ),
           ),
           title: Text(
             playlist.name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontWeight: FontWeight.w700),
+            style: Theme.of(context).textTheme.titleSmall,
           ),
           subtitle: Text(
             '${playlist.songCount} songs',
@@ -363,11 +366,11 @@ class _EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 58),
+      padding: const EdgeInsets.only(top: AppSpacing.xxxl),
       child: Column(
         children: [
-          Icon(icon, size: 55, color: AppColors.primary),
-          const SizedBox(height: 17),
+          Icon(icon, size: 55, color: AppColors.textSecondary),
+          const SizedBox(height: AppSpacing.xl),
           Text(
             title,
             style: const TextStyle(
@@ -375,7 +378,7 @@ class _EmptyState extends StatelessWidget {
               fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(height: 7),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             description,
             textAlign: TextAlign.center,
