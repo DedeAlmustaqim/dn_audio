@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
 import '../controllers/settings_controller.dart';
 import '../models/audio_library_preferences.dart';
 import '../models/playback_preferences.dart';
@@ -41,20 +43,20 @@ class SettingsView extends GetView<SettingsController> {
         }
 
         return ListView(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
+          padding: const const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.md, AppSpacing.screenHorizontal, AppSpacing.xxxl),
           children: [
             const _SettingsIntro(),
-            const SizedBox(height: 28),
+            const SizedBox(height: AppSpacing.xxxl),
             const _SectionHeading(
               title: 'Playback',
               subtitle: 'Choose the playback speed used for your music.',
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: AppSpacing.md),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
               decoration: BoxDecoration(
                 color: AppColors.surface,
-                borderRadius: BorderRadius.circular(18),
+                borderRadius: AppRadius.medium,
                 border: Border.all(color: AppColors.border),
               ),
               child: Row(
@@ -67,7 +69,7 @@ class SettingsView extends GetView<SettingsController> {
                           'Playback speed',
                           style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                         ),
-                        SizedBox(height: 4),
+                        SizedBox(height: AppSpacing.xxs),
                         Text(
                           'Adjust how fast your music plays.',
                           style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
@@ -75,11 +77,11 @@ class SettingsView extends GetView<SettingsController> {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: AppSpacing.md),
                   DropdownButton<double>(
                     value: controller.playbackPreferences.value.speed,
                     underline: const SizedBox.shrink(),
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: AppRadius.small,
                     dropdownColor: AppColors.surfaceElevated,
                     onChanged: controller.isSaving.value
                         ? null
@@ -101,16 +103,16 @@ class SettingsView extends GetView<SettingsController> {
                 ],
               ),
             ),
-            const SizedBox(height: 28),
+            const SizedBox(height: AppSpacing.xxxl),
             const _SectionHeading(
               title: 'Audio Experience',
               subtitle: 'Shape the sound with your device-supported audio effects.',
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: AppSpacing.md),
             Container(
               decoration: BoxDecoration(
                 color: AppColors.surface,
-                borderRadius: BorderRadius.circular(18),
+                borderRadius: AppRadius.medium,
                 border: Border.all(color: AppColors.border),
               ),
               child: ListTile(
@@ -141,18 +143,18 @@ class SettingsView extends GetView<SettingsController> {
                 ),
               ),
             ),
-            const SizedBox(height: 28),
+            const SizedBox(height: AppSpacing.xxxl),
             const _SectionHeading(
               title: 'Audio Library',
               subtitle: 'Choose which audio formats DN Audio can include in your library.',
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: AppSpacing.md),
             _FormatPanel(
               enabledExtensions: controller.preferences.value.enabledExtensions,
               isSaving: controller.isSaving.value,
               onChanged: controller.toggleExtension,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.md),
             Row(
               children: [
                 Expanded(
@@ -179,9 +181,9 @@ class SettingsView extends GetView<SettingsController> {
                 icon: Icons.info_outline_rounded,
               ),
             if (controller.isSaving.value) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.sm),
               const LinearProgressIndicator(minHeight: 2),
-              const SizedBox(height: 6),
+              const SizedBox(height: AppSpacing.xs),
               const Text(
                 'Saving and applying your changes…',
                 style: TextStyle(
@@ -191,28 +193,28 @@ class SettingsView extends GetView<SettingsController> {
               ),
             ],
             if (controller.errorMessage.value != null) ...[
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
               _InlineNotice(
                 message: controller.errorMessage.value!,
                 icon: Icons.error_outline_rounded,
                 isError: true,
               ),
             ],
-            const SizedBox(height: 28),
+            const SizedBox(height: AppSpacing.xxxl),
             const _SectionHeading(
               title: 'Storage & Maintenance',
               subtitle: 'Review your offline library and refresh its contents.',
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: AppSpacing.md),
             const _LibraryOverviewPanel(),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.md),
             const _ArtworkCachePanel(),
             const SizedBox(height: 32),
             const _SectionHeading(
               title: 'About',
               subtitle: 'A focused offline music experience.',
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: AppSpacing.md),
             const _AboutPanel(),
           ],
         );
@@ -227,16 +229,16 @@ class _SettingsIntro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: AppRadius.large,
         border: Border.all(color: AppColors.border),
       ),
       child: const Row(
         children: [
           Icon(Icons.tune_rounded, color: AppColors.primary, size: 30),
-          SizedBox(width: 16),
+          SizedBox(width: AppSpacing.lg),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,7 +247,7 @@ class _SettingsIntro extends StatelessWidget {
                   'Make it yours.',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
-                SizedBox(height: 4),
+                SizedBox(height: AppSpacing.xxs),
                 Text(
                   'Personalize how your music is organized.',
                   style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
@@ -271,7 +273,7 @@ class _SectionHeading extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-        const SizedBox(height: 5),
+        const SizedBox(height: AppSpacing.xs),
         Text(
           subtitle,
           style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, height: 1.4),
@@ -297,7 +299,7 @@ class _FormatPanel extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: AppRadius.medium,
         border: Border.all(color: AppColors.border),
       ),
       child: Column(
@@ -322,7 +324,7 @@ class _FormatPanel extends StatelessWidget {
                   '.$extension',
                   style: const TextStyle(color: AppColors.textSecondary, fontSize: 11),
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 2),
+                contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.xs),
               );
             }),
           ],
@@ -361,10 +363,10 @@ class _AboutPanelState extends State<_AboutPanel> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: AppRadius.medium,
         border: Border.all(color: AppColors.border),
       ),
       child: FutureBuilder<PackageInfo>(
@@ -388,7 +390,7 @@ class _AboutPanelState extends State<_AboutPanel> {
                   fontSize: 16,
                 ),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: AppSpacing.xs),
               const Text(
                 'Your Music. Your Experience.',
                 style: TextStyle(
@@ -397,7 +399,7 @@ class _AboutPanelState extends State<_AboutPanel> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: AppSpacing.md),
               Text(
                 'A premium offline music player designed to keep your '
                 'personal music library close, with playback controls and '
@@ -410,7 +412,7 @@ class _AboutPanelState extends State<_AboutPanel> {
               ),
               const SizedBox(height: 18),
               const Divider(color: AppColors.border, height: 1),
-              const SizedBox(height: 14),
+              const SizedBox(height: AppSpacing.md),
               const Text(
                 'DEVELOPED BY',
                 style: TextStyle(
@@ -420,12 +422,12 @@ class _AboutPanelState extends State<_AboutPanel> {
                   letterSpacing: 1.4,
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: AppSpacing.xs),
               const Text(
                 'Digital Native Dev',
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSpacing.xxs),
               const Text(
                 'Independent software development',
                 style: TextStyle(
@@ -433,7 +435,7 @@ class _AboutPanelState extends State<_AboutPanel> {
                   fontSize: 11,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
               Text(
                 versionLabel,
                 style: const TextStyle(
@@ -441,7 +443,7 @@ class _AboutPanelState extends State<_AboutPanel> {
                   fontSize: 11,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.sm),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 dense: true,
@@ -487,22 +489,22 @@ class _InlineNotice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(13),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: AppColors.surfaceElevated,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: AppRadius.small,
         border: Border.all(color: AppColors.border),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 18, color: isError ? Colors.redAccent : AppColors.textSecondary),
-          const SizedBox(width: 10),
+          Icon(icon, size: 18, color: isError ? AppColors.error : AppColors.textSecondary),
+          const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
               message,
               style: TextStyle(
-                color: isError ? Colors.redAccent : AppColors.textSecondary,
+                color: isError ? AppColors.error : AppColors.textSecondary,
                 fontSize: 12,
                 height: 1.4,
               ),
@@ -553,10 +555,10 @@ class _LibraryOverviewPanelState extends State<_LibraryOverviewPanel> {
       final isScanning = library.isLoading.value;
       final songCount = library.songs.length;
       return Container(
-        padding: const EdgeInsets.all(18),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         decoration: BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: AppRadius.medium,
           border: Border.all(color: AppColors.border),
         ),
         child: Column(
@@ -569,11 +571,11 @@ class _LibraryOverviewPanelState extends State<_LibraryOverviewPanel> {
                   height: 44,
                   decoration: BoxDecoration(
                     color: AppColors.surfaceElevated,
-                    borderRadius: BorderRadius.circular(13),
+                    borderRadius: AppRadius.small,
                   ),
                   child: const Icon(Icons.library_music_rounded, color: AppColors.primary),
                 ),
-                const SizedBox(width: 14),
+                const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -582,7 +584,7 @@ class _LibraryOverviewPanelState extends State<_LibraryOverviewPanel> {
                         'Music library',
                         style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: AppSpacing.xxs),
                       Text(
                         '$songCount ${songCount == 1 ? 'song' : 'songs'} indexed',
                         style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
@@ -604,7 +606,7 @@ class _LibraryOverviewPanelState extends State<_LibraryOverviewPanel> {
               ],
             ),
             if (isScanning) ...[
-              const SizedBox(height: 14),
+              const SizedBox(height: AppSpacing.md),
               const LinearProgressIndicator(minHeight: 2),
               const SizedBox(height: 7),
               const Text(
@@ -613,7 +615,7 @@ class _LibraryOverviewPanelState extends State<_LibraryOverviewPanel> {
               ),
             ],
             if (_scanMessage != null) ...[
-              const SizedBox(height: 14),
+              const SizedBox(height: AppSpacing.md),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -624,16 +626,16 @@ class _LibraryOverviewPanelState extends State<_LibraryOverviewPanel> {
                     size: 17,
                     color: _scanWasSuccessful
                         ? AppColors.primary
-                        : Colors.redAccent,
+                        : AppColors.error,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.sm),
                   Expanded(
                     child: Text(
                       _scanMessage!,
                       style: TextStyle(
                         color: _scanWasSuccessful
                             ? AppColors.textSecondary
-                            : Colors.redAccent,
+                            : AppColors.error,
                         fontSize: 12,
                         height: 1.4,
                       ),
@@ -733,10 +735,10 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: AppRadius.medium,
         border: Border.all(color: AppColors.border),
       ),
       child: Column(
@@ -745,7 +747,7 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
           Row(
             children: [
               const Icon(Icons.image_outlined, color: AppColors.primary, size: 21),
-              const SizedBox(width: 10),
+              const SizedBox(width: AppSpacing.sm),
               const Expanded(
                 child: Text(
                   'Artwork cache',
@@ -759,13 +761,13 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.sm),
           FutureBuilder<ArtworkCacheInfo>(
             future: _cacheInfoFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12),
+                  padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
                   child: LinearProgressIndicator(minHeight: 2),
                 );
               }
@@ -775,7 +777,7 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
                     const Expanded(
                       child: Text(
                         'Unable to read artwork cache information.',
-                        style: TextStyle(color: Colors.redAccent, fontSize: 12),
+                        style: TextStyle(color: AppColors.error, fontSize: 12),
                       ),
                     ),
                     TextButton(onPressed: _refreshCacheInfo, child: const Text('Retry')),
@@ -793,7 +795,7 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
                       value: info.formattedSize,
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: AppSpacing.lg),
                   Expanded(
                     child: _CacheMetric(
                       label: 'Cached files',
@@ -805,7 +807,7 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
             },
           ),
           if (_actionMessage != null) ...[
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.md),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -816,16 +818,16 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
                   size: 17,
                   color: _actionSucceeded
                       ? AppColors.primary
-                      : Colors.redAccent,
+                      : AppColors.error,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(
                     _actionMessage!,
                     style: TextStyle(
                       color: _actionSucceeded
                           ? AppColors.textSecondary
-                          : Colors.redAccent,
+                          : AppColors.error,
                       fontSize: 12,
                       height: 1.4,
                     ),
@@ -834,7 +836,7 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
               ],
             ),
           ],
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.md),
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
@@ -848,12 +850,12 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
                   : const Icon(Icons.delete_outline_rounded, size: 18),
               label: Text(_isClearing ? 'Clearing cache…' : 'Clear artwork cache'),
               style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.redAccent,
-                side: BorderSide(color: Colors.redAccent.withValues(alpha: 0.45)),
+                foregroundColor: AppColors.error,
+                side: BorderSide(color: AppColors.error.withValues(alpha: 0.45)),
               ),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.sm),
           const Text(
             'Only DN Audio artwork cache files are removed. Artwork is recreated when needed.',
             style: TextStyle(
@@ -883,7 +885,7 @@ class _CacheMetric extends StatelessWidget {
           value,
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
         ),
-        const SizedBox(height: 3),
+        const SizedBox(height: AppSpacing.xxs),
         Text(
           label,
           style: const TextStyle(color: AppColors.textSecondary, fontSize: 11),
