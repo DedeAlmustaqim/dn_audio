@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dn_audio/core/widgets/app_empty_state.dart';
 import 'package:dn_audio/core/widgets/app_search_field.dart';
+import 'package:dn_audio/core/widgets/app_loading_state.dart';
 
 void main() {
   group('AppSearchField', () {
@@ -65,4 +66,19 @@ void main() {
       expect(find.text('Scan again'), findsNothing);
     });
   });
+  group('AppLoadingState', () {
+    testWidgets('shows progress and optional label', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: AppLoadingState(label: 'Loading library...'),
+          ),
+        ),
+      );
+
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.text('Loading library...'), findsOneWidget);
+    });
+  });
+
 }
