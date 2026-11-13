@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/app_loading_state.dart';
 import '../../../core/widgets/app_empty_state.dart';
 import '../../../core/widgets/app_search_field.dart';
@@ -42,28 +45,23 @@ class LibraryView extends GetView<LibraryController> {
         return CustomScrollView(
           slivers: [
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(22, 22, 22, 12),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.xxl, AppSpacing.screenHorizontal, AppSpacing.md),
               sliver: SliverToBoxAdapter(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
                       'Your Library',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: -0.7,
-                      ),
+                      style: AppTypography.editorialTitle,
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: AppSpacing.xs),
                     Text(
                       '$collectionCount $sectionLabel on this device',
-                      style: const TextStyle(
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppColors.textSecondary,
-                        fontSize: 13,
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppSpacing.xl),
                     AppSearchField(
                       onChanged: controller.updateSearch,
                       hintText: section == 'songs'
@@ -72,7 +70,7 @@ class LibraryView extends GetView<LibraryController> {
                               ? 'Search albums or artists...'
                               : 'Search artists...',
                     ),
-                    const SizedBox(height: 18),
+                    const SizedBox(height: AppSpacing.lg),
                     Row(
                       children: [
                         _LibrarySectionChip(
@@ -80,7 +78,7 @@ class LibraryView extends GetView<LibraryController> {
                           selected: section == 'songs',
                           onTap: () => controller.selectLibrarySection('songs'),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: AppSpacing.sm),
                         _LibrarySectionChip(
                           label: 'Albums',
                           selected: section == 'albums',
@@ -163,7 +161,7 @@ class LibraryView extends GetView<LibraryController> {
               )
             else if (section == 'songs')
               SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.xxxl),
                 sliver: SliverList.separated(
                   itemCount: visibleSongs.length,
                   separatorBuilder: (_, _) =>
@@ -207,9 +205,9 @@ class LibraryView extends GetView<LibraryController> {
                 sliver: SliverGrid(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    mainAxisSpacing: 18,
-                    crossAxisSpacing: 14,
-                    childAspectRatio: 0.76,
+                    mainAxisSpacing: AppSpacing.lg,
+                    crossAxisSpacing: AppSpacing.md,
+                    childAspectRatio: 0.78,
                   ),
                   delegate: SliverChildBuilderDelegate(
                     (context, index) => _AlbumCard(album: visibleAlbums[index]),
@@ -349,19 +347,19 @@ class _LibrarySectionChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Material(
-        color: selected ? AppColors.primary.withValues(alpha: 0.16) : AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
+        color: selected ? AppColors.controlActive : AppColors.surface,
+        borderRadius: AppRadius.small,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: AppRadius.small,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
             child: Text(
               label,
               style: TextStyle(
-                color: selected ? AppColors.primary : AppColors.textSecondary,
+                color: selected ? AppColors.onControlActive : AppColors.textSecondary,
                 fontSize: 12,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -377,7 +375,7 @@ class _AlbumCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Material(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppRadius.medium,
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: () {
@@ -385,22 +383,22 @@ class _AlbumCard extends StatelessWidget {
             Get.to(() => AlbumDetailView(album: album));
           },
           child: Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(AppSpacing.sm),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: AppRadius.small,
                     child: SizedBox(
                       width: double.infinity,
                       child: SongArtwork(song: album.artworkSong, iconSize: 42),
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: AppSpacing.md),
                 Text(album.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
-                const SizedBox(height: 3),
+                const SizedBox(height: AppSpacing.xxs),
                 Text(album.artist, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
                 const SizedBox(height: 3),
                 Text('${album.songCount} songs', style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
