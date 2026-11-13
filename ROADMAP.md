@@ -490,7 +490,16 @@ Catatan koreksi lanjutan:
 - Menerapkan ulang preferensi ketika scan ulang atau aplikasi dibuka.
 - Menambahkan unit test untuk model/repository preferensi dan pemetaan filter.
 
-**Status: Direncanakan**
+#### 9.2.1 — Preferences Foundation
+
+- Menambahkan model AudioLibraryPreferences dengan daftar extension yang didukung dan default MP3, FLAC, WAV, M4A, AAC, OGG, dan OPUS.
+- Menormalisasi extension (huruf kecil dan tanpa titik) serta mengabaikan extension yang tidak didukung.
+- Menyediakan serialisasi model ke/dari map untuk penyimpanan lokal.
+- Menambahkan SettingsRepository berbasis SQLite dengan database terpisah dn_audio_settings.db dan tabel key-value agar dapat diperluas untuk preferensi aplikasi berikutnya.
+- Menambahkan unit test untuk default, normalisasi, serialisasi, data tidak valid, dan pilihan kosong.
+- Belum menghubungkan repository ke UI atau MediaStore; integrasi dilakukan pada sub-tahap berikutnya.
+
+**Status: Implementasi tersedia di GitHub — menunggu format, analisis, dan pengujian lokal**
 
 ### 9.3 — Playback & Audio Experience Settings
 
@@ -544,9 +553,9 @@ Catatan koreksi lanjutan:
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 9.1 — Home Functional Completion
+# Stage 9.2.1 — Preferences Foundation
 
-Stage 9.0 audit selesai. Implementasi Home dan perbaikan sintaks setelah hasil `flutter analyze` tersedia di GitHub. Home memuat Library saat dibuka, pencarian diarahkan ke Library, shortcut Songs/Albums/Artists berfungsi, dan placeholder Recently Played diganti dengan Now Playing yang hanya muncul ketika ada lagu aktif. Menunggu hasil `dart format`, `flutter analyze`, `flutter test`, dan verifikasi perangkat ulang.
+Stage 9.1 telah dinyatakan bersih oleh pengguna. Fondasi preferensi Settings tersedia di GitHub: model AudioLibraryPreferences, SettingsRepository SQLite, dan unit test model. Menunggu format, analisis, dan pengujian lokal sebelum melanjutkan ke Settings UI.
 
 
 
