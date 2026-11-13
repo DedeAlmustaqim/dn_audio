@@ -94,7 +94,7 @@ class LibraryView extends GetView<LibraryController> {
                         const Spacer(),
                         IconButton(
                           tooltip: 'Scan music again',
-                          onAction: controller.isLoading.value
+                          onPressed: controller.isLoading.value
                               ? null
                               : controller.refreshLibrary,
                           icon: const Icon(Icons.refresh_rounded),
