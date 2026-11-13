@@ -1,7 +1,40 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dn_audio/modules/library/services/artwork_service.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  const channel = MethodChannel('dn_audio/audio_library');
+
+  tearDown(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, null);
+  });
+  group('ArtworkService cache cleanup', () {
+    test('invokes native cleanup and returns the deleted file count', () async {
+      var wasCalled = false;
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (call) async {
+        expect(call.method, 'clearArtworkCache');
+        wasCalled = true;
+        return 7;
+      });
+
+      final deletedCount = await ArtworkService.clearCache();
+
+      expect(wasCalled, isTrue);
+      expect(deletedCount, 7);
+    });
+
+    test('treats a null native cleanup result as zero files', () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (call) async => null);
+
+      expect(await ArtworkService.clearCache(), 0);
+    });
+  });
+
   group('ArtworkCacheInfo', () {
     test('parses native cache statistics', () {
       final info = ArtworkCacheInfo.fromMap({
