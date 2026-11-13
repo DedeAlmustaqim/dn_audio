@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/app_colors.dart';
+import '../theme/app_spacing.dart';
 
 class AppLoadingState extends StatelessWidget {
   const AppLoadingState({
@@ -13,27 +14,31 @@ class AppLoadingState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(
-            width: 26,
-            height: 26,
-            child: CircularProgressIndicator(
-              color: AppColors.primary,
-              strokeWidth: 2.4,
+      child: Semantics(
+        liveRegion: true,
+        label: label ?? 'Loading',
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(
+              width: 28,
+              height: 28,
+              child: CircularProgressIndicator(
+                color: AppColors.controlActive,
+                strokeWidth: 2,
+              ),
             ),
-          ),
-          if (label != null) ...[
-            const SizedBox(height: 14),
-            Text(
-              label!,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-            ),
+            if (label != null) ...[
+              const SizedBox(height: AppSpacing.md),
+              Text(
+                label!,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
