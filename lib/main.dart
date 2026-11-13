@@ -6,6 +6,7 @@ import 'core/routes/app_pages.dart';
 import 'core/routes/app_routes.dart';
 import 'core/theme/app_theme.dart';
 import 'modules/player/services/dn_audio_handler.dart';
+import 'modules/settings/services/settings_repository.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +23,17 @@ Future<void> main() async {
   );
 
   await handler.configureAudioSession();
+
+  final settingsRepository = SettingsRepository();
+  try {
+    final playbackPreferences =
+        await settingsRepository.loadPlaybackPreferences();
+    await handler.setPlaybackSpeed(playbackPreferences.speed);
+  } catch (error) {
+    debugPrint('DN Audio: unable to restore playback preferences: $error');
+  } finally {
+    await settingsRepository.close();
+  }
 
   Get.put<DnAudioHandler>(handler, permanent: true);
   runApp(const DnAudioApp());
