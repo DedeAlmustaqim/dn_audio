@@ -227,7 +227,7 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
                             style: const TextStyle(
                               color: AppColors.textSecondary,
                               fontSize: 12,
-                              fontFeatures: const [FontFeature.tabularFigures()],
+                              fontFeatures: [FontFeature.tabularFigures()],
                             ),
                           ),
                           PopupMenuButton<String>(
