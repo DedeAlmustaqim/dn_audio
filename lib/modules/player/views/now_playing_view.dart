@@ -14,10 +14,12 @@ class NowPlayingView extends GetView<PlayerController> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SizedBox(
-        height: MediaQuery.sizeOf(context).height * 0.88,
-        child: Obx(() {
+    return Material(
+      color: AppColors.background,
+      child: SafeArea(
+        child: SizedBox(
+          height: MediaQuery.sizeOf(context).height * 0.88,
+          child: Obx(() {
           final song = controller.currentSong.value;
           if (song == null) return const Center(child: Text('Nothing playing'));
 
@@ -198,7 +200,8 @@ class NowPlayingView extends GetView<PlayerController> {
               ],
             ),
           );
-        }),
+          }),
+        ),
       ),
     );
   }
