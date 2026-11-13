@@ -111,7 +111,10 @@ class _HomeTab extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 26),
-              _SearchField(\n                textController: controller.searchTextController,\n                onSubmitted: controller.submitSearch,\n              ),
+              _SearchField(
+                textController: controller.searchTextController,
+                onSubmitted: controller.submitSearch,
+              ),
               const SizedBox(height: 30),
               const _NowPlayingSection(),
               const SizedBox(height: 30),
@@ -207,7 +210,8 @@ class _BrandHeader extends StatelessWidget {
 class _SearchField extends StatelessWidget {
   const _SearchField({required this.textController, required this.onSubmitted});
 
-  final TextEditingController textController;\n  final ValueChanged<String> onSubmitted;
+  final TextEditingController textController;
+  final ValueChanged<String> onSubmitted;
 
   @override
   Widget build(BuildContext context) {
