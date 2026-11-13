@@ -20,7 +20,6 @@ class PlayerMiniBar extends GetView<PlayerController> {
 
       return Material(
         color: const Color(0xFFF4F3F0),
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(22)),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: () => showModalBottomSheet<void>(
