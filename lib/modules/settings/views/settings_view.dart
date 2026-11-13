@@ -87,7 +87,7 @@ class SettingsView extends GetView<SettingsController> {
                           (speed) => DropdownMenuItem<double>(
                             value: speed,
                             child: Text(
-                              '${speed.toStringAsFixed(speed == speed.roundToDouble() ? 1 : 2)}×',
+                              '${speed}×',
                               style: const TextStyle(fontWeight: FontWeight.w600),
                             ),
                           ),
@@ -139,7 +139,7 @@ class SettingsView extends GetView<SettingsController> {
               const LinearProgressIndicator(minHeight: 2),
               const SizedBox(height: 6),
               const Text(
-                'Saving and applying changes to your library…',
+                'Saving and applying your changes…',
                 style: TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 11,
