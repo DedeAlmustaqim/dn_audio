@@ -169,6 +169,14 @@ class EqualizerController extends GetxController {
     return ensureCurrentSession();
   }
 
+  bool _isSessionCurrent(int sessionId) {
+    final service = _handler.audioEffectsService;
+    return !_isDisposed &&
+        service.attachedSessionId == sessionId &&
+        service.capabilities.available &&
+        service.capabilities.sessionId == sessionId;
+  }
+
   int _clampStrength(int value, AudioEffectCapability capability) {
     final min = capability.minStrength ?? 0;
     final max = capability.maxStrength ?? 1000;
