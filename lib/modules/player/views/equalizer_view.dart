@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
 import '../models/audio_effects_capabilities.dart';
 import '../models/audio_equalizer_preset.dart';
 import '../services/dn_audio_handler.dart';
@@ -290,7 +289,7 @@ class _EqualizerViewState extends State<EqualizerView> {
             return Column(
               children: [
                 Padding(
-                  padding: const const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.md, AppSpacing.md, AppSpacing.md),
+                  padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.md, AppSpacing.md, AppSpacing.md),
                   child: Column(
                     children: [
                       if (widget.isBottomSheet) ...[
@@ -383,7 +382,7 @@ class _EqualizerViewState extends State<EqualizerView> {
     }
 
     return ListView(
-      padding: const const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.lg, AppSpacing.screenHorizontal, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.lg, AppSpacing.screenHorizontal, AppSpacing.xl),
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
@@ -507,7 +506,7 @@ class _EqualizerViewState extends State<EqualizerView> {
     final maxLevel = (equalizer.maxLevelMillibels ?? 1500).toDouble();
 
     return ListView(
-      padding: const const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.lg, AppSpacing.screenHorizontal, AppSpacing.xxxl),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.lg, AppSpacing.screenHorizontal, AppSpacing.xxxl),
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
