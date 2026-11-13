@@ -4,10 +4,10 @@ import 'package:dn_audio/modules/player/services/audio_effects_settings_reposito
 
 void main() {
   group('AudioEffectsSettings', () {
-    test('round trips effect preferences and integer band indexes', () {
+    test('round trips every audio preference and integer band indexes', () {
       const settings = AudioEffectsSettings(
         equalizerEnabled: true,
-        selectedPresetId: 'rock',
+        selectedPresetId: 'vocal',
         bandLevels: {0: -250, 1: 125, 4: 600},
         bassBoostEnabled: true,
         bassBoostStrength: 720,
@@ -18,7 +18,7 @@ void main() {
       final restored = AudioEffectsSettings.fromMap(settings.toMap());
 
       expect(restored.equalizerEnabled, isTrue);
-      expect(restored.selectedPresetId, 'rock');
+      expect(restored.selectedPresetId, 'vocal');
       expect(restored.bandLevels, {0: -250, 1: 125, 4: 600});
       expect(restored.bassBoostEnabled, isTrue);
       expect(restored.bassBoostStrength, 720);
@@ -26,9 +26,11 @@ void main() {
       expect(restored.virtualizerStrength, 300);
     });
 
-    test('uses safe defaults for incomplete stored data', () {
+    test('uses safe defaults for incomplete or malformed stored data', () {
       final settings = AudioEffectsSettings.fromMap({
         'bandLevels': {'bad-index': 100, '2': 'invalid'},
+        'bassBoostStrength': 'invalid',
+        'virtualizerStrength': null,
       });
 
       expect(settings.equalizerEnabled, isFalse);
@@ -36,6 +38,7 @@ void main() {
       expect(settings.bandLevels, isEmpty);
       expect(settings.bassBoostStrength, 0);
       expect(settings.virtualizerEnabled, isFalse);
+      expect(settings.virtualizerStrength, 0);
     });
   });
 }
