@@ -6,6 +6,7 @@ import '../controllers/settings_controller.dart';
 import '../models/audio_library_preferences.dart';
 import '../models/playback_preferences.dart';
 import '../../player/views/equalizer_view.dart';
+import '../../library/controllers/library_controller.dart';
 
 class SettingsView extends GetView<SettingsController> {
   const SettingsView({super.key});
@@ -195,6 +196,13 @@ class SettingsView extends GetView<SettingsController> {
                 isError: true,
               ),
             ],
+            const SizedBox(height: 28),
+            const _SectionHeading(
+              title: 'Storage & Maintenance',
+              subtitle: 'Review your offline library and refresh its contents.',
+            ),
+            const SizedBox(height: 14),
+            const _LibraryOverviewPanel(),
             const SizedBox(height: 32),
             const _SectionHeading(
               title: 'About',
@@ -392,5 +400,125 @@ class _InlineNotice extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+
+class _LibraryOverviewPanel extends StatefulWidget {
+  const _LibraryOverviewPanel();
+
+  @override
+  State<_LibraryOverviewPanel> createState() => _LibraryOverviewPanelState();
+}
+
+class _LibraryOverviewPanelState extends State<_LibraryOverviewPanel> {
+  String? _scanMessage;
+  bool _scanWasSuccessful = false;
+
+  Future<void> _scanLibrary() async {
+    final library = Get.find<LibraryController>();
+    if (library.isLoading.value) return;
+    setState(() => _scanMessage = null);
+    await library.refreshLibrary(force: true);
+    if (!mounted) return;
+    setState(() {
+      if (library.errorMessage.value != null) {
+        _scanWasSuccessful = false;
+        _scanMessage = library.errorMessage.value;
+      } else if (!library.hasPermission.value) {
+        _scanWasSuccessful = false;
+        _scanMessage = 'Audio access was not granted. Your library was not scanned.';
+      } else {
+        _scanWasSuccessful = true;
+        final count = library.songs.length;
+        _scanMessage = 'Scan complete. $count ${count == 1 ? 'song' : 'songs'} found.';
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final library = Get.find<LibraryController>();
+    return Obx(() {
+      final isScanning = library.isLoading.value;
+      final songCount = library.songs.length;
+      return Container(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceElevated,
+                    borderRadius: BorderRadius.circular(13),
+                  ),
+                  child: const Icon(Icons.library_music_rounded, color: AppColors.primary),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Music library', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
+                      const SizedBox(height: 4),
+                      Text(
+                        '$songCount ${songCount == 1 ? 'song' : 'songs'} indexed',
+                        style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton.icon(
+                  onPressed: isScanning ? null : _scanLibrary,
+                  icon: isScanning
+                      ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+                      : const Icon(Icons.refresh_rounded, size: 17),
+                  label: Text(isScanning ? 'Scanning' : 'Scan library'),
+                ),
+              ],
+            ),
+            if (isScanning) ...[
+              const SizedBox(height: 14),
+              const LinearProgressIndicator(minHeight: 2),
+              const SizedBox(height: 7),
+              const Text('Scanning audio files on this device…', style: TextStyle(color: AppColors.textSecondary, fontSize: 11)),
+            ],
+            if (_scanMessage != null) ...[
+              const SizedBox(height: 14),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    _scanWasSuccessful ? Icons.check_circle_outline_rounded : Icons.error_outline_rounded,
+                    size: 17,
+                    color: _scanWasSuccessful ? AppColors.primary : Colors.redAccent,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      _scanMessage!,
+                      style: TextStyle(
+                        color: _scanWasSuccessful ? AppColors.textSecondary : Colors.redAccent,
+                        fontSize: 12,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ],
+        ),
+      );
+    });
   }
 }
