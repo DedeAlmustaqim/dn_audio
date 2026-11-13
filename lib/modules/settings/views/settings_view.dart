@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../controllers/settings_controller.dart';
@@ -331,8 +332,31 @@ class _FormatPanel extends StatelessWidget {
   }
 }
 
-class _AboutPanel extends StatelessWidget {
+class _AboutPanel extends StatefulWidget {
   const _AboutPanel();
+
+  @override
+  State<_AboutPanel> createState() => _AboutPanelState();
+}
+
+class _AboutPanelState extends State<_AboutPanel> {
+  late Future<PackageInfo> _packageInfoFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _packageInfoFuture = PackageInfo.fromPlatform();
+  }
+
+  void _showOpenSourceLicenses(PackageInfo packageInfo) {
+    showLicensePage(
+      context: context,
+      applicationName: 'DN Audio',
+      applicationVersion:
+          '${packageInfo.version}+${packageInfo.buildNumber}',
+      applicationLegalese: 'Digital Native Dev',
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -343,23 +367,107 @@ class _AboutPanel extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: AppColors.border),
       ),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('DN AUDIO', style: TextStyle(fontWeight: FontWeight.w800, letterSpacing: 1.8)),
-          SizedBox(height: 5),
-          Text(
-            'Premium Offline Music Player',
-            style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
-          ),
-          SizedBox(height: 14),
-          Divider(color: AppColors.border, height: 1),
-          SizedBox(height: 14),
-          Text(
-            'Digital Native Dev',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-          ),
-        ],
+      child: FutureBuilder<PackageInfo>(
+        future: _packageInfoFuture,
+        builder: (context, snapshot) {
+          final packageInfo = snapshot.data;
+          final versionLabel = snapshot.connectionState == ConnectionState.waiting
+              ? 'Loading version…'
+              : snapshot.hasError || packageInfo == null
+                  ? 'Version unavailable'
+                  : 'Version ${packageInfo.version} · Build ${packageInfo.buildNumber}';
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'DN AUDIO',
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 2.2,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                'Your Music. Your Experience.',
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 14),
+              Text(
+                'A premium offline music player designed to keep your '
+                'personal music library close, with playback controls and '
+                'audio experiences shaped around your listening preferences.',
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 12,
+                  height: 1.55,
+                ),
+              ),
+              const SizedBox(height: 18),
+              const Divider(color: AppColors.border, height: 1),
+              const SizedBox(height: 14),
+              const Text(
+                'DEVELOPED BY',
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1.4,
+                ),
+              ),
+              const SizedBox(height: 5),
+              const Text(
+                'Digital Native Dev',
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                'Independent software development',
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 11,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                versionLabel,
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 11,
+                ),
+              ),
+              const SizedBox(height: 8),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                leading: const Icon(
+                  Icons.article_outlined,
+                  color: AppColors.primary,
+                ),
+                title: const Text(
+                  'Open-source licenses',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                ),
+                subtitle: const Text(
+                  'View licenses for third-party packages',
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 11,
+                  ),
+                ),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: packageInfo == null
+                    ? null
+                    : () => _showOpenSourceLicenses(packageInfo),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
