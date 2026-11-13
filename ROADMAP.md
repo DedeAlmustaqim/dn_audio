@@ -423,25 +423,114 @@ Catatan:
 - Pengujian background, pembatalan, dan lifecycle audio service pada perangkat
 - Validasi akurasi countdown dan expiry pada perangkat
 
-**Status: Unit test tambahan tersedia di GitHub — menunggu format, analisis, test lokal, dan verifikasi perangkat**
+**Status: Selesai — pengguna mengonfirmasi pengujian clean**
 
-## 10. Stage 9 — Final Polish & Release
+## 10. Stage 9 — Product Completion, Settings & Release
 
-- Penyempurnaan UI/UX
-- Optimasi performa dan baterai
-- Pengujian pada berbagai perangkat
-- Bug fixing
-- Persiapan rilis Google Play Store
+### 9.0 — Release Readiness & Functional Audit
 
-**Status: Belum dimulai**
+Temuan audit repository:
+- Home memiliki struktur tampilan, tetapi belum berfungsi sebagai dashboard interaktif.
+- Search field Home masih berupa dekorasi dan belum membuka pencarian Library.
+- Shortcut Songs, Albums, Artists, dan Folders belum memiliki aksi.
+- Section Recently Played masih berupa placeholder; belum ada listening-history persistence yang dapat menjadi sumber data.
+- Label "See all" belum memiliki aksi.
+- Home belum menyediakan akses ke Settings.
+- Library scan mengambil semua audio dari MediaStore; belum ada preferensi format/extension yang dapat dipilih pengguna.
+- Android MediaStore query berada di `MainActivity.kt`, sedangkan pemanggilan scan Flutter berada di `AudioLibraryService` dan `LibraryController`.
+- Belum ditemukan modul Settings atau penyimpanan preferensi aplikasi umum pada struktur `lib/modules` saat audit ini.
+
+Keputusan implementasi:
+- Pertahankan Flutter + GetX MVC dan struktur feature module.
+- Format filter harus diterapkan pada query MediaStore/native scan, bukan hanya menyembunyikan item di UI.
+- Preferensi format disimpan lokal dan diterapkan setiap kali scan/refresh dilakukan.
+- Jangan menampilkan Recently Played seolah-olah berfungsi sebelum sumber riwayat pemutaran tersedia. Bangun listening history secara eksplisit atau gunakan konten Home berbasis data yang sudah tersedia.
+- Folder browsing tidak boleh ditampilkan sebagai fitur aktif sebelum implementasinya tersedia.
+
+**Status: Audit repository selesai — siap masuk implementasi Home**
+
+### 9.1 — Home Functional Completion
+
+- Menghubungkan search entry point Home ke pencarian Library.
+- Menghubungkan shortcut Songs, Albums, dan Artists ke section Library yang sesuai.
+- Menghapus atau menonaktifkan shortcut Folders sampai folder browsing benar-benar tersedia.
+- Menghubungkan "See all" ke halaman/section terkait atau menghapus affordance yang belum memiliki aksi.
+- Mengganti placeholder Recently Played dengan data riwayat pemutaran yang nyata, atau mengubah hierarki Home menjadi library-first sampai listening history selesai.
+- Menyediakan akses Settings dari header Home.
+- Menambahkan unit/widget tests untuk aksi Home dan navigasi.
+
+**Status: Direncanakan**
+
+### 9.2 — Settings Foundation & Audio Library Preferences
+
+- Membuat modul Settings mengikuti pola GetX MVC.
+- Membuat halaman Settings dengan kelompok Audio Library, Playback, Audio Experience, Storage & Maintenance, dan About.
+- Menambahkan pilihan format audio yang dapat diaktifkan/nonaktifkan pengguna.
+- Menyediakan default format yang umum: MP3, FLAC, WAV, M4A, AAC, OGG, dan OPUS; daftar dapat diperluas berdasarkan dukungan MediaStore.
+- Menyimpan preferensi secara persisten di perangkat.
+- Menerapkan filter format pada query Android MediaStore.
+- Menerapkan ulang preferensi ketika scan ulang atau aplikasi dibuka.
+- Menambahkan unit test untuk model/repository preferensi dan pemetaan filter.
+
+**Status: Direncanakan**
+
+### 9.3 — Playback & Audio Experience Settings
+
+- Menentukan dan mengimplementasikan opsi playback yang benar-benar didukung engine.
+- Menyediakan pengaturan preferensi audio yang terhubung ke EqualizerController/AudioEffectsService.
+- Tidak menampilkan toggle untuk perilaku yang belum memiliki implementasi nyata.
+- Menambahkan pengujian persistensi dan penerapan preferensi.
+
+**Status: Direncanakan**
+
+### 9.4 — Storage & Maintenance
+
+- Menampilkan ringkasan jumlah lagu Library.
+- Menyediakan scan ulang Library.
+- Menampilkan ukuran cache artwork jika dapat dihitung secara andal.
+- Menyediakan clear artwork cache melalui ArtworkService/native cache path.
+- Menambahkan konfirmasi untuk tindakan yang menghapus data cache.
+- Menambahkan pengujian untuk operasi maintenance.
+
+**Status: Direncanakan**
+
+### 9.5 — About DN Audio
+
+- Menampilkan nama dan identitas DN Audio.
+- Menampilkan versi aplikasi dan build number dari package metadata.
+- Menampilkan Digital Native Dev sebagai developer.
+- Menyediakan deskripsi aplikasi dan lisensi open-source.
+- Menyediakan Privacy Policy ketika URL resminya sudah ditetapkan.
+
+**Status: Direncanakan**
+
+### 9.6 — Final UI/UX Polish
+
+- Menerapkan arah Premium Editorial dengan aksen Monochrome sesuai `docs/DESIGN_DIRECTION.md`.
+- Memoles Home, Library, Settings, Playlist, Now Playing, Equalizer, dan Sleep Timer.
+- Menjaga seluruh fungsi, playback, queue, background audio, dan playlist tetap utuh.
+- Menyelesaikan accessibility, safe-area, text scaling, dan responsive checks.
+
+**Status: Direncanakan**
+
+### 9.7 — Performance, Regression & Release Preparation
+
+- Audit performa scan, artwork cache, memory, dan battery usage.
+- Regression test seluruh fitur utama.
+- Verifikasi audio focus, headset/Bluetooth, lock screen, dan interupsi audio.
+- Menyiapkan app icon, splash screen, versioning, signing, release build, privacy policy, dan Google Play Store checklist.
+
+**Status: Direncanakan**
 
 ---
 
 ## Posisi Pengembangan Saat Ini
 
-# Stage 8.4 — Stabilization & Testing
+# Stage 9.0 — Release Readiness & Functional Audit
 
-Stage 7.5, Stage 8.1, dan fitur utama Stage 8.2 telah dinyatakan berjalan oleh pengguna. Integrasi Stop Playback Stage 8.3 tersedia melalui `DnAudioHandler`. Stage 8.4 menambahkan cakupan unit test untuk stream countdown, expiry, pembatalan, dan disposal. Pengujian lokal serta verifikasi perangkat untuk pergantian lagu, queue, background, dan akurasi timer masih menunggu.
+Stage 8.4 telah dinyatakan clean oleh pengguna. Audit awal repository menemukan Home masih memiliki beberapa elemen statis dan belum terhubung ke fungsi Library, sedangkan preferensi format audio dan modul Settings belum tersedia. Tahap berikutnya adalah menyelesaikan fungsi Home sebelum membangun fondasi Settings dan filter format MediaStore.
+
+
 
 ---
 
