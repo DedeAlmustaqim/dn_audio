@@ -486,7 +486,7 @@ Stage 9.6 is complete when:
 ---
 
 **Final decision:** Immersive Minimal overall · Poppins typography · Editorial Now Playing · Premium Dark monochrome palette.  
-**Implementation status:** Blueprint approved. Stage 9.6.1 foundation and the first Stage 9.6.2 shared-component slice have been committed. Poppins font binaries are not yet bundled; device-level typography verification remains pending.
+**Implementation status:** Blueprint approved. Stage 9.6.1 foundation, Stage 9.6.2 shared-component slice and Stage 9.6.3 Home & Library visual refinement have been committed. Poppins font binaries are not yet bundled; device-level typography verification remains pending.
 
 
 ## 13. Stage 9.6.1 implementation record
@@ -522,3 +522,21 @@ Remaining in Stage 9.6.2:
 - Run formatter, analyzer, tests and device interaction checks in the local Flutter environment.
 
 No playback engine, queue, navigation destination, persistence, database schema or native audio behavior was changed in this slice.
+
+
+## 15. Stage 9.6.3 implementation record
+
+Completed in this slice:
+- Refined Home's editorial heading hierarchy and applied shared spacing and radius tokens to the header, shortcuts and Continue Listening surface.
+- Refined Library's title hierarchy, section count typography, section chips and album grid spacing.
+- Changed the selected Library section chip to a solid monochrome treatment with a contrasting dark label; removed the translucent accent-tint selection treatment.
+- Refined Album Detail and Artist Detail heading hierarchy, artwork radii, content spacing and album grid surfaces.
+- Changed missing-artwork placeholder icon treatment to neutral secondary text while retaining album artwork in its original colors.
+- Preserved existing search submission, section selection, scan/permission flow, album/artist navigation, play-all and song playback callbacks.
+
+Validation still required locally:
+- Run `dart format lib test`, `flutter analyze` and `flutter test`.
+- Verify Home, Library, Album Detail and Artist Detail on device with real local music, no permission, empty library, search with no matches, long titles and narrow screen widths.
+- Check that the shared Mini Player and bottom navigation remain visible without content/inset overlap.
+
+No library scanning rules, search matching, collection grouping, playback behavior, persistence, database schema or native audio code was changed in this slice.
