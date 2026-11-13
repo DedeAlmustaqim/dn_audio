@@ -249,7 +249,8 @@ Direction:
 - Optional progress line only if it remains accurate and visually quiet.
 - Tapping the non-control area opens Now Playing.
 - Controls must be independently tappable.
-- Maintain clear separation from bottom navigation and device insets.
+- Visually integrate with bottom navigation as one continuous Bottom Dock: use a shared surface tone, avoid a hard divider between Mini Player and NavigationBar, and retain clear internal hierarchy.
+- Keep the Mini Player controls independently tappable and preserve safe-area/system-inset behaviour.
 
 ### 6.6 Playlists and Playlist Detail — personal collection management
 
@@ -653,6 +654,7 @@ Local automated validation required:
 Manual device regression required:
 - Complete the flows listed above on a real Android device, especially permission denial/regrant, rescan, playback queue/selection, playlist mutations, Equalizer unsupported capability, timer cancellation/completion and artwork-cache cleanup.
 - Confirm the Mini Player remains visible and does not cover scrollable content on every main tab.
+- Bottom Dock: verify Mini Player and NavigationBar read as one continuous surface without a harsh seam; verify the transition remains clear, controls stay independently tappable, and the dock respects gesture/system insets.
 
 Limitations:
 - Repository review cannot replace runtime screenshot review, TalkBack testing, device-specific audio effects testing or manual playback regression.
