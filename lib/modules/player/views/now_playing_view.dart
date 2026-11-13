@@ -6,6 +6,8 @@ import '../../../core/constants/app_colors.dart';
 import '../../library/widgets/song_artwork.dart';
 import '../controllers/player_controller.dart';
 import 'equalizer_view.dart';
+import 'sleep_timer_sheet.dart';
+import '../controllers/sleep_timer_controller.dart';
 
 class NowPlayingView extends GetView<PlayerController> {
   const NowPlayingView({super.key});
@@ -35,6 +37,20 @@ class NowPlayingView extends GetView<PlayerController> {
                   const Spacer(),
                   const Text('NOW PLAYING', style: TextStyle(fontSize: 11, letterSpacing: 2, color: AppColors.textSecondary, fontWeight: FontWeight.w700)),
                   const Spacer(),
+                  Obx(() {
+                    final active =
+                        Get.find<SleepTimerController>().isActive.value;
+                    return IconButton(
+                      tooltip: active ? 'Sleep Timer Active' : 'Sleep Timer',
+                      onPressed: () => SleepTimerSheet.show(context),
+                      icon: Icon(
+                        Icons.bedtime_outlined,
+                        color: active
+                            ? AppColors.primary
+                            : AppColors.textSecondary,
+                      ),
+                    );
+                  }),
                   IconButton(
                     tooltip: 'Equalizer',
                     onPressed: () => showModalBottomSheet<void>(
