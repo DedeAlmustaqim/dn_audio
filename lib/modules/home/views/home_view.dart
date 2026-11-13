@@ -44,29 +44,29 @@ class HomeView extends GetView<HomeController> {
             children: [
               const PlayerMiniBar(),
               NavigationBar(
-              selectedIndex: index,
-              onDestinationSelected: controller.selectTab,
-              destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home_rounded),
-              label: 'Home',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.library_music_outlined),
-              selectedIcon: Icon(Icons.library_music_rounded),
-              label: 'Library',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.queue_music_outlined),
-              selectedIcon: Icon(Icons.queue_music_rounded),
-              label: 'Playlists',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.equalizer_rounded),
-              label: 'Equalizer',
-            ),
-              ],
+                selectedIndex: index,
+                onDestinationSelected: controller.selectTab,
+                destinations: const [
+                  NavigationDestination(
+                    icon: Icon(Icons.home_outlined),
+                    selectedIcon: Icon(Icons.home_rounded),
+                    label: 'Home',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.library_music_outlined),
+                    selectedIcon: Icon(Icons.library_music_rounded),
+                    label: 'Library',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.queue_music_outlined),
+                    selectedIcon: Icon(Icons.queue_music_rounded),
+                    label: 'Playlists',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.equalizer_rounded),
+                    label: 'Equalizer',
+                  ),
+                ],
               ),
             ],
           ),
