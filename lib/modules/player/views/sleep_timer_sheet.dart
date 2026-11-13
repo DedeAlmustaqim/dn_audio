@@ -176,7 +176,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 return _DurationChip(
                   label: minutes >= 60
                       ? '${minutes ~/ 60}h${minutes % 60 == 0 ? '' : ' 30m'}'
-                      : '${minutes} min',
+                      : '$minutes min',
                   onTap: () => _start(Duration(minutes: minutes)),
                 );
               }).toList(),
@@ -316,7 +316,7 @@ class _DurationDropdown<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<T>(
-      value: value,
+      initialValue: value,
       dropdownColor: AppColors.surfaceElevated,
       decoration: InputDecoration(
         labelText: label,
