@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
 import '../controllers/sleep_timer_controller.dart';
 
 class SleepTimerSheet extends StatefulWidget {
@@ -58,7 +57,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 height: 4,
                 decoration: BoxDecoration(
                   color: AppColors.border,
-                  borderRadius: AppRadius.full,
+                  borderRadius: AppRadius.pillShape,
                 ),
               ),
             ),
