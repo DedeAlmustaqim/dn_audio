@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../../settings/models/audio_library_preferences.dart';
 import '../../settings/services/settings_repository.dart';
 import '../models/song.dart';
 import '../models/library_collection.dart';
