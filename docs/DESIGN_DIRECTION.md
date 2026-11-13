@@ -580,3 +580,21 @@ Validation still required locally:
 - Confirm the Mini Player remains visible and does not overlap playlist content.
 
 No playlist controller, repository, model, database schema, playback controller, queue semantics or persistence logic was changed in this slice.
+
+
+## 18. Stage 9.6.6 implementation record
+
+Completed in this slice:
+- Migrated Equalizer screen accent treatments to monochrome control tokens and neutral selected surfaces.
+- Standardized Equalizer spacing, radii and section hierarchy with shared design tokens.
+- Replaced the hardcoded red error text with the semantic error token.
+- Refined Sleep Timer spacing, quick-duration chips, custom duration fields, active timer surface and primary/cancel actions to match the Premium Dark design system.
+- Preserved capability refresh, preset application, band-level updates, Bass Boost and Virtualizer toggles, persistence calls, timer start/cancel and countdown rendering.
+
+Validation still required locally:
+- Run `dart format lib test`, `flutter analyze` and `flutter test`.
+- On a physical device verify Equalizer available/unavailable states, enabled/disabled state, preset selection, each band adjustment, Bass Boost/Virtualizer support and strength controls, capability refresh and restoration.
+- Verify Sleep Timer quick presets, custom hours/minutes, zero-duration disabled state, active countdown, cancel and completed state.
+- Confirm the Equalizer and Sleep Timer sheets respect keyboard/system insets and compact-height screens.
+
+No equalizer controller, audio effects service, native Android effects manager, MethodChannel, settings repository, sleep timer controller/service, playback engine or persistence semantics were changed.
