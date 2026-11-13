@@ -532,6 +532,23 @@ Catatan koreksi lanjutan:
 - Tidak menampilkan toggle untuk perilaku yang belum memiliki implementasi nyata.
 - Menambahkan pengujian persistensi dan penerapan preferensi.
 
+#### 9.3.1 — Playback Speed Preference
+
+- Menambahkan model PlaybackPreferences dengan default 1.0× dan opsi 0.5×, 0.75×, 1.0×, 1.25×, 1.5×, 1.75×, dan 2.0×.
+- Memperluas SettingsRepository SQLite yang sudah ada untuk menyimpan preferensi playback tanpa membuat database baru.
+- Menambahkan kontrol Playback Speed pada Settings dan menerapkan perubahan langsung melalui AudioPlayer.setSpeed milik DnAudioHandler.
+- Memulihkan playback speed sebelum aplikasi menjalankan UI sehingga preferensi berlaku sejak playback pertama.
+- Memvalidasi nilai yang tersimpan; nilai yang tidak didukung kembali ke 1.0×.
+- Menambahkan unit test model dan controller untuk default, pemulihan, persistensi, validasi, serta rollback ketika penyimpanan gagal.
+
+**Status: Implementasi tersedia di GitHub — menunggu flutter format, flutter analyze, flutter test, dan verifikasi perangkat lokal.**
+
+#### 9.3.2 — Audio Experience Preferences
+
+- Audit dan integrasikan preferensi Equalizer, preset, Bass Boost, dan Virtualizer yang sudah tersedia.
+- Hindari membuat pipeline audio atau instance player tambahan.
+- Tambahkan pengujian pemulihan preferensi saat audio session berubah.
+
 **Status: Direncanakan**
 
 ### 9.4 — Storage & Maintenance
