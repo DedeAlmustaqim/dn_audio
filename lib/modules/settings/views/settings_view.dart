@@ -43,7 +43,7 @@ class SettingsView extends GetView<SettingsController> {
         }
 
         return ListView(
-          padding: const const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.md, AppSpacing.screenHorizontal, AppSpacing.xxxl),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.md, AppSpacing.screenHorizontal, AppSpacing.xxxl),
           children: [
             const _SettingsIntro(),
             const SizedBox(height: AppSpacing.xxxl),
