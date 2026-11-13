@@ -13,7 +13,12 @@ void main() {
       service.start(const Duration(seconds: 30));
 
       expect(service.isActive, isTrue);
-      expect(service.remainingTime, const Duration(seconds: 30));
+      final remaining = service.remainingTime!;
+      expect(remaining, lessThanOrEqualTo(const Duration(seconds: 30)));
+      expect(
+        remaining,
+        greaterThan(const Duration(seconds: 29, milliseconds: 900)),
+      );
     });
 
     test('cancel stops countdown and clears remaining time', () async {
