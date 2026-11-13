@@ -8,6 +8,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../library/models/song.dart';
 import '../../library/widgets/song_artwork.dart';
 import '../controllers/player_controller.dart';
 import '../controllers/sleep_timer_controller.dart';
@@ -156,7 +157,7 @@ class NowPlayingView extends GetView<PlayerController> {
     );
   }
 
-  Widget _buildArtwork(dynamic song, double artworkSize) {
+  Widget _buildArtwork(Song song, double artworkSize) {
     return Center(
       child: Container(
         width: artworkSize,
@@ -180,7 +181,7 @@ class NowPlayingView extends GetView<PlayerController> {
     );
   }
 
-  Widget _buildTrackInformation(BuildContext context, dynamic song) {
+  Widget _buildTrackInformation(BuildContext context, Song song) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
