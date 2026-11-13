@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/widgets/app_loading_state.dart';
 import '../../../core/widgets/app_empty_state.dart';
 import '../../player/controllers/player_controller.dart';
 import '../../player/views/player_mini_bar.dart';
@@ -171,9 +172,7 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
             if (_isLoading)
               const SliverFillRemaining(
                 hasScrollBody: false,
-                child: Center(
-                  child: CircularProgressIndicator(color: AppColors.primary),
-                ),
+                child: AppLoadingState(),
               )
             else if (_loadError != null)
               SliverFillRemaining(
