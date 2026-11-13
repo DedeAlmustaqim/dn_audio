@@ -63,7 +63,7 @@ class _SongArtworkState extends State<SongArtwork> {
         child: Icon(
           Icons.graphic_eq_rounded,
           size: widget.iconSize,
-          color: AppColors.primary,
+          color: AppColors.textSecondary,
         ),
       );
 }
