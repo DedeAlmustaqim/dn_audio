@@ -111,7 +111,12 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.md, AppSpacing.screenHorizontal, AppSpacing.lg),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.screenHorizontal,
+                AppSpacing.md,
+                AppSpacing.screenHorizontal,
+                AppSpacing.lg,
+              ),
               sliver: SliverToBoxAdapter(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,7 +137,9 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
                     const SizedBox(height: AppSpacing.xl),
                     Text(
                       'YOUR PLAYLIST',
-                      style: AppTypography.eyebrow.copyWith(color: AppColors.textSecondary),
+                      style: AppTypography.eyebrow.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
@@ -165,9 +172,14 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
                         icon: const Icon(Icons.play_arrow_rounded),
                         label: const Text('Play all'),
                         style: FilledButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          foregroundColor: Colors.white,
+                          backgroundColor: AppColors.controlActive,
+                          foregroundColor: AppColors.onControlActive,
+                          disabledBackgroundColor: AppColors.surfaceElevated,
+                          disabledForegroundColor: AppColors.textMuted,
                           minimumSize: const Size.fromHeight(52),
+                          shape: const StadiumBorder(),
+                          textStyle: Theme.of(context).textTheme.labelLarge
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                       ),
                     ),
@@ -205,7 +217,12 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
               )
             else
               SliverPadding(
-                padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.xxxl),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.lg,
+                  0,
+                  AppSpacing.lg,
+                  AppSpacing.xxxl,
+                ),
                 sliver: SliverList.separated(
                   itemCount: songs.length,
                   separatorBuilder: (_, _) =>
