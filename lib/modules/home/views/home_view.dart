@@ -5,6 +5,8 @@ import '../../../core/constants/app_colors.dart';
 import '../../library/views/library_view.dart';
 import '../../player/views/player_mini_bar.dart';
 import '../../player/views/equalizer_view.dart';
+import '../../player/views/sleep_timer_sheet.dart';
+import '../../player/controllers/sleep_timer_controller.dart';
 import '../../playlist/views/playlist_view.dart';
 import '../controllers/home_controller.dart';
 
@@ -185,14 +187,17 @@ class _BrandHeader extends StatelessWidget {
           ],
         ),
         const Spacer(),
-        IconButton(
-          tooltip: 'Settings',
-          onPressed: () {},
-          icon: const Icon(
-            Icons.settings_outlined,
-            color: AppColors.textSecondary,
-          ),
-        ),
+        Obx(() {
+          final active = Get.find<SleepTimerController>().isActive.value;
+          return IconButton(
+            tooltip: active ? 'Sleep Timer Active' : 'Sleep Timer',
+            onPressed: () => SleepTimerSheet.show(context),
+            icon: Icon(
+              Icons.bedtime_outlined,
+              color: active ? AppColors.primary : AppColors.textSecondary,
+            ),
+          );
+        }),
       ],
     );
   }
