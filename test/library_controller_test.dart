@@ -3,12 +3,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:dn_audio/modules/library/controllers/library_controller.dart';
 import 'package:dn_audio/modules/library/models/song.dart';
 import 'package:dn_audio/modules/library/services/audio_library_service.dart';
+import 'package:dn_audio/modules/settings/models/audio_library_preferences.dart';
+import 'package:dn_audio/modules/settings/services/settings_repository.dart';
 
 void main() {
   group('LibraryController', () {
     test('does not request permission until the library is opened', () async {
       final service = _FakeAudioLibraryService();
-      final controller = LibraryController(service: service);
+      final controller = LibraryController(
+        service: service,
+        settingsRepository: _FakeSettingsRepository(),
+      );
 
       expect(service.permissionChecks, 0);
       expect(service.permissionRequests, 0);
@@ -24,7 +29,10 @@ void main() {
 
     test('loads the library only once through ensureLoaded', () async {
       final service = _FakeAudioLibraryService();
-      final controller = LibraryController(service: service);
+      final controller = LibraryController(
+        service: service,
+        settingsRepository: _FakeSettingsRepository(),
+      );
 
       await controller.ensureLoaded();
       await controller.ensureLoaded();
@@ -36,7 +44,10 @@ void main() {
 
     test('concurrent load requests share one scan operation', () async {
       final service = _FakeAudioLibraryService();
-      final controller = LibraryController(service: service);
+      final controller = LibraryController(
+        service: service,
+        settingsRepository: _FakeSettingsRepository(),
+      );
 
       final firstLoad = controller.ensureLoaded();
       final secondLoad = controller.ensureLoaded();
@@ -53,8 +64,43 @@ void main() {
       expect(controller.isLoading.value, isFalse);
     });
 
+    test('passes saved format preferences to the native scanner', () async {
+      final service = _FakeAudioLibraryService();
+      final preferences = _FakeSettingsRepository(
+        preferences: AudioLibraryPreferences(
+          enabledExtensions: {'mp3', 'flac'},
+        ),
+      );
+      final controller = LibraryController(
+        service: service,
+        settingsRepository: preferences,
+      );
+
+      await controller.ensureLoaded();
+
+      expect(preferences.loadCount, 1);
+      expect(service.receivedExtensions, {'mp3', 'flac'});
+    });
+
+    test('passes an empty format selection without enabling defaults', () async {
+      final service = _FakeAudioLibraryService();
+      final controller = LibraryController(
+        service: service,
+        settingsRepository: _FakeSettingsRepository(
+          preferences: AudioLibraryPreferences(enabledExtensions: {}),
+        ),
+      );
+
+      await controller.ensureLoaded();
+
+      expect(service.receivedExtensions, isEmpty);
+    });
+
     test('groups songs into albums and artists using MediaStore IDs', () async {
-      final controller = LibraryController(service: _CollectionAudioLibraryService());
+      final controller = LibraryController(
+        service: _CollectionAudioLibraryService(),
+        settingsRepository: _FakeSettingsRepository(),
+      );
 
       await controller.ensureLoaded();
 
@@ -66,7 +112,10 @@ void main() {
     });
 
     test('filters album and artist collections using the active search query', () async {
-      final controller = LibraryController(service: _CollectionAudioLibraryService());
+      final controller = LibraryController(
+        service: _CollectionAudioLibraryService(),
+        settingsRepository: _FakeSettingsRepository(),
+      );
 
       await controller.ensureLoaded();
       controller.updateSearch('album one');
@@ -82,15 +131,35 @@ void main() {
     });
 
     test('uses normalized album and artist labels when IDs are unavailable', () async {
-      final controller = LibraryController(service: _FallbackCollectionAudioLibraryService());
+      final controller = LibraryController(
+        service: _FallbackCollectionAudioLibraryService(),
+        settingsRepository: _FakeSettingsRepository(),
+      );
 
       await controller.ensureLoaded();
 
       expect(controller.albums, hasLength(1));
       expect(controller.artists, hasLength(1));
     });
-
   });
+}
+
+class _FakeSettingsRepository extends SettingsRepository {
+  _FakeSettingsRepository({
+    AudioLibraryPreferences? preferences,
+  }) : preferences = preferences ?? AudioLibraryPreferences();
+
+  final AudioLibraryPreferences preferences;
+  int loadCount = 0;
+
+  @override
+  Future<AudioLibraryPreferences> loadAudioLibraryPreferences() async {
+    loadCount++;
+    return preferences;
+  }
+
+  @override
+  Future<void> close() async {}
 }
 
 class _CollectionAudioLibraryService extends AudioLibraryService {
@@ -98,7 +167,7 @@ class _CollectionAudioLibraryService extends AudioLibraryService {
   Future<bool> hasPermission() async => true;
 
   @override
-  Future<List<Song>> getSongs() async => [
+  Future<List<Song>> getSongs({Set<String>? extensions}) async => [
         _song('1', 'Track One', 'Artist One', 'Album One', 10, 20),
         _song('2', 'Track Two', 'Artist One', 'Album One', 10, 20),
         _song('3', 'Track Three', 'Artist Two', 'Album Two', 11, 21),
@@ -110,7 +179,7 @@ class _FallbackCollectionAudioLibraryService extends AudioLibraryService {
   Future<bool> hasPermission() async => true;
 
   @override
-  Future<List<Song>> getSongs() async => [
+  Future<List<Song>> getSongs({Set<String>? extensions}) async => [
         _song('1', 'Track One', 'Artist One', 'Album One', null, null),
         _song('2', 'Track Two', ' artist one ', ' album one ', null, null),
       ];
@@ -142,6 +211,7 @@ class _FakeAudioLibraryService extends AudioLibraryService {
   int permissionChecks = 0;
   int permissionRequests = 0;
   int scanRequests = 0;
+  Set<String>? receivedExtensions;
 
   @override
   Future<bool> hasPermission() async {
@@ -156,8 +226,9 @@ class _FakeAudioLibraryService extends AudioLibraryService {
   }
 
   @override
-  Future<List<Song>> getSongs() async {
+  Future<List<Song>> getSongs({Set<String>? extensions}) async {
     scanRequests++;
+    receivedExtensions = extensions;
     return const [];
   }
 }
