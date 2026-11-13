@@ -24,7 +24,7 @@ abstract final class AppTheme {
       textTheme: AppTypography.textTheme,
       scaffoldBackgroundColor: AppColors.background,
       splashFactory: InkSparkle.splashFactory,
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: AppColors.background,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
@@ -60,7 +60,7 @@ abstract final class AppTheme {
         showDragHandle: true,
         dragHandleColor: AppColors.textMuted,
       ),
-      dialogTheme: const DialogThemeData(
+      dialogTheme: DialogThemeData(
         backgroundColor: AppColors.surface,
         surfaceTintColor: Colors.transparent,
         titleTextStyle: AppTypography.textTheme.titleLarge,
