@@ -46,6 +46,7 @@ class _EqualizerViewState extends State<EqualizerView> {
     if (_isRefreshing) return;
     setState(() => _isRefreshing = true);
     await _handler.audioEffectsService.getCapabilities();
+    await _equalizerController.retryRestoreForCurrentSession();
     if (mounted) setState(() => _isRefreshing = false);
   }
 
