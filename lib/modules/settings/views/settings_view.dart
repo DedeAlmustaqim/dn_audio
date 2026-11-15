@@ -246,7 +246,7 @@ class _SettingsIntro extends StatelessWidget {
         borderRadius: AppRadius.large,
         border: Border.all(color: AppColors.border),
       ),
-      child: const Row(
+      child: Row(
         children: [
           Icon(Icons.tune_rounded, color: AppColors.primary, size: 30),
           SizedBox(width: AppSpacing.lg),
