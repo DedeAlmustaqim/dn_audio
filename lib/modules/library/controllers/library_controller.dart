@@ -160,9 +160,9 @@ class LibraryController extends GetxController {
       _hasLoaded = true;
     } on PlatformException catch (error) {
       errorMessage.value =
-          error.message ?? 'Unable to read music on this device.';
+          error.message ?? 'library_read_error'.tr;
     } catch (_) {
-      errorMessage.value = 'Something went wrong while scanning your music.';
+      errorMessage.value = 'library_scan_error'.tr;
     } finally {
       isLoading.value = false;
     }
