@@ -121,7 +121,7 @@ class SettingsController extends GetxController {
       await _refreshLoadedLibrary();
     } catch (_) {
       preferences.value = previous;
-      errorMessage.value = 'Could not save changes. Your previous settings were restored.';
+      errorMessage.value = 'format_save_failed'.tr;
     } finally {
       isSaving.value = false;
     }
