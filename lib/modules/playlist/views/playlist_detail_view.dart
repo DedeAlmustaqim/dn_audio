@@ -64,7 +64,7 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: Text('remove_song_question'.tr),
-        content: Text('Remove “${song.title}” from this playlist?'),
+        content: Text('remove_song_confirm'.trParams({'song': song.title})),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -196,7 +196,7 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
                 hasScrollBody: false,
                 child: AppEmptyState(
                   icon: Icons.music_off_rounded,
-                  title: 'This playlist is empty',
+                  title: 'playlist_empty_title'.tr,
                   message:
                       'Add songs from Your Library to build this playlist.',
                 ),
