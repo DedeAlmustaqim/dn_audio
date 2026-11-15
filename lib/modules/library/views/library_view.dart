@@ -51,12 +51,12 @@ class LibraryView extends GetView<LibraryController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Your Library',
+                      'your_library'.tr,
                       style: AppTypography.editorialTitle,
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
-                      '$collectionCount $sectionLabel on this device',
+                      'library_item_count'.trParams({'count': '$collectionCount', 'section': sectionLabel.tr}),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -65,10 +65,10 @@ class LibraryView extends GetView<LibraryController> {
                     AppSearchField(
                       onChanged: controller.updateSearch,
                       hintText: section == 'songs'
-                          ? 'Search songs, artists, albums...'
+                          ? 'search_music_hint'.tr
                           : section == 'albums'
-                              ? 'Search albums or artists...'
-                              : 'Search artists...',
+                              ? 'search_albums_artists_hint'.tr
+                              : 'search_artists_hint'.tr,
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     Row(
@@ -116,7 +116,7 @@ class LibraryView extends GetView<LibraryController> {
                   icon: Icons.error_outline_rounded,
                   title: 'could_not_scan'.tr,
                   message: controller.errorMessage.value!,
-                  actionLabel: 'Try again',
+                  actionLabel: 'try_again'.tr,
                   onAction: controller.refreshLibrary,
                 ),
               )
@@ -127,19 +127,19 @@ class LibraryView extends GetView<LibraryController> {
                   icon: Icons.folder_off_outlined,
                   title: 'music_access_needed'.tr,
                   message:
-                      'Allow DN Audio to access audio files so it can build your offline library.',
-                  actionLabel: 'Allow access',
+                      'allow_audio_access_message'.tr,
+                  actionLabel: 'allow_access'.tr,
                   onAction: controller.refreshLibrary,
                 ),
               )
             else if (controller.songs.isEmpty)
-              const SliverFillRemaining(
+              SliverFillRemaining(
                 hasScrollBody: false,
                 child: AppEmptyState(
                   icon: Icons.music_off_rounded,
                   title: 'no_music_found'.tr,
                   message:
-                      'Audio files stored on your device will appear here after scanning.',
+                      'library_empty_message'.tr,
                 ),
               )
             else if (!hasResults)
@@ -148,7 +148,7 @@ class LibraryView extends GetView<LibraryController> {
                 child: AppEmptyState(
                   icon: Icons.search_off_rounded,
                   title: controller.searchQuery.value.isNotEmpty
-                      ? 'No matching $sectionLabel'
+                      ? 'no_matching_items'.trParams({'section': sectionLabel.tr})
                       : 'No $sectionLabel yet',
                   message: controller.searchQuery.value.isNotEmpty
                       ? 'Try another search term.'
