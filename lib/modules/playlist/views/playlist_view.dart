@@ -210,7 +210,7 @@ class _PlaylistNameDialogState extends State<_PlaylistNameDialog> {
     final playlist = widget.playlist;
 
     return AlertDialog(
-      title: Text(playlist == null ? 'create_playlist_title'.tr : 'Rename playlist'),
+      title: Text(playlist == null ? 'create_playlist_title'.tr : 'rename_playlist'.tr),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
