@@ -10,7 +10,6 @@ import '../models/audio_library_preferences.dart';
 import '../models/playback_preferences.dart';
 import '../../library/controllers/library_controller.dart';
 import '../../library/services/artwork_service.dart';
-import '../../player/views/equalizer_view.dart';
 
 class SettingsView extends GetView<SettingsController> {
   const SettingsView({super.key});
@@ -101,46 +100,6 @@ class SettingsView extends GetView<SettingsController> {
                         .toList(growable: false),
                   ),
                 ],
-              ),
-            ),
-            const SizedBox(height: AppSpacing.xxxl),
-            const _SectionHeading(
-              title: 'Audio Experience',
-              subtitle: 'Shape the sound with your device-supported audio effects.',
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: AppRadius.medium,
-                border: Border.all(color: AppColors.border),
-              ),
-              child: ListTile(
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 18,
-                  vertical: 6,
-                ),
-                leading: const Icon(
-                  Icons.equalizer_rounded,
-                  color: AppColors.primary,
-                ),
-                title: const Text(
-                  'Equalizer & effects',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-                ),
-                subtitle: const Text(
-                  'Presets, band levels, Bass Boost and Virtualizer',
-                  style: TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 11,
-                  ),
-                ),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: () => Get.bottomSheet<void>(
-                  const EqualizerView(isBottomSheet: true),
-                  isScrollControlled: true,
-                  backgroundColor: AppColors.background,
-                ),
               ),
             ),
             const SizedBox(height: AppSpacing.xxxl),
