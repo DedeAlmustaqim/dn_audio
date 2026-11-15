@@ -665,3 +665,12 @@ Limitations:
 
 
 QA refinement: Keep Equalizer accessible from its dedicated bottom-navigation destination only; do not duplicate an Equalizer entry in Settings.
+
+
+## Home content refinement — Recently Added & Your Playlists
+- Add a Recently Added horizontal artwork row using the local library's `dateAdded` field, newest first; show up to 8 tracks and link See all to Library > Songs.
+- Add a Your Playlists section using persisted playlist records, sorted by `updatedAt` newest first; show up to 3 playlists and link See all to the Playlists tab.
+- Tapping a recently added track starts playback with the visible recent-track list as its queue.
+- Tapping a playlist opens its existing detail view.
+- Keep honest empty states when the device library or playlist collection is empty; do not use mock tracks or fabricated playlist content.
+- Preserve the monochrome Immersive Minimal direction and existing playback/navigation architecture.
