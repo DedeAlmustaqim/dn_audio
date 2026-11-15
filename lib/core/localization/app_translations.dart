@@ -175,6 +175,8 @@ class AppTranslations extends Translations {
           'playlist_name_max': 'Maximum 50 characters.',
           'add_songs_to_playlist': 'Add songs from Your Library to build this playlist.',
           'enable_frequency_control': 'Enable audio frequency control',
+          'audio_file_error': 'Unable to play this audio file.',
+          'could_not_play_playlist': 'Could not play this playlist: @error',
         },
         'id_ID': {
           'settings_title': 'Pengaturan',
@@ -348,6 +350,8 @@ class AppTranslations extends Translations {
           'playlist_name_max': 'Maksimal 50 karakter.',
           'add_songs_to_playlist': 'Tambahkan lagu dari Pustaka Musik untuk mengisi playlist ini.',
           'enable_frequency_control': 'Aktifkan pengaturan frekuensi audio',
+          'audio_file_error': 'Tidak dapat memutar file audio ini.',
+          'could_not_play_playlist': 'Tidak dapat memutar playlist ini: @error',
         },
       };
 }
