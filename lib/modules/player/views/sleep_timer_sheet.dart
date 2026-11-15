@@ -82,7 +82,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Sleep Timer',
+                        'sleep_timer'.tr,
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w600,
@@ -90,7 +90,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                       ),
                       SizedBox(height: 3),
                       Text(
-                        'Set a time to stop your music.',
+                        'set_sleep_timer'.tr,
                         style: TextStyle(
                           color: AppColors.textSecondary,
                           fontSize: 12,
@@ -131,7 +131,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            finished ? 'Timer finished' : 'Timer active',
+                            finished ? 'timer_finished'.tr : 'timer_active'.tr,
                             style: const TextStyle(
                               fontWeight: FontWeight.w600,
                             ),
@@ -139,8 +139,8 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                           const SizedBox(height: 3),
                           Text(
                             finished
-                                ? 'Playback has been paused.'
-                                : 'Music stops when the countdown ends.',
+                                ? 'playback_paused'.tr
+                                : 'timer_countdown_note'.tr,
                             style: const TextStyle(
                               color: AppColors.textSecondary,
                               fontSize: 11,
@@ -161,8 +161,8 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 ),
               );
             }),
-            const Text(
-              'QUICK DURATION',
+            Text(
+              'quick_duration'.tr,
               style: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 10,
@@ -184,8 +184,8 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
               }).toList(),
             ),
             const SizedBox(height: AppSpacing.xxxl),
-            const Text(
-              'CUSTOM DURATION',
+            Text(
+              'custom_duration'.tr,
               style: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 10,
@@ -199,7 +199,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 Expanded(
                   child: _DurationDropdown<int>(
                     value: _hours,
-                    label: 'Hours',
+                    label: 'hours'.tr,
                     items: List.generate(13, (index) => index),
                     onChanged: (value) => setState(() => _hours = value),
                   ),
@@ -208,7 +208,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 Expanded(
                   child: _DurationDropdown<int>(
                     value: _minutes,
-                    label: 'Minutes',
+                    label: 'minutes'.tr,
                     items: List.generate(60, (index) => index),
                     onChanged: (value) => setState(() => _minutes = value),
                   ),
@@ -233,8 +233,8 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                     borderRadius: AppRadius.small,
                   ),
                 ),
-                child: const Text(
-                  'Start Timer',
+                child: Text(
+                  'start_timer'.tr,
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
@@ -260,7 +260,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                         borderRadius: AppRadius.small,
                       ),
                     ),
-                    child: const Text('Cancel Timer'),
+                    child: Text('cancel_timer'.tr),
                   ),
                 ),
               );
