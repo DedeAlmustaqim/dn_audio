@@ -169,6 +169,12 @@ class AppTranslations extends Translations {
           'song_not_in_playlist': 'This song is no longer in the playlist.',
           'playlist_missing': 'This playlist no longer exists.',
           'generic_retry_error': 'Something went wrong. Please try again.',
+          'organize_music': 'Organize your music your way.',
+          'create_first_playlist': 'Create your first playlist and start organizing your music.',
+          'playlist_name_required': 'Playlist name is required.',
+          'playlist_name_max': 'Maximum 50 characters.',
+          'add_songs_to_playlist': 'Add songs from Your Library to build this playlist.',
+          'enable_frequency_control': 'Enable audio frequency control',
         },
         'id_ID': {
           'settings_title': 'Pengaturan',
@@ -336,6 +342,12 @@ class AppTranslations extends Translations {
           'song_not_in_playlist': 'Lagu ini sudah tidak ada di playlist.',
           'playlist_missing': 'Playlist ini sudah tidak tersedia.',
           'generic_retry_error': 'Terjadi kesalahan. Silakan coba lagi.',
+          'organize_music': 'Atur musik sesuai caramu.',
+          'create_first_playlist': 'Buat playlist pertamamu dan mulai atur koleksi musik.',
+          'playlist_name_required': 'Nama playlist wajib diisi.',
+          'playlist_name_max': 'Maksimal 50 karakter.',
+          'add_songs_to_playlist': 'Tambahkan lagu dari Pustaka Musik untuk mengisi playlist ini.',
+          'enable_frequency_control': 'Aktifkan pengaturan frekuensi audio',
         },
       };
 }
