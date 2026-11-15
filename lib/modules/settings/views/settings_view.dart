@@ -45,7 +45,7 @@ class SettingsView extends GetView<SettingsController> {
         return ListView(
           padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.md, AppSpacing.screenHorizontal, AppSpacing.xxxl),
           children: [
-            _SettingsIntro(),
+            const _SettingsIntro(),
             const SizedBox(height: AppSpacing.xl),
             _LanguagePreferencePanel(),
             const SizedBox(height: AppSpacing.xxxl),
@@ -235,7 +235,7 @@ class _LanguagePreferencePanel extends StatelessWidget {
 }
 
 class _SettingsIntro extends StatelessWidget {
-  _SettingsIntro();
+  const _SettingsIntro();
 
   @override
   Widget build(BuildContext context) {
@@ -273,7 +273,7 @@ class _SettingsIntro extends StatelessWidget {
 }
 
 class _SectionHeading extends StatelessWidget {
-  _SectionHeading({required this.title, required this.subtitle});
+  const _SectionHeading({required this.title, required this.subtitle});
 
   final String title;
   final String subtitle;
