@@ -685,7 +685,7 @@ class _EqualizerViewState extends State<EqualizerView> {
                     final safeValue = current.clamp(minLevel, maxLevel).toDouble();
                     final enabled = equalizer.enabled && !_isApplyingPreset;
                     return SizedBox(
-                      width: 48,
+                      width: 62,
                       child: Column(
                         children: [
                           Text(
@@ -694,12 +694,12 @@ class _EqualizerViewState extends State<EqualizerView> {
                               color: enabled
                                   ? AppColors.controlActive
                                   : AppColors.textMuted,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
                               fontFeatures: const [FontFeature.tabularFigures()],
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 10),
                           _VerticalBandSlider(
                             value: safeValue,
                             min: minLevel,
@@ -711,12 +711,12 @@ class _EqualizerViewState extends State<EqualizerView> {
                             onChangeEnd: (value) =>
                                 _applyBandLevel(band.index, value),
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 12),
                           Text(
                             _formatFrequency(band.centerFrequencyHz),
                             style: const TextStyle(
                               color: AppColors.textSecondary,
-                              fontSize: 10,
+                              fontSize: 11,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -859,19 +859,19 @@ class _VerticalBandSliderState extends State<_VerticalBandSlider> {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTapDown: widget.enabled
-            ? (details) => _commit(_valueAt(details.localPosition.dy, 132))
+            ? (details) => _commit(_valueAt(details.localPosition.dy, 172))
             : null,
         onVerticalDragUpdate: widget.enabled
             ? (details) => _updateValue(
-                  _valueAt(details.localPosition.dy, 132),
+                  _valueAt(details.localPosition.dy, 172),
                 )
             : null,
         onVerticalDragEnd: widget.enabled
             ? (_) => widget.onChangeEnd(_currentValue)
             : null,
         child: SizedBox(
-          width: 30,
-          height: 132,
+          width: 40,
+          height: 172,
           child: CustomPaint(
             painter: _VerticalBandSliderPainter(
               value: safeValue,
@@ -906,8 +906,8 @@ class _VerticalBandSliderPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    const trackWidth = 4.0;
-    const thumbRadius = 6.0;
+    const trackWidth = 6.0;
+    const thumbRadius = 8.0;
     final centerX = size.width / 2;
     final top = thumbRadius;
     final bottom = size.height - thumbRadius;
@@ -933,12 +933,12 @@ class _VerticalBandSliderPainter extends CustomPainter {
     canvas.drawCircle(Offset(centerX, valueY), thumbRadius, thumbPaint);
     canvas.drawCircle(
       Offset(centerX, valueY),
-      2.2,
+      3.0,
       Paint()..color = AppColors.background,
     );
     canvas.drawCircle(
       Offset(centerX, zeroY),
-      1.8,
+      2.2,
       Paint()..color = AppColors.textMuted.withValues(alpha: 0.8),
     );
   }
