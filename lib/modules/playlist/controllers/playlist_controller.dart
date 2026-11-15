@@ -29,7 +29,7 @@ class PlaylistController extends GetxController {
     try {
       playlists.assignAll(await _repository.getPlaylists());
     } catch (_) {
-      errorMessage.value = 'Unable to load playlists.';
+      errorMessage.value = 'playlist_load_error'.tr;
     } finally {
       isLoading.value = false;
     }
@@ -42,7 +42,7 @@ class PlaylistController extends GetxController {
       playlistSongs[playlistId] = songs;
       return songs;
     } catch (_) {
-      errorMessage.value = 'Unable to load songs in this playlist.';
+      errorMessage.value = 'playlist_songs_load_error'.tr;
       rethrow;
     }
   }
@@ -92,20 +92,20 @@ class PlaylistController extends GetxController {
       await loadPlaylists();
       return true;
     } on PlaylistAlreadyExistsException {
-      errorMessage.value = 'A playlist with this name already exists.';
+      errorMessage.value = 'playlist_name_exists'.tr;
     } on PlaylistSongAlreadyExistsException {
-      errorMessage.value = 'This song is already in the playlist.';
+      errorMessage.value = 'song_already_in_playlist'.tr;
     } on InvalidPlaylistSongException {
-      errorMessage.value = 'This song cannot be added to the playlist.';
+      errorMessage.value = 'song_cannot_add'.tr;
     } on PlaylistSongNotFoundException {
-      errorMessage.value = 'This song is no longer in the playlist.';
+      errorMessage.value = 'song_not_in_playlist'.tr;
     } on InvalidPlaylistNameException catch (error) {
       errorMessage.value = error.message;
     } on PlaylistNotFoundException {
-      errorMessage.value = 'This playlist no longer exists.';
+      errorMessage.value = 'playlist_missing'.tr;
       await loadPlaylists();
     } catch (_) {
-      errorMessage.value = 'Something went wrong. Please try again.';
+      errorMessage.value = 'generic_retry_error'.tr;
     } finally {
       isSaving.value = false;
     }
