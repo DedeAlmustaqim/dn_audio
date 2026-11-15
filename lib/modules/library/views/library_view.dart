@@ -296,7 +296,7 @@ class LibraryView extends GetView<LibraryController> {
                             color: AppColors.primary,
                           ),
                           title: Text(playlist.name),
-                          subtitle: Text('${playlist.songCount} songs'),
+                          subtitle: Text('song_count'.trParams({'count': '${playlist.songCount}'})),
                           trailing: const Icon(Icons.add_rounded),
                           onTap: playlistController.isSaving.value
                               ? null
@@ -401,7 +401,7 @@ class _AlbumCard extends StatelessWidget {
                 const SizedBox(height: AppSpacing.xxs),
                 Text(album.artist, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
                 const SizedBox(height: 3),
-                Text('${album.songCount} songs', style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
+                Text('song_count'.trParams({'count': '${album.songCount}'}), style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
               ],
             ),
           ),
