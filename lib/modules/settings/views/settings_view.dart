@@ -758,7 +758,7 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
             children: [
               const Icon(Icons.image_outlined, color: AppColors.primary, size: 21),
               const SizedBox(width: AppSpacing.sm),
-              const Expanded(
+              Expanded(
                 child: Text(
                   'artwork_cache'.tr,
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
@@ -784,7 +784,7 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
               if (snapshot.hasError) {
                 return Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                       child: Text(
                         'unable_read_cache'.tr,
                         style: TextStyle(color: AppColors.error, fontSize: 12),
