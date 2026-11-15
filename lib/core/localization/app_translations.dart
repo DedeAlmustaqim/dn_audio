@@ -177,6 +177,7 @@ class AppTranslations extends Translations {
           'enable_frequency_control': 'Enable audio frequency control',
           'audio_file_error': 'Unable to play this audio file.',
           'could_not_play_playlist': 'Could not play this playlist: @error',
+          'sound_control': 'Sound control',
         },
         'id_ID': {
           'settings_title': 'Pengaturan',
@@ -352,6 +353,7 @@ class AppTranslations extends Translations {
           'enable_frequency_control': 'Aktifkan pengaturan frekuensi audio',
           'audio_file_error': 'Tidak dapat memutar file audio ini.',
           'could_not_play_playlist': 'Tidak dapat memutar playlist ini: @error',
+          'sound_control': 'Kontrol suara',
         },
       };
 }
