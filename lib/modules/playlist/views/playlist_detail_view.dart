@@ -238,7 +238,7 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
                             onSelected: (value) {
                               if (value == 'remove') _confirmRemove(item);
                             },
-                            itemBuilder: (_) => const [
+                            itemBuilder: (_) => [
                               PopupMenuItem(
                                 value: 'remove',
                                 child: Text('remove_from_playlist'.tr),
