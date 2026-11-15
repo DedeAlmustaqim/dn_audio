@@ -105,7 +105,7 @@ class LibraryView extends GetView<LibraryController> {
               ),
             ),
             if (controller.isLoading.value)
-              const SliverFillRemaining(
+              SliverFillRemaining(
                 hasScrollBody: false,
                 child: AppLoadingState(),
               )
@@ -149,7 +149,7 @@ class LibraryView extends GetView<LibraryController> {
                   icon: Icons.search_off_rounded,
                   title: controller.searchQuery.value.isNotEmpty
                       ? 'no_matching_items'.trParams({'section': sectionLabel.tr})
-                      : 'No $sectionLabel yet',
+                      : 'no_matching_items'.trParams({'section': sectionLabel.tr}),
                   message: controller.searchQuery.value.isNotEmpty
                       ? 'Try another search term.'
                       : section == 'albums'
