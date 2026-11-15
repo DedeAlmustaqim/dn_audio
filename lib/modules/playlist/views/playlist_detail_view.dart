@@ -187,18 +187,18 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
                   icon: Icons.error_outline_rounded,
                   title: 'could_not_load_playlist'.tr,
                   message: _loadError!,
-                  actionLabel: 'Try again',
+                  actionLabel: 'try_again'.tr,
                   onAction: _loadSongs,
                 ),
               )
             else if (songs.isEmpty)
-              const SliverFillRemaining(
+              SliverFillRemaining(
                 hasScrollBody: false,
                 child: AppEmptyState(
                   icon: Icons.music_off_rounded,
                   title: 'playlist_empty_title'.tr,
                   message:
-                      'Add songs from Your Library to build this playlist.',
+                      'add_songs_to_playlist'.tr,
                 ),
               )
             else
