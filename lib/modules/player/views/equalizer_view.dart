@@ -306,7 +306,7 @@ class _EqualizerViewState extends State<EqualizerView> {
                         const SizedBox(height: 8),
                       Row(
                         children: [
-                          const Expanded(
+                          Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
