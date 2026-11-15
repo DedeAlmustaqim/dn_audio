@@ -35,7 +35,7 @@ class SettingsController extends GetxController {
       playbackPreferences.value = await _repository.loadPlaybackPreferences();
       await _applyPlaybackSpeed(playbackPreferences.value.speed);
     } catch (_) {
-      errorMessage.value = 'Unable to load settings preferences.';
+      errorMessage.value = 'playback_load_failed'.tr;
     } finally {
       isLoading.value = false;
     }
@@ -44,7 +44,7 @@ class SettingsController extends GetxController {
   Future<void> setPlaybackSpeed(double speed) async {
     if (isSaving.value || isLoading.value) return;
     if (!PlaybackPreferences.supportedSpeeds.contains(speed)) {
-      errorMessage.value = 'That playback speed is not supported.';
+      errorMessage.value = 'playback_speed_unsupported'.tr;
       return;
     }
 
@@ -63,7 +63,7 @@ class SettingsController extends GetxController {
       } catch (_) {
         // Keep the original save/apply error visible to the user.
       }
-      errorMessage.value = 'Could not apply or save playback speed. Previous setting restored.';
+      errorMessage.value = 'playback_speed_save_failed'.tr;
     } finally {
       isSaving.value = false;
     }
@@ -101,7 +101,7 @@ class SettingsController extends GetxController {
       await _refreshLoadedLibrary();
     } catch (_) {
       preferences.value = previous;
-      errorMessage.value = 'Could not save changes. Your previous settings were restored.';
+      errorMessage.value = 'format_save_failed'.tr;
     } finally {
       isSaving.value = false;
     }
