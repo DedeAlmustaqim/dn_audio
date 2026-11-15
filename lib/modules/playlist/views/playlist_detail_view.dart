@@ -63,16 +63,16 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Remove song?'),
+        title: Text('remove_song_question'.tr),
         content: Text('Remove “${song.title}” from this playlist?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Cancel'),
+            child: Text('cancel'.tr),
           ),
           FilledButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Remove'),
+            child: Text('remove'.tr),
           ),
         ],
       ),
@@ -95,10 +95,10 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
       ),
       appBar: AppBar(
         backgroundColor: AppColors.background,
-        title: const Text('Playlist'),
+        title: Text('nav_playlists'.tr),
         actions: [
           IconButton(
-            tooltip: 'Refresh playlist',
+            tooltip: 'refresh_playlist'.tr,
             onPressed: _isLoading ? null : _loadSongs,
             icon: const Icon(Icons.refresh_rounded),
           ),
@@ -156,7 +156,7 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
                                   songs.map((item) => item.song).toList(),
                                 ),
                         icon: const Icon(Icons.play_arrow_rounded),
-                        label: const Text('Play all'),
+                        label: Text('play_all'.tr),
                         style: FilledButton.styleFrom(
                           backgroundColor: AppColors.controlActive,
                           foregroundColor: AppColors.onControlActive,
@@ -185,7 +185,7 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
                 hasScrollBody: false,
                 child: AppEmptyState(
                   icon: Icons.error_outline_rounded,
-                  title: 'Could not load playlist',
+                  title: 'could_not_load_playlist'.tr,
                   message: _loadError!,
                   actionLabel: 'Try again',
                   onAction: _loadSongs,
@@ -234,14 +234,14 @@ class _PlaylistDetailViewState extends State<PlaylistDetailView> {
                             ),
                           ),
                           PopupMenuButton<String>(
-                            tooltip: 'Song options',
+                            tooltip: 'song_options'.tr,
                             onSelected: (value) {
                               if (value == 'remove') _confirmRemove(item);
                             },
                             itemBuilder: (_) => const [
                               PopupMenuItem(
                                 value: 'remove',
-                                child: Text('Remove from playlist'),
+                                child: Text('remove_from_playlist'.tr),
                               ),
                             ],
                           ),
