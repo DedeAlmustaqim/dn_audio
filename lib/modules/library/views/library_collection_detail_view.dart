@@ -148,7 +148,7 @@ class ArtistDetailView extends StatelessWidget {
             ),
           ),
           if (albums.isEmpty)
-            const SliverFillRemaining(
+            SliverFillRemaining(
               hasScrollBody: false,
               child: _DetailEmptyState(title: 'no_albums_found'.tr, message: 'artist_albums_empty'.tr),
             )
