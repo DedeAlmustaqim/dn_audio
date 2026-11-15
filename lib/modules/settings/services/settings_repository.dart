@@ -14,6 +14,7 @@ class SettingsRepository {
   static const _tableName = 'app_settings';
   static const audioLibraryPreferencesKey = 'audio_library_preferences';
   static const playbackPreferencesKey = 'playback_preferences';
+  static const languageCodeKey = 'language_code';
 
   Database? _database;
 
@@ -77,6 +78,29 @@ class SettingsRepository {
     PlaybackPreferences preferences,
   ) async {
     await _savePayload(playbackPreferencesKey, preferences.toMap());
+  }
+
+  Future<String?> loadLanguageCode() => _loadString(languageCodeKey);
+
+  Future<void> saveLanguageCode(String languageCode) async {
+    final normalized = languageCode == 'id' ? 'id' : 'en';
+    final db = await _db;
+    await db.insert(
+      _tableName,
+      {'setting_key': languageCodeKey, 'payload': jsonEncode(normalized)},
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<String?> _loadString(String key) async {
+    final payload = await _loadPayload(key);
+    if (payload == null) return null;
+    try {
+      final value = jsonDecode(payload);
+      return value is String ? value : null;
+    } catch (_) {
+      return null;
+    }
   }
 
   Future<String?> _loadPayload(String key) async {
