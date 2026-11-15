@@ -50,7 +50,7 @@ Future<void> main() async {
 }
 
 class DnAudioApp extends StatelessWidget {
-  const DnAudioApp({super.key, required this.initialLocale});
+  const DnAudioApp({super.key, this.initialLocale = const Locale('en', 'US')});
 
   final Locale initialLocale;
 
