@@ -24,7 +24,7 @@ class AlbumDetailView extends StatelessWidget {
       bottomNavigationBar: const SafeArea(top: false, child: PlayerMiniBar()),
       appBar: AppBar(
         backgroundColor: AppColors.background,
-        title: const Text('Album'),
+        title: Text('albums'.tr),
       ),
       body: CustomScrollView(
         slivers: [
@@ -102,7 +102,7 @@ class ArtistDetailView extends StatelessWidget {
       bottomNavigationBar: const SafeArea(top: false, child: PlayerMiniBar()),
       appBar: AppBar(
         backgroundColor: AppColors.background,
-        title: const Text('Artist'),
+        title: Text('artists'.tr),
       ),
       body: CustomScrollView(
         slivers: [
@@ -141,7 +141,7 @@ class ArtistDetailView extends StatelessWidget {
                   const SizedBox(height: 20),
                   _PlayAllButton(onPressed: () => player.playPlaylist(artist.songs)),
                   const SizedBox(height: 24),
-                  const Text('Albums', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                  Text('albums'.tr, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                   const SizedBox(height: 14),
                 ],
               ),
@@ -150,7 +150,7 @@ class ArtistDetailView extends StatelessWidget {
           if (albums.isEmpty)
             const SliverFillRemaining(
               hasScrollBody: false,
-              child: _DetailEmptyState(title: 'No albums found', message: 'Albums by this artist will appear here.'),
+              child: _DetailEmptyState(title: 'no_albums_found'.tr, message: 'artist_albums_empty'.tr),
             )
           else
             SliverPadding(
@@ -171,7 +171,7 @@ class ArtistDetailView extends StatelessWidget {
           const SliverPadding(
             padding: EdgeInsets.fromLTRB(22, 28, 22, 12),
             sliver: SliverToBoxAdapter(
-              child: Text('All songs', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+              child: Text('all_songs'.tr, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
             ),
           ),
           _SongListSliver(songs: artist.songs),
@@ -230,7 +230,7 @@ class _PlayAllButton extends StatelessWidget {
         child: FilledButton.icon(
           onPressed: onPressed,
           icon: const Icon(Icons.play_arrow_rounded),
-          label: const Text('Play all'),
+          label: Text('play_all'.tr),
           style: FilledButton.styleFrom(
             backgroundColor: AppColors.controlActive,
             foregroundColor: AppColors.onControlActive,
@@ -255,7 +255,7 @@ class _SongListSliver extends StatelessWidget {
     if (songs.isEmpty) {
       return const SliverFillRemaining(
         hasScrollBody: false,
-        child: _DetailEmptyState(title: 'No songs found', message: 'Songs in this collection will appear here.'),
+        child: _DetailEmptyState(title: 'no_songs_found'.tr, message: 'Songs in this collection will appear here.'),
       );
     }
     return SliverPadding(
