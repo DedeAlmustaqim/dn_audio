@@ -28,11 +28,13 @@ Future<void> main() async {
   await handler.configureAudioSession();
 
   final settingsRepository = SettingsRepository();
-  late final Locale initialLocale;
+  final deviceLanguage = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+  var initialLocale = AppLocale.fromLanguageCode(deviceLanguage);
   try {
     final savedLanguage = await settingsRepository.loadLanguageCode();
-    final deviceLanguage = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
-    initialLocale = AppLocale.fromLanguageCode(savedLanguage ?? deviceLanguage);
+    if (savedLanguage != null) {
+      initialLocale = AppLocale.fromLanguageCode(savedLanguage);
+    }
     final playbackPreferences =
         await settingsRepository.loadPlaybackPreferences();
     await handler.setPlaybackSpeed(playbackPreferences.speed);
