@@ -255,7 +255,7 @@ class _SongListSliver extends StatelessWidget {
     if (songs.isEmpty) {
       return const SliverFillRemaining(
         hasScrollBody: false,
-        child: _DetailEmptyState(title: 'no_songs_found'.tr, message: 'Songs in this collection will appear here.'),
+        child: _DetailEmptyState(title: 'no_songs_found'.tr, message: 'collection_songs_empty'.tr),
       );
     }
     return SliverPadding(
