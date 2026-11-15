@@ -45,13 +45,13 @@ class SettingsView extends GetView<SettingsController> {
         return ListView(
           padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.md, AppSpacing.screenHorizontal, AppSpacing.xxxl),
           children: [
-            const _SettingsIntro(),
+            _SettingsIntro(),
             const SizedBox(height: AppSpacing.xl),
             _LanguagePreferencePanel(),
             const SizedBox(height: AppSpacing.xxxl),
-            const _SectionHeading(
-              title: 'Playback',
-              subtitle: 'Choose the playback speed used for your music.',
+            _SectionHeading(
+              title: 'playback'.tr,
+              subtitle: 'playback_description'.tr,
             ),
             const SizedBox(height: AppSpacing.md),
             Container(
@@ -68,12 +68,12 @@ class SettingsView extends GetView<SettingsController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Playback speed',
+                          'playback_speed'.tr,
                           style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                         ),
                         SizedBox(height: AppSpacing.xxs),
                         Text(
-                          'Adjust how fast your music plays.',
+                          'playback_speed_description'.tr,
                           style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
                         ),
                       ],
@@ -106,9 +106,9 @@ class SettingsView extends GetView<SettingsController> {
               ),
             ),
             const SizedBox(height: AppSpacing.xxxl),
-            const _SectionHeading(
-              title: 'Audio Library',
-              subtitle: 'Choose which audio formats DN Audio can include in your library.',
+            _SectionHeading(
+              title: 'audio_library'.tr,
+              subtitle: 'audio_library_description'.tr,
             ),
             const SizedBox(height: AppSpacing.md),
             _FormatPanel(
@@ -121,7 +121,7 @@ class SettingsView extends GetView<SettingsController> {
               children: [
                 Expanded(
                   child: Text(
-                    '${controller.preferences.value.enabledExtensions.length} of ${AudioLibraryPreferences.supportedExtensions.length} formats enabled',
+                    'formats_enabled'.trParams({'enabled': '${controller.preferences.value.enabledExtensions.length}', 'total': '${AudioLibraryPreferences.supportedExtensions.length}'}),
                     style: const TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 12,
@@ -133,7 +133,7 @@ class SettingsView extends GetView<SettingsController> {
                       ? null
                       : controller.resetFormats,
                   icon: const Icon(Icons.restart_alt_rounded, size: 17),
-                  label: const Text('Reset defaults'),
+                  label: Text('reset_defaults'.tr),
                 ),
               ],
             ),
@@ -146,7 +146,7 @@ class SettingsView extends GetView<SettingsController> {
               const SizedBox(height: AppSpacing.sm),
               const LinearProgressIndicator(minHeight: 2),
               const SizedBox(height: AppSpacing.xs),
-              const Text(
+              Text(
                 'Saving and applying your changes…',
                 style: TextStyle(
                   color: AppColors.textSecondary,
@@ -163,18 +163,18 @@ class SettingsView extends GetView<SettingsController> {
               ),
             ],
             const SizedBox(height: AppSpacing.xxxl),
-            const _SectionHeading(
-              title: 'Storage & Maintenance',
-              subtitle: 'Review your offline library and refresh its contents.',
+            _SectionHeading(
+              title: 'storage_maintenance'.tr,
+              subtitle: 'storage_description'.tr,
             ),
             const SizedBox(height: AppSpacing.md),
             const _LibraryOverviewPanel(),
             const SizedBox(height: AppSpacing.md),
             const _ArtworkCachePanel(),
             const SizedBox(height: 32),
-            const _SectionHeading(
-              title: 'About',
-              subtitle: 'A focused offline music experience.',
+            _SectionHeading(
+              title: 'about'.tr,
+              subtitle: 'about_description'.tr,
             ),
             const SizedBox(height: AppSpacing.md),
             const _AboutPanel(),
@@ -235,7 +235,7 @@ class _LanguagePreferencePanel extends StatelessWidget {
 }
 
 class _SettingsIntro extends StatelessWidget {
-  const _SettingsIntro();
+  _SettingsIntro();
 
   @override
   Widget build(BuildContext context) {
@@ -255,12 +255,12 @@ class _SettingsIntro extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Make it yours.',
+                  'settings_intro_title'.tr,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
                 SizedBox(height: AppSpacing.xxs),
                 Text(
-                  'Personalize how your music is organized.',
+                  'settings_intro_subtitle'.tr,
                   style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
                 ),
               ],
@@ -273,7 +273,7 @@ class _SettingsIntro extends StatelessWidget {
 }
 
 class _SectionHeading extends StatelessWidget {
-  const _SectionHeading({required this.title, required this.subtitle});
+  _SectionHeading({required this.title, required this.subtitle});
 
   final String title;
   final String subtitle;
@@ -385,15 +385,15 @@ class _AboutPanelState extends State<_AboutPanel> {
         builder: (context, snapshot) {
           final packageInfo = snapshot.data;
           final versionLabel = snapshot.connectionState == ConnectionState.waiting
-              ? 'Loading version…'
+              ? 'version_loading'.tr
               : snapshot.hasError || packageInfo == null
-                  ? 'Version unavailable'
-                  : 'Version ${packageInfo.version} · Build ${packageInfo.buildNumber}';
+                  ? 'version_unavailable'.tr
+                  : 'version_build'.trParams({'version': packageInfo.version, 'build': packageInfo.buildNumber});
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'DN AUDIO',
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
@@ -402,7 +402,7 @@ class _AboutPanelState extends State<_AboutPanel> {
                 ),
               ),
               const SizedBox(height: AppSpacing.xs),
-              const Text(
+              Text(
                 'Your Music. Your Experience.',
                 style: TextStyle(
                   color: AppColors.textSecondary,
@@ -424,8 +424,8 @@ class _AboutPanelState extends State<_AboutPanel> {
               const SizedBox(height: 18),
               const Divider(color: AppColors.border, height: 1),
               const SizedBox(height: AppSpacing.md),
-              const Text(
-                'DEVELOPED BY',
+              Text(
+                'developed_by'.tr,
                 style: TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 10,
@@ -434,13 +434,13 @@ class _AboutPanelState extends State<_AboutPanel> {
                 ),
               ),
               const SizedBox(height: AppSpacing.xs),
-              const Text(
+              Text(
                 'Digital Native Dev',
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: AppSpacing.xxs),
-              const Text(
-                'Independent software development',
+              Text(
+                'independent_development'.tr,
                 style: TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 11,
@@ -462,12 +462,12 @@ class _AboutPanelState extends State<_AboutPanel> {
                   Icons.article_outlined,
                   color: AppColors.primary,
                 ),
-                title: const Text(
-                  'Open-source licenses',
+                title: Text(
+                  'open_source_licenses'.tr,
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
                 ),
-                subtitle: const Text(
-                  'View licenses for third-party packages',
+                subtitle: Text(
+                  'view_third_party_licenses'.tr,
                   style: TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 11,
@@ -554,7 +554,7 @@ class _LibraryOverviewPanelState extends State<_LibraryOverviewPanel> {
       } else {
         _scanWasSuccessful = true;
         final count = library.songs.length;
-        _scanMessage = 'Scan complete. $count ${count == 1 ? 'song' : 'songs'} found.';
+        _scanMessage = 'scan_complete'.trParams({'count': '$count'});
       }
     });
   }
@@ -591,13 +591,13 @@ class _LibraryOverviewPanelState extends State<_LibraryOverviewPanel> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Music library',
+                      Text(
+                        'music_library'.tr,
                         style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
                       ),
                       const SizedBox(height: AppSpacing.xxs),
                       Text(
-                        '$songCount ${songCount == 1 ? 'song' : 'songs'} indexed',
+                        'songs_indexed'.trParams({'count': '$songCount'}),
                         style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
                       ),
                     ],
@@ -612,7 +612,7 @@ class _LibraryOverviewPanelState extends State<_LibraryOverviewPanel> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.refresh_rounded, size: 17),
-                  label: Text(isScanning ? 'Scanning' : 'Scan library'),
+                  label: Text(isScanning ? 'scanning'.tr : 'scan_library'.tr),
                 ),
               ],
             ),
@@ -620,7 +620,7 @@ class _LibraryOverviewPanelState extends State<_LibraryOverviewPanel> {
               const SizedBox(height: AppSpacing.md),
               const LinearProgressIndicator(minHeight: 2),
               const SizedBox(height: 7),
-              const Text(
+              Text(
                 'Scanning audio files on this device…',
                 style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
               ),
@@ -696,8 +696,8 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Clear artwork cache?'),
-        content: const Text(
+        title: Text('Clear artwork cache?'),
+        content: Text(
           'This removes cached album artwork stored by DN Audio. '
           'Artwork will be generated again when needed. Your music files, '
           'playlists, playback preferences, and listening data will not be affected.',
@@ -705,11 +705,11 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Cancel'),
+            child: Text('cancel'.tr),
           ),
           FilledButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Clear cache'),
+            child: Text('clear_cache'.tr),
           ),
         ],
       ),
@@ -728,8 +728,7 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
       setState(() {
         _isClearing = false;
         _actionSucceeded = true;
-        _actionMessage = 'Artwork cache cleared. ' +
-            '$deletedCount ${deletedCount == 1 ? 'file' : 'files'} removed.';
+        _actionMessage = 'cache_cleared'.trParams({'count': '$deletedCount'});
         _loadCacheInfo();
       });
     } catch (_) {
@@ -761,12 +760,12 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
               const SizedBox(width: AppSpacing.sm),
               const Expanded(
                 child: Text(
-                  'Artwork cache',
+                  'artwork_cache'.tr,
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
                 ),
               ),
               IconButton(
-                tooltip: 'Refresh cache information',
+                tooltip: 'refresh_cache'.tr,
                 onPressed: _isClearing ? null : _refreshCacheInfo,
                 icon: const Icon(Icons.refresh_rounded, size: 19),
               ),
@@ -787,11 +786,11 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
                   children: [
                     const Expanded(
                       child: Text(
-                        'Unable to read artwork cache information.',
+                        'unable_read_cache'.tr,
                         style: TextStyle(color: AppColors.error, fontSize: 12),
                       ),
                     ),
-                    TextButton(onPressed: _refreshCacheInfo, child: const Text('Retry')),
+                    TextButton(onPressed: _refreshCacheInfo, child: Text('retry'.tr)),
                   ],
                 );
               }
@@ -802,14 +801,14 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
                 children: [
                   Expanded(
                     child: _CacheMetric(
-                      label: 'Total size',
+                      label: 'total_size'.tr,
                       value: info.formattedSize,
                     ),
                   ),
                   const SizedBox(width: AppSpacing.lg),
                   Expanded(
                     child: _CacheMetric(
-                      label: 'Cached files',
+                      label: 'cached_files'.tr,
                       value: info.fileCount.toString(),
                     ),
                   ),
@@ -859,7 +858,7 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : const Icon(Icons.delete_outline_rounded, size: 18),
-              label: Text(_isClearing ? 'Clearing cache…' : 'Clear artwork cache'),
+              label: Text(_isClearing ? 'clearing_cache'.tr : 'clear_artwork_cache'.tr),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.error,
                 side: BorderSide(color: AppColors.error.withValues(alpha: 0.45)),
@@ -867,8 +866,8 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
-          const Text(
-            'Only DN Audio artwork cache files are removed. Artwork is recreated when needed.',
+          Text(
+            'cache_note'.tr,
             style: TextStyle(
               color: AppColors.textSecondary,
               fontSize: 11,
