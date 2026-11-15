@@ -6,6 +6,7 @@ import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../library/widgets/song_artwork.dart';
+import '../../library/controllers/library_controller.dart';
 import '../../library/views/library_view.dart';
 import '../../player/controllers/player_controller.dart';
 import '../../player/views/now_playing_view.dart';
@@ -14,6 +15,9 @@ import '../../player/views/equalizer_view.dart';
 import '../../player/views/sleep_timer_sheet.dart';
 import '../../player/controllers/sleep_timer_controller.dart';
 import '../../playlist/views/playlist_view.dart';
+import '../../playlist/controllers/playlist_controller.dart';
+import '../../playlist/models/playlist.dart';
+import '../../playlist/views/playlist_detail_view.dart';
 import '../../../core/routes/app_routes.dart';
 import '../controllers/home_controller.dart';
 
@@ -120,6 +124,10 @@ class _HomeTab extends StatelessWidget {
               const SizedBox(height: AppSpacing.xxxl),
               const _NowPlayingSection(),
               const SizedBox(height: AppSpacing.xxxl),
+              _RecentlyAddedSection(onSeeAll: () => controller.openLibrary(section: 'songs')),
+              const SizedBox(height: AppSpacing.xxxl),
+              _HomePlaylistsSection(onSeeAll: () => controller.selectTab(2)),
+              const SizedBox(height: AppSpacing.xxxl),
               const _SectionHeader(title: 'Your Library'),
               const SizedBox(height: AppSpacing.md),
               Row(
@@ -157,6 +165,244 @@ class _HomeTab extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _RecentlyAddedSection extends StatelessWidget {
+  const _RecentlyAddedSection({required this.onSeeAll});
+
+  final VoidCallback onSeeAll;
+
+  @override
+  Widget build(BuildContext context) {
+    final library = Get.find<LibraryController>();
+    return Obx(() {
+      final songs = [...library.songs]
+        ..sort((a, b) => b.dateAdded.compareTo(a.dateAdded));
+      final recent = songs.take(8).toList(growable: false);
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _SectionHeader(
+            title: 'Recently Added',
+            actionLabel: 'See all',
+            onAction: onSeeAll,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          if (library.isLoading.value && recent.isEmpty)
+            const SizedBox(
+              height: 150,
+              child: Center(child: CircularProgressIndicator()),
+            )
+          else if (recent.isEmpty)
+            const _HomeSectionEmpty(
+              icon: Icons.library_music_outlined,
+              message: 'New music you add to your device will appear here.',
+            )
+          else
+            SizedBox(
+              height: 174,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: recent.length,
+                separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.md),
+                itemBuilder: (context, index) {
+                  final song = recent[index];
+                  return SizedBox(
+                    width: 116,
+                    child: InkWell(
+                      onTap: () => Get.find<PlayerController>().playSong(song, recent),
+                      borderRadius: AppRadius.medium,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius: AppRadius.small,
+                            child: SizedBox(
+                              width: 116,
+                              height: 116,
+                              child: SongArtwork(song: song, iconSize: 30),
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          Text(
+                            song.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            song.artist,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                  color: AppColors.textSecondary,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+        ],
+      );
+    });
+  }
+}
+
+class _HomePlaylistsSection extends StatelessWidget {
+  const _HomePlaylistsSection({required this.onSeeAll});
+
+  final VoidCallback onSeeAll;
+
+  @override
+  Widget build(BuildContext context) {
+    final playlists = Get.find<PlaylistController>();
+    return Obx(() {
+      final items = [...playlists.playlists]
+        ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+      final visible = items.take(3).toList(growable: false);
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _SectionHeader(
+            title: 'Your Playlists',
+            actionLabel: 'See all',
+            onAction: onSeeAll,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          if (playlists.isLoading.value && visible.isEmpty)
+            const SizedBox(
+              height: 76,
+              child: Center(child: CircularProgressIndicator()),
+            )
+          else if (visible.isEmpty)
+            _HomeSectionEmpty(
+              icon: Icons.queue_music_rounded,
+              message: 'Create a playlist to keep your music organized.',
+              actionLabel: 'Create playlist',
+              onAction: onSeeAll,
+            )
+          else
+            ...visible.map(
+              (playlist) => _HomePlaylistTile(playlist: playlist),
+            ),
+        ],
+      );
+    });
+  }
+}
+
+class _HomePlaylistTile extends StatelessWidget {
+  const _HomePlaylistTile({required this.playlist});
+
+  final Playlist playlist;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Material(
+        color: AppColors.surface,
+        borderRadius: AppRadius.medium,
+        child: InkWell(
+          borderRadius: AppRadius.medium,
+          onTap: () => Get.to(() => PlaylistDetailView(playlist: playlist)),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Row(
+              children: [
+                Container(
+                  width: 46,
+                  height: 46,
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceElevated,
+                    borderRadius: AppRadius.small,
+                  ),
+                  child: const Icon(
+                    Icons.queue_music_rounded,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        playlist.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        '${playlist.songCount} songs',
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right_rounded, color: AppColors.textSecondary),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HomeSectionEmpty extends StatelessWidget {
+  const _HomeSectionEmpty({
+    required this.icon,
+    required this.message,
+    this.actionLabel,
+    this.onAction,
+  });
+
+  final IconData icon;
+  final String message;
+  final String? actionLabel;
+  final VoidCallback? onAction;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: AppRadius.medium,
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: AppColors.textSecondary, size: 22),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Text(
+              message,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+            ),
+          ),
+          if (actionLabel != null && onAction != null)
+            TextButton(onPressed: onAction, child: Text(actionLabel!)),
+        ],
+      ),
     );
   }
 }
@@ -276,9 +522,15 @@ class _SearchField extends StatelessWidget {
 }
 
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title});
+  const _SectionHeader({
+    required this.title,
+    this.actionLabel,
+    this.onAction,
+  });
 
   final String title;
+  final String? actionLabel;
+  final VoidCallback? onAction;
 
   @override
   Widget build(BuildContext context) {
@@ -292,6 +544,16 @@ class _SectionHeader extends StatelessWidget {
           ),
         ),
         const Spacer(),
+        if (actionLabel != null && onAction != null)
+          TextButton(
+            onPressed: onAction,
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.textSecondary,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              minimumSize: const Size(0, 36),
+            ),
+            child: Text(actionLabel!),
+          ),
       ],
     );
   }
