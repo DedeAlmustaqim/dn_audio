@@ -347,7 +347,7 @@ class _HomePlaylistTile extends StatelessWidget {
                       ),
                       const SizedBox(height: 3),
                       Text(
-                        '${playlist.songCount} songs',
+                        'song_count'.trParams({'count': '${playlist.songCount}'}),
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: AppColors.textSecondary,
                             ),
