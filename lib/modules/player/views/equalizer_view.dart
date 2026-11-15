@@ -210,7 +210,7 @@ class _EqualizerViewState extends State<EqualizerView> {
             const SizedBox(height: 8),
             Row(
               children: [
-                Text('INTENSITY', style: TextStyle(
+                Text('intensity'.tr, style: TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
@@ -397,7 +397,7 @@ class _EqualizerViewState extends State<EqualizerView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Equalizer', style: TextStyle(
+                    Text('equalizer'.tr, style: TextStyle(
                       fontSize: 14, fontWeight: FontWeight.w700)),
                     SizedBox(height: 3),
                     Text('master_audio_control'.tr, style: TextStyle(
@@ -479,7 +479,7 @@ class _EqualizerViewState extends State<EqualizerView> {
             });
           },
           icon: const Icon(Icons.tune_rounded),
-          label: Text('Open full equalizer'),
+          label: Text('open_full_equalizer'.tr),
         ),
       ],
     );
@@ -522,7 +522,7 @@ class _EqualizerViewState extends State<EqualizerView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Equalizer',
+                      'equalizer'.tr,
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
