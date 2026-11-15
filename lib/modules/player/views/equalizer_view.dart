@@ -638,55 +638,97 @@ class _EqualizerViewState extends State<EqualizerView> {
             ),
           ],
         ),
-        const SizedBox(height: 16),
-        ...equalizer.bands.map((band) {
-          final current = _draftLevels[band.index] ??
-              band.levelMillibels.toDouble();
-          final safeValue = current.clamp(minLevel, maxLevel).toDouble();
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 18),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        _formatFrequency(band.centerFrequencyHz),
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+        const SizedBox(height: 18),
+        Container(
+          padding: const EdgeInsets.fromLTRB(12, 18, 12, 14),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceElevated,
+            borderRadius: AppRadius.medium,
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${(maxLevel / 100).toStringAsFixed(0)} dB',
+                    style: const TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 9,
                     ),
-                    Text(
-                      '${(safeValue / 100).toStringAsFixed(1)} dB',
-                      style: const TextStyle(
-                        color: AppColors.controlActive,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      ),
+                  ),
+                  Text(
+                    '0 dB',
+                    style: const TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 9,
                     ),
-                  ],
+                  ),
+                  Text(
+                    '${(minLevel / 100).toStringAsFixed(0)} dB',
+                    style: const TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 9,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: equalizer.bands.map((band) {
+                    final current = _draftLevels[band.index] ??
+                        band.levelMillibels.toDouble();
+                    final safeValue = current.clamp(minLevel, maxLevel).toDouble();
+                    final enabled = equalizer.enabled && !_isApplyingPreset;
+                    return SizedBox(
+                      width: 48,
+                      child: Column(
+                        children: [
+                          Text(
+                            '${(safeValue / 100).toStringAsFixed(1)}',
+                            style: TextStyle(
+                              color: enabled
+                                  ? AppColors.controlActive
+                                  : AppColors.textMuted,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              fontFeatures: const [FontFeature.tabularFigures()],
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          _VerticalBandSlider(
+                            value: safeValue,
+                            min: minLevel,
+                            max: maxLevel > minLevel ? maxLevel : minLevel + 1,
+                            enabled: enabled,
+                            onChanged: (value) {
+                              setState(() => _draftLevels[band.index] = value);
+                            },
+                            onChangeEnd: (value) =>
+                                _applyBandLevel(band.index, value),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            _formatFrequency(band.centerFrequencyHz),
+                            style: const TextStyle(
+                              color: AppColors.textSecondary,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(growable: false),
                 ),
-                Slider(
-                  min: minLevel,
-                  max: maxLevel > minLevel ? maxLevel : minLevel + 1,
-                  value: safeValue,
-                  activeColor: AppColors.controlActive,
-                  inactiveColor: AppColors.border,
-                  onChanged: equalizer.enabled && !_isApplyingPreset
-                      ? (value) {
-                          setState(() => _draftLevels[band.index] = value);
-                        }
-                      : null,
-                  onChangeEnd: equalizer.enabled && !_isApplyingPreset
-                      ? (value) => _applyBandLevel(band.index, value)
-                      : null,
-                ),
-              ],
-            ),
-          );
-        }),
+              ),
+            ],
+          ),
+        ),
         const SizedBox(height: 8),
         Center(
           child: TextButton.icon(
@@ -743,6 +785,148 @@ class _EqualizerViewState extends State<EqualizerView> {
     }
     return '$frequencyHz Hz';
   }
+}
+
+
+class _VerticalBandSlider extends StatelessWidget {
+  const _VerticalBandSlider({
+    required this.value,
+    required this.min,
+    required this.max,
+    required this.enabled,
+    required this.onChanged,
+    required this.onChangeEnd,
+  });
+
+  final double value;
+  final double min;
+  final double max;
+  final bool enabled;
+  final ValueChanged<double> onChanged;
+  final ValueChanged<double> onChangeEnd;
+
+  double _valueAt(double dy, double height) {
+    final fraction = (1 - (dy / height)).clamp(0.0, 1.0);
+    return min + (max - min) * fraction;
+  }
+
+  void _commit(double nextValue) {
+    onChanged(nextValue);
+    onChangeEnd(nextValue);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final safeValue = value.clamp(min, max).toDouble();
+    return Semantics(
+      slider: true,
+      enabled: enabled,
+      value: '${(safeValue / 100).toStringAsFixed(1)} dB',
+      increasedValue: '${((safeValue + 100).clamp(min, max) / 100).toStringAsFixed(1)} dB',
+      decreasedValue: '${((safeValue - 100).clamp(min, max) / 100).toStringAsFixed(1)} dB',
+      onIncrease: enabled
+          ? () => _commit((safeValue + 100).clamp(min, max).toDouble())
+          : null,
+      onDecrease: enabled
+          ? () => _commit((safeValue - 100).clamp(min, max).toDouble())
+          : null,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTapDown: enabled
+            ? (details) {
+                final next = _valueAt(details.localPosition.dy, 132);
+                _commit(next);
+              }
+            : null,
+        onVerticalDragUpdate: enabled
+            ? (details) {
+                onChanged(_valueAt(details.localPosition.dy, 132));
+              }
+            : null,
+        onVerticalDragEnd: enabled
+            ? (_) => onChangeEnd(value)
+            : null,
+        child: SizedBox(
+          width: 30,
+          height: 132,
+          child: CustomPaint(
+            painter: _VerticalBandSliderPainter(
+              value: safeValue,
+              min: min,
+              max: max,
+              activeColor: enabled
+                  ? AppColors.controlActive
+                  : AppColors.textMuted,
+              trackColor: AppColors.border,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _VerticalBandSliderPainter extends CustomPainter {
+  const _VerticalBandSliderPainter({
+    required this.value,
+    required this.min,
+    required this.max,
+    required this.activeColor,
+    required this.trackColor,
+  });
+
+  final double value;
+  final double min;
+  final double max;
+  final Color activeColor;
+  final Color trackColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const trackWidth = 4.0;
+    const thumbRadius = 6.0;
+    final centerX = size.width / 2;
+    final top = thumbRadius;
+    final bottom = size.height - thumbRadius;
+    final trackHeight = bottom - top;
+    final zeroFraction = (0 - min) / (max - min);
+    final zeroY = bottom - (zeroFraction.clamp(0.0, 1.0) * trackHeight);
+    final valueFraction = ((value - min) / (max - min)).clamp(0.0, 1.0);
+    final valueY = bottom - (valueFraction * trackHeight);
+
+    final trackPaint = Paint()
+      ..color = trackColor
+      ..strokeWidth = trackWidth
+      ..strokeCap = StrokeCap.round;
+    canvas.drawLine(Offset(centerX, top), Offset(centerX, bottom), trackPaint);
+
+    final activePaint = Paint()
+      ..color = activeColor
+      ..strokeWidth = trackWidth
+      ..strokeCap = StrokeCap.round;
+    canvas.drawLine(Offset(centerX, zeroY), Offset(centerX, valueY), activePaint);
+
+    final thumbPaint = Paint()..color = activeColor;
+    canvas.drawCircle(Offset(centerX, valueY), thumbRadius, thumbPaint);
+    canvas.drawCircle(
+      Offset(centerX, valueY),
+      2.2,
+      Paint()..color = AppColors.background,
+    );
+    canvas.drawCircle(
+      Offset(centerX, zeroY),
+      1.8,
+      Paint()..color = AppColors.textMuted.withValues(alpha: 0.8),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _VerticalBandSliderPainter oldDelegate) =>
+      value != oldDelegate.value ||
+      min != oldDelegate.min ||
+      max != oldDelegate.max ||
+      activeColor != oldDelegate.activeColor ||
+      trackColor != oldDelegate.trackColor;
 }
 
 class _UnavailableState extends StatelessWidget {
