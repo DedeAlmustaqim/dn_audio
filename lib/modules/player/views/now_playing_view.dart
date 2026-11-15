@@ -106,7 +106,7 @@ class NowPlayingView extends GetView<PlayerController> {
         Row(
           children: [
             _HeaderIconButton(
-              tooltip: 'Close player',
+              tooltip: 'close_player'.tr,
               icon: Icons.keyboard_arrow_down_rounded,
               onPressed: () => Navigator.of(context).maybePop(),
             ),
@@ -135,14 +135,14 @@ class NowPlayingView extends GetView<PlayerController> {
             Obx(() {
               final active = Get.find<SleepTimerController>().isActive.value;
               return _HeaderIconButton(
-                tooltip: active ? 'Sleep Timer Active' : 'Sleep Timer',
+                tooltip: active ? 'sleep_timer_active'.tr : 'sleep_timer'.tr,
                 icon: Icons.bedtime_outlined,
                 isActive: active,
                 onPressed: () => SleepTimerSheet.show(context),
               );
             }),
             _HeaderIconButton(
-              tooltip: 'Equalizer',
+              tooltip: 'equalizer'.tr,
               icon: Icons.tune_rounded,
               onPressed: () => showModalBottomSheet<void>(
                 context: context,
@@ -295,13 +295,13 @@ class NowPlayingView extends GetView<PlayerController> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         _PlayerActionButton(
-          tooltip: 'Shuffle',
+          tooltip: 'shuffle'.tr,
           icon: Icons.shuffle_rounded,
           isActive: controller.isShuffleEnabled.value,
           onPressed: controller.toggleShuffle,
         ),
         _PlayerActionButton(
-          tooltip: 'Previous track',
+          tooltip: 'previous_track'.tr,
           icon: Icons.skip_previous_rounded,
           iconSize: 31,
           onPressed: controller.skipPrevious,
@@ -314,7 +314,7 @@ class NowPlayingView extends GetView<PlayerController> {
             shape: BoxShape.circle,
           ),
           child: IconButton(
-            tooltip: controller.isPlaying.value ? 'Pause' : 'Play',
+            tooltip: controller.isPlaying.value ? 'pause'.tr : 'play'.tr,
             onPressed: controller.togglePlayPause,
             icon: controller.isBuffering.value
                 ? const SizedBox(
@@ -335,16 +335,16 @@ class NowPlayingView extends GetView<PlayerController> {
           ),
         ),
         _PlayerActionButton(
-          tooltip: 'Next track',
+          tooltip: 'next_track'.tr,
           icon: Icons.skip_next_rounded,
           iconSize: 31,
           onPressed: controller.skipNext,
         ),
         _PlayerActionButton(
           tooltip: switch (controller.loopMode.value) {
-            LoopMode.off => 'Repeat off',
-            LoopMode.all => 'Repeat all',
-            LoopMode.one => 'Repeat one',
+            LoopMode.off => 'repeat_off'.tr,
+            LoopMode.all => 'repeat_all'.tr,
+            LoopMode.one => 'repeat_one'.tr,
           },
           icon: controller.loopMode.value == LoopMode.one
               ? Icons.repeat_one_rounded
