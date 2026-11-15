@@ -253,7 +253,7 @@ class _SongListSliver extends StatelessWidget {
   Widget build(BuildContext context) {
     final player = Get.find<PlayerController>();
     if (songs.isEmpty) {
-      return const SliverFillRemaining(
+      return SliverFillRemaining(
         hasScrollBody: false,
         child: _DetailEmptyState(title: 'no_songs_found'.tr, message: 'collection_songs_empty'.tr),
       );
