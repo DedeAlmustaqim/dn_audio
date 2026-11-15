@@ -22,12 +22,12 @@ class PlaylistView extends GetView<PlaylistController> {
               delegate: SliverChildListDelegate([
                 Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Your Playlists',
+                            'your_playlists'.tr,
                             style: TextStyle(
                               fontSize: 27,
                               fontWeight: FontWeight.w600,
@@ -36,7 +36,7 @@ class PlaylistView extends GetView<PlaylistController> {
                           ),
                           SizedBox(height: 5),
                           Text(
-                            'Organize your music your way.',
+                            'organize_music'.tr,
                             style: TextStyle(
                               color: AppColors.textSecondary,
                               fontSize: 13,
@@ -66,7 +66,7 @@ class PlaylistView extends GetView<PlaylistController> {
                     icon: Icons.error_outline_rounded,
                     title: 'could_not_load_playlist'.tr,
                     description: controller.errorMessage.value!,
-                    actionLabel: 'Try again',
+                    actionLabel: 'try_again'.tr,
                     onAction: controller.loadPlaylists,
                   )
                 else if (controller.playlists.isEmpty)
@@ -74,7 +74,7 @@ class PlaylistView extends GetView<PlaylistController> {
                     icon: Icons.queue_music_rounded,
                     title: 'playlist_empty_home'.tr,
                     description:
-                        'Create your first playlist and start organizing your music.',
+                        'create_first_playlist'.tr,
                     actionLabel: 'create_playlist_title'.tr,
                     onAction: () => _showPlaylistDialog(context),
                   )
@@ -228,10 +228,10 @@ class _PlaylistNameDialogState extends State<_PlaylistNameDialog> {
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Playlist name is required.';
+                    return 'playlist_name_required'.tr;
                   }
                   if (value.trim().length > 50) {
-                    return 'Maximum 50 characters.';
+                    return 'playlist_name_max'.tr;
                   }
                   return null;
                 },
