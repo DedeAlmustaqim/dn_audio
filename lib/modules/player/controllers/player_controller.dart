@@ -75,7 +75,7 @@ class PlayerController extends GetxController {
 
   void _setPlaybackError(Object error) {
     playbackError.value = error is PlayerException
-        ? (error.message ?? 'Unable to play this audio file.')
+        ? (error.message ?? 'audio_file_error'.tr)
         : error.toString();
     isPlaying.value = false;
     isBuffering.value = false;
@@ -116,7 +116,7 @@ class PlayerController extends GetxController {
       await handler.loadPlaylist(songs, initialIndex);
       unawaited(_playSafely(handler));
     } catch (error) {
-      _setPlaybackError('Could not play this playlist: $error');
+      _setPlaybackError('could_not_play_playlist'.trParams({'error': '$error'}));
     }
   }
 
