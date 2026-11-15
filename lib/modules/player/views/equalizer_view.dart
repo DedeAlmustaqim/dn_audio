@@ -311,7 +311,7 @@ class _EqualizerViewState extends State<EqualizerView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'EQUALIZER',
+                                  'equalizer'.tr,
                                   style: TextStyle(
                                     color: AppColors.textSecondary,
                                     fontSize: 10,
@@ -393,7 +393,7 @@ class _EqualizerViewState extends State<EqualizerView> {
           ),
           child: Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -517,7 +517,7 @@ class _EqualizerViewState extends State<EqualizerView> {
           ),
           child: Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -530,7 +530,7 @@ class _EqualizerViewState extends State<EqualizerView> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      'Enable audio frequency control',
+                      'enable_frequency_control'.tr,
                       style: TextStyle(
                         color: AppColors.textSecondary,
                         fontSize: 11,
