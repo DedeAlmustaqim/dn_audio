@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/localization/locale_controller.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../controllers/settings_controller.dart';
@@ -29,9 +30,9 @@ class SettingsView extends GetView<SettingsController> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: Text('settings_title'.tr),
         leading: IconButton(
-          tooltip: 'Back',
+          tooltip: 'back'.tr,
           onPressed: Get.back,
           icon: const Icon(Icons.arrow_back_rounded),
         ),
@@ -45,6 +46,8 @@ class SettingsView extends GetView<SettingsController> {
           padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.md, AppSpacing.screenHorizontal, AppSpacing.xxxl),
           children: [
             const _SettingsIntro(),
+            const SizedBox(height: AppSpacing.xl),
+            _LanguagePreferencePanel(),
             const SizedBox(height: AppSpacing.xxxl),
             const _SectionHeading(
               title: 'Playback',
@@ -175,6 +178,55 @@ class SettingsView extends GetView<SettingsController> {
             ),
             const SizedBox(height: AppSpacing.md),
             const _AboutPanel(),
+          ],
+        );
+      }),
+    );
+  }
+}
+
+
+class _LanguagePreferencePanel extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final localeController = Get.find<LocaleController>();
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: AppRadius.medium,
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Obx(() {
+        final languageCode = localeController.currentLocale.value.languageCode;
+        return Row(
+          children: [
+            const Icon(Icons.language_rounded, color: AppColors.textSecondary),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('language'.tr, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  const SizedBox(height: AppSpacing.xxs),
+                  Text('language_description'.tr, style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            DropdownButton<String>(
+              value: languageCode,
+              underline: const SizedBox.shrink(),
+              borderRadius: AppRadius.small,
+              dropdownColor: AppColors.surfaceElevated,
+              onChanged: (value) {
+                if (value != null) localeController.changeLocale(value);
+              },
+              items: [
+                DropdownMenuItem(value: 'en', child: Text('language_english'.tr)),
+                DropdownMenuItem(value: 'id', child: Text('language_indonesian'.tr)),
+              ],
+            ),
           ],
         );
       }),
