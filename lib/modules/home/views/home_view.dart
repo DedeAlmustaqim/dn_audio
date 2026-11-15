@@ -50,25 +50,25 @@ class HomeView extends GetView<HomeController> {
               NavigationBar(
                 selectedIndex: index,
                 onDestinationSelected: controller.selectTab,
-                destinations: const [
+                destinations: [
                   NavigationDestination(
                     icon: Icon(Icons.home_outlined),
                     selectedIcon: Icon(Icons.home_rounded),
-                    label: 'Home',
+                    label: 'nav_home'.tr,
                   ),
                   NavigationDestination(
                     icon: Icon(Icons.library_music_outlined),
                     selectedIcon: Icon(Icons.library_music_rounded),
-                    label: 'Library',
+                    label: 'nav_library'.tr,
                   ),
                   NavigationDestination(
                     icon: Icon(Icons.queue_music_outlined),
                     selectedIcon: Icon(Icons.queue_music_rounded),
-                    label: 'Playlists',
+                    label: 'nav_playlists'.tr,
                   ),
                   NavigationDestination(
                     icon: Icon(Icons.equalizer_rounded),
-                    label: 'Equalizer',
+                    label: 'nav_equalizer'.tr,
                   ),
                 ],
               ),
@@ -96,7 +96,7 @@ class _HomeTab extends StatelessWidget {
               const _BrandHeader(),
               const SizedBox(height: AppSpacing.xxxl),
               Text(
-                'YOUR MUSIC. YOUR EXPERIENCE.',
+                'home_tagline'.tr,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: AppColors.textSecondary,
                       letterSpacing: 2.0,
@@ -105,12 +105,12 @@ class _HomeTab extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.sm),
               Text(
-                'Music, made personal.',
+                'home_headline'.tr,
                 style: AppTypography.editorialTitle.copyWith(fontSize: 30),
               ),
               const SizedBox(height: AppSpacing.sm),
               Text(
-                'Your offline collection, ready whenever you are.',
+                'home_description'.tr,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: AppColors.textSecondary,
                       height: 1.45,
@@ -128,15 +128,15 @@ class _HomeTab extends StatelessWidget {
               const SizedBox(height: AppSpacing.xxxl),
               _HomePlaylistsSection(onSeeAll: () => controller.selectTab(2)),
               const SizedBox(height: AppSpacing.xxxl),
-              const _SectionHeader(title: 'Your Library'),
+              _SectionHeader(title: 'your_library'.tr),
               const SizedBox(height: AppSpacing.md),
               Row(
                 children: [
                   Expanded(
                     child: _LibraryShortcut(
                       icon: Icons.music_note_rounded,
-                      title: 'Songs',
-                      subtitle: 'Your collection',
+                      title: 'songs'.tr,
+                      subtitle: 'your_collection'.tr,
                       onTap: () => controller.openLibrary(section: 'songs'),
                     ),
                   ),
@@ -144,8 +144,8 @@ class _HomeTab extends StatelessWidget {
                   Expanded(
                     child: _LibraryShortcut(
                       icon: Icons.album_rounded,
-                      title: 'Albums',
-                      subtitle: 'Browse albums',
+                      title: 'albums'.tr,
+                      subtitle: 'browse_albums'.tr,
                       onTap: () => controller.openLibrary(section: 'albums'),
                     ),
                   ),
@@ -153,8 +153,8 @@ class _HomeTab extends StatelessWidget {
                   Expanded(
                     child: _LibraryShortcut(
                       icon: Icons.person_rounded,
-                      title: 'Artists',
-                      subtitle: 'Explore artists',
+                      title: 'artists'.tr,
+                      subtitle: 'explore_artists'.tr,
                       onTap: () => controller.openLibrary(section: 'artists'),
                     ),
                   ),
@@ -186,8 +186,8 @@ class _RecentlyAddedSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _SectionHeader(
-            title: 'Recently Added',
-            actionLabel: 'See all',
+            title: 'recently_added'.tr,
+            actionLabel: 'see_all'.tr,
             onAction: onSeeAll,
           ),
           const SizedBox(height: AppSpacing.md),
@@ -197,9 +197,9 @@ class _RecentlyAddedSection extends StatelessWidget {
               child: Center(child: CircularProgressIndicator()),
             )
           else if (recent.isEmpty)
-            const _HomeSectionEmpty(
+            _HomeSectionEmpty(
               icon: Icons.library_music_outlined,
-              message: 'New music you add to your device will appear here.',
+              message: 'recent_empty'.tr,
             )
           else
             SizedBox(
@@ -274,8 +274,8 @@ class _HomePlaylistsSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _SectionHeader(
-            title: 'Your Playlists',
-            actionLabel: 'See all',
+            title: 'your_playlists'.tr,
+            actionLabel: 'see_all'.tr,
             onAction: onSeeAll,
           ),
           const SizedBox(height: AppSpacing.md),
@@ -287,8 +287,8 @@ class _HomePlaylistsSection extends StatelessWidget {
           else if (visible.isEmpty)
             _HomeSectionEmpty(
               icon: Icons.queue_music_rounded,
-              message: 'Create a playlist to keep your music organized.',
-              actionLabel: 'Create playlist',
+              message: 'playlist_empty_home'.tr,
+              actionLabel: 'create_playlist'.tr,
               onAction: onSeeAll,
             )
           else
@@ -366,7 +366,7 @@ class _HomePlaylistTile extends StatelessWidget {
 }
 
 class _HomeSectionEmpty extends StatelessWidget {
-  const _HomeSectionEmpty({
+  _HomeSectionEmpty({
     required this.icon,
     required this.message,
     this.actionLabel,
@@ -452,14 +452,14 @@ class _BrandHeader extends StatelessWidget {
         ),
         const Spacer(),
         IconButton(
-          tooltip: 'Settings',
+          tooltip: 'settings'.tr,
           onPressed: () => Get.toNamed(AppRoutes.settings),
           icon: const Icon(Icons.settings_outlined, color: AppColors.textSecondary),
         ),
         Obx(() {
           final active = Get.find<SleepTimerController>().isActive.value;
           return IconButton(
-            tooltip: active ? 'Sleep Timer Active' : 'Sleep Timer',
+            tooltip: active ? 'sleep_timer_active'.tr : 'sleep_timer'.tr,
             onPressed: () => SleepTimerSheet.show(context),
             icon: Icon(
               Icons.bedtime_outlined,
@@ -500,15 +500,15 @@ class _SearchField extends StatelessWidget {
                 onSubmitted(value);
                 FocusScope.of(context).unfocus();
               },
-              decoration: const InputDecoration(
-                hintText: 'Search songs, artists, albums...',
+              decoration: InputDecoration(
+                hintText: 'search_music_hint'.tr,
                 border: InputBorder.none,
                 isDense: true,
               ),
             ),
           ),
           IconButton(
-            tooltip: 'Search',
+            tooltip: 'search'.tr,
             onPressed: () {
               onSubmitted(textController.text);
               FocusScope.of(context).unfocus();
@@ -522,7 +522,7 @@ class _SearchField extends StatelessWidget {
 }
 
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({
+  _SectionHeader({
     required this.title,
     this.actionLabel,
     this.onAction,
@@ -630,7 +630,7 @@ class _NowPlayingSection extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _SectionHeader(title: 'Continue Listening'),
+          _SectionHeader(title: 'continue_listening'.tr),
           const SizedBox(height: 13),
           Material(
             color: AppColors.surface,
@@ -696,7 +696,7 @@ class _NowPlayingSection extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         IconButton.filled(
-                          tooltip: player.isPlaying.value ? 'Pause' : 'Play',
+                          tooltip: player.isPlaying.value ? 'pause'.tr : 'play'.tr,
                           onPressed: player.togglePlayPause,
                           icon: Icon(
                             player.isPlaying.value
