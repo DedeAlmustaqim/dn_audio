@@ -662,3 +662,6 @@ Limitations:
 - Repository review cannot replace runtime screenshot review, TalkBack testing, device-specific audio effects testing or manual playback regression.
 - Poppins is referenced by the app theme; confirm font assets are actually bundled and render on device rather than relying on fallback.
 - No controller, service, native audio integration, route, model, persistence or database schema was changed in this QA slice.
+
+
+QA refinement: Keep Equalizer accessible from its dedicated bottom-navigation destination only; do not duplicate an Equalizer entry in Settings.
