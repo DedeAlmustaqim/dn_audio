@@ -63,7 +63,7 @@ class SettingsView extends GetView<SettingsController> {
               ),
               child: Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -138,7 +138,7 @@ class SettingsView extends GetView<SettingsController> {
               ],
             ),
             if (controller.preferences.value.enabledExtensions.isEmpty)
-              const _InlineNotice(
+              _InlineNotice(
                 message: 'no_formats_enabled'.tr,
                 icon: Icons.info_outline_rounded,
               ),
