@@ -222,7 +222,7 @@ class _PlaylistNameDialogState extends State<_PlaylistNameDialog> {
                 autofocus: true,
                 maxLength: 50,
                 textCapitalization: TextCapitalization.sentences,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'playlist_name'.tr,
                   counterText: '',
                 ),
@@ -330,7 +330,7 @@ class _PlaylistTile extends StatelessWidget {
               if (value == 'rename') onRename();
               if (value == 'delete') onDelete();
             },
-            itemBuilder: (context) => const [
+            itemBuilder: (context) => [
               PopupMenuItem(
                 value: 'rename',
                 child: Text('rename'.tr),
