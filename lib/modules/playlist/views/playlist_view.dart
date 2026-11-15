@@ -50,7 +50,7 @@ class PlaylistView extends GetView<PlaylistController> {
                           ? null
                           : () => _showPlaylistDialog(context),
                       icon: const Icon(Icons.add_rounded),
-                      tooltip: 'Create playlist',
+                      tooltip: 'create_playlist_title'.tr,
                     ),
                   ],
                 ),
@@ -64,7 +64,7 @@ class PlaylistView extends GetView<PlaylistController> {
                     controller.playlists.isEmpty)
                   _EmptyState(
                     icon: Icons.error_outline_rounded,
-                    title: 'Could not load playlists',
+                    title: 'could_not_load_playlist'.tr,
                     description: controller.errorMessage.value!,
                     actionLabel: 'Try again',
                     onAction: controller.loadPlaylists,
@@ -72,10 +72,10 @@ class PlaylistView extends GetView<PlaylistController> {
                 else if (controller.playlists.isEmpty)
                   _EmptyState(
                     icon: Icons.queue_music_rounded,
-                    title: 'No playlists yet',
+                    title: 'playlist_empty_home'.tr,
                     description:
                         'Create your first playlist and start organizing your music.',
-                    actionLabel: 'Create playlist',
+                    actionLabel: 'create_playlist_title'.tr,
                     onAction: () => _showPlaylistDialog(context),
                   )
                 else ...[
@@ -129,21 +129,21 @@ class PlaylistView extends GetView<PlaylistController> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete playlist?'),
+        title: Text('delete_playlist_question'.tr),
         content: Text(
           '“${playlist.name}” will be deleted. This action cannot be undone.',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Cancel'),
+            child: Text('cancel'.tr),
           ),
           FilledButton(
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Delete'),
+            child: Text('delete'.tr),
           ),
         ],
       ),
@@ -210,7 +210,7 @@ class _PlaylistNameDialogState extends State<_PlaylistNameDialog> {
     final playlist = widget.playlist;
 
     return AlertDialog(
-      title: Text(playlist == null ? 'Create playlist' : 'Rename playlist'),
+      title: Text(playlist == null ? 'create_playlist_title'.tr : 'Rename playlist'),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -223,7 +223,7 @@ class _PlaylistNameDialogState extends State<_PlaylistNameDialog> {
                 maxLength: 50,
                 textCapitalization: TextCapitalization.sentences,
                 decoration: const InputDecoration(
-                  hintText: 'Playlist name',
+                  hintText: 'playlist_name'.tr,
                   counterText: '',
                 ),
                 validator: (value) {
@@ -261,13 +261,13 @@ class _PlaylistNameDialogState extends State<_PlaylistNameDialog> {
           onPressed: widget.controller.isSaving.value
               ? null
               : () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text('cancel'.tr),
         ),
         Obx(
           () => FilledButton(
             onPressed:
                 widget.controller.isSaving.value ? null : _submit,
-            child: Text(playlist == null ? 'Create' : 'Save'),
+            child: Text(playlist == null ? 'create'.tr : 'save'.tr),
           ),
         ),
       ],
@@ -333,11 +333,11 @@ class _PlaylistTile extends StatelessWidget {
             itemBuilder: (context) => const [
               PopupMenuItem(
                 value: 'rename',
-                child: Text('Rename'),
+                child: Text('rename'.tr),
               ),
               PopupMenuItem(
                 value: 'delete',
-                child: Text('Delete'),
+                child: Text('delete'.tr),
               ),
             ],
           ),
