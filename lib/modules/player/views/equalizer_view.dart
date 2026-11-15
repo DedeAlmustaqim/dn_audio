@@ -321,7 +321,7 @@ class _EqualizerViewState extends State<EqualizerView> {
                                 ),
                                 SizedBox(height: 5),
                                 Text(
-                                  'Sound control',
+                                  'sound_control'.tr,
                                   style: TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.w600,
