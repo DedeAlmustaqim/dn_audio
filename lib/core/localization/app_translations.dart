@@ -152,6 +152,13 @@ class AppTranslations extends Translations {
           'collection_songs_empty': 'Songs in this collection will appear here.',
           'playlist_empty_title': 'This playlist is empty.',
           'playlist_count': '@count songs',
+          'library_item_count': '@count @section on this device',
+          'search_albums_artists_hint': 'Search albums or artists...',
+          'search_artists_hint': 'Search artists...',
+          'allow_audio_access_message': 'Allow DN Audio to access audio files so it can build your offline library.',
+          'allow_access': 'Allow access',
+          'library_empty_message': 'Audio files stored on your device will appear here after scanning.',
+          'no_matching_items': 'No matching @section yet.',
         },
         'id_ID': {
           'settings_title': 'Pengaturan',
@@ -302,6 +309,13 @@ class AppTranslations extends Translations {
           'collection_songs_empty': 'Lagu dalam koleksi ini akan muncul di sini.',
           'playlist_empty_title': 'Playlist ini masih kosong.',
           'playlist_count': '@count lagu',
+          'library_item_count': '@count @section di perangkat ini',
+          'search_albums_artists_hint': 'Cari album atau artis...',
+          'search_artists_hint': 'Cari artis...',
+          'allow_audio_access_message': 'Izinkan DN Audio mengakses file audio untuk membangun pustaka offline-mu.',
+          'allow_access': 'Izinkan akses',
+          'library_empty_message': 'File audio di perangkatmu akan muncul di sini setelah pemindaian.',
+          'no_matching_items': 'Tidak ada @section yang cocok.',
         },
       };
 }
