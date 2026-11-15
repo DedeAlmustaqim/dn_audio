@@ -139,7 +139,7 @@ class SettingsView extends GetView<SettingsController> {
             ),
             if (controller.preferences.value.enabledExtensions.isEmpty)
               const _InlineNotice(
-                message: 'No formats are enabled. Your music library will be empty after format filtering is applied.',
+                message: 'no_formats_enabled'.tr,
                 icon: Icons.info_outline_rounded,
               ),
             if (controller.isSaving.value) ...[
@@ -147,7 +147,7 @@ class SettingsView extends GetView<SettingsController> {
               const LinearProgressIndicator(minHeight: 2),
               const SizedBox(height: AppSpacing.xs),
               Text(
-                'Saving and applying your changes…',
+                'saving_changes'.tr,
                 style: TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 11,
@@ -550,7 +550,7 @@ class _LibraryOverviewPanelState extends State<_LibraryOverviewPanel> {
         _scanMessage = library.errorMessage.value;
       } else if (!library.hasPermission.value) {
         _scanWasSuccessful = false;
-        _scanMessage = 'Audio access was not granted. Your library was not scanned.';
+        _scanMessage = 'audio_access_denied'.tr;
       } else {
         _scanWasSuccessful = true;
         final count = library.songs.length;
@@ -696,7 +696,7 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: Text('Clear artwork cache?'),
+        title: Text('clear_cache_confirm_title'.tr),
         content: Text(
           'This removes cached album artwork stored by DN Audio. '
           'Artwork will be generated again when needed. Your music files, '
@@ -736,7 +736,7 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
       setState(() {
         _isClearing = false;
         _actionSucceeded = false;
-        _actionMessage = 'Unable to clear artwork cache. Please try again.';
+        _actionMessage = 'cache_clear_failed'.tr;
         _loadCacheInfo();
       });
     }
