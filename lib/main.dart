@@ -2,6 +2,9 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'core/localization/app_locale.dart';
+import 'core/localization/app_translations.dart';
+import 'core/localization/locale_controller.dart';
 import 'core/routes/app_pages.dart';
 import 'core/routes/app_routes.dart';
 import 'core/theme/app_theme.dart';
@@ -25,7 +28,11 @@ Future<void> main() async {
   await handler.configureAudioSession();
 
   final settingsRepository = SettingsRepository();
+  late final Locale initialLocale;
   try {
+    final savedLanguage = await settingsRepository.loadLanguageCode();
+    final deviceLanguage = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+    initialLocale = AppLocale.fromLanguageCode(savedLanguage ?? deviceLanguage);
     final playbackPreferences =
         await settingsRepository.loadPlaybackPreferences();
     await handler.setPlaybackSpeed(playbackPreferences.speed);
@@ -36,16 +43,23 @@ Future<void> main() async {
   }
 
   Get.put<DnAudioHandler>(handler, permanent: true);
-  runApp(const DnAudioApp());
+  Get.put<LocaleController>(LocaleController(initialLocale: initialLocale), permanent: true);
+  runApp(DnAudioApp(initialLocale: initialLocale));
 }
 
 class DnAudioApp extends StatelessWidget {
-  const DnAudioApp({super.key});
+  const DnAudioApp({super.key, required this.initialLocale});
+
+  final Locale initialLocale;
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'DN Audio',
+      translations: AppTranslations(),
+      locale: initialLocale,
+      fallbackLocale: const Locale('en', 'US'),
+      supportedLocales: AppLocale.supportedLocales,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.dark,
       initialRoute: AppRoutes.home,
