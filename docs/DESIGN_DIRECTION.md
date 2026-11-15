@@ -674,3 +674,27 @@ QA refinement: Keep Equalizer accessible from its dedicated bottom-navigation de
 - Tapping a playlist opens its existing detail view.
 - Keep honest empty states when the device library or playlist collection is empty; do not use mock tracks or fabricated playlist content.
 - Preserve the monochrome Immersive Minimal direction and existing playback/navigation architecture.
+
+
+## 21. Bilingual localization — English & Bahasa Indonesia
+
+**Product decision**
+- DN Audio supports English (en_US) and Bahasa Indonesia (id_ID).
+- On first launch, the app follows the device language. Indonesian devices use Bahasa Indonesia; unsupported device languages fall back to English.
+- A language explicitly selected by the user takes precedence on later launches and is persisted in the existing app_settings key-value table.
+- Changing language from Settings applies immediately without restarting the app.
+- Track metadata and user-created playlist names are data, not interface copy; they are never translated.
+
+**Implementation**
+- Use GetX Translations with a centralized dictionary in lib/core/localization/app_translations.dart.
+- Keep locale normalization in app_locale.dart and runtime switching/persistence in locale_controller.dart.
+- GetMaterialApp receives supported locales, initial locale, translations and English fallback.
+- Reuse SettingsRepository and its existing key-value table; no database schema migration is required.
+- Migrate navigation, Home, Library, collection details, Now Playing controls, Playlists, Equalizer, Sleep Timer, Settings and user-facing controller errors to translation keys.
+
+**Validation required**
+- Test first launch on id and en device locales, plus unsupported device locales.
+- Test manual language switching in Settings and verify the selection persists after force-close/relaunch.
+- Review long Indonesian labels, narrow screens, dialogs, bottom sheets, tooltips and text scaling.
+- Run dart format lib test, flutter analyze, flutter test and a device build.
+- Verify audio metadata, playlist names and notification track metadata remain unchanged.
