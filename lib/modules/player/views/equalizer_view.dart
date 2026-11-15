@@ -210,7 +210,7 @@ class _EqualizerViewState extends State<EqualizerView> {
             const SizedBox(height: 8),
             Row(
               children: [
-                const Text('INTENSITY', style: TextStyle(
+                Text('INTENSITY', style: TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
@@ -242,7 +242,7 @@ class _EqualizerViewState extends State<EqualizerView> {
             ),
           ] else ...[
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Perangkat hanya menyediakan kontrol ON/OFF untuk efek ini.',
               style: TextStyle(color: AppColors.textSecondary, fontSize: 11)),
           ],
@@ -331,7 +331,7 @@ class _EqualizerViewState extends State<EqualizerView> {
                             ),
                           ),
                           IconButton(
-                            tooltip: 'Refresh capability',
+                            tooltip: 'retry'.tr,
                             onPressed:
                                 _isRefreshing ? null : _refreshCapabilities,
                             icon: _isRefreshing
@@ -400,7 +400,7 @@ class _EqualizerViewState extends State<EqualizerView> {
                     Text('Equalizer', style: TextStyle(
                       fontSize: 14, fontWeight: FontWeight.w700)),
                     SizedBox(height: 3),
-                    Text('Master audio control', style: TextStyle(
+                    Text('master_audio_control'.tr, style: TextStyle(
                       color: AppColors.textSecondary, fontSize: 11)),
                   ],
                 ),
@@ -414,7 +414,7 @@ class _EqualizerViewState extends State<EqualizerView> {
           ),
         ),
         const SizedBox(height: 20),
-        const Text(
+        Text(
           'QUICK PRESETS',
           style: TextStyle(
             color: AppColors.textSecondary,
@@ -479,7 +479,7 @@ class _EqualizerViewState extends State<EqualizerView> {
             });
           },
           icon: const Icon(Icons.tune_rounded),
-          label: const Text('Open full equalizer'),
+          label: Text('Open full equalizer'),
         ),
       ],
     );
@@ -557,8 +557,8 @@ class _EqualizerViewState extends State<EqualizerView> {
         const SizedBox(height: 22),
         Row(
           children: [
-            const Text(
-              'SOUND PRESETS',
+            Text(
+              'sound_presets'.tr,
               style: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 10,
@@ -618,8 +618,8 @@ class _EqualizerViewState extends State<EqualizerView> {
         const SizedBox(height: 22),
         Row(
           children: [
-            const Text(
-              'FREQUENCY BANDS',
+            Text(
+              'frequency_bands'.tr,
               style: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 10,
@@ -697,18 +697,18 @@ class _EqualizerViewState extends State<EqualizerView> {
                     )
                 : null,
             icon: const Icon(Icons.restart_alt_rounded, size: 18),
-            label: const Text('Reset flat'),
+            label: Text('reset_flat'.tr),
           ),
         ),
         _buildOptionalEffectCard(
-          title: 'Bass Enhancement',
-          description: 'Perkuat frekuensi rendah',
+          title: 'bass_enhancement'.tr,
+          description: 'bass_description'.tr,
           capability: capabilities.bassBoost,
           isBassBoost: true,
         ),
         _buildOptionalEffectCard(
-          title: 'Virtualizer',
-          description: 'Efek ruang dan keluasan suara',
+          title: 'virtualizer'.tr,
+          description: 'virtualizer_description'.tr,
           capability: capabilities.virtualizer,
           isBassBoost: false,
         ),
@@ -724,8 +724,8 @@ class _EqualizerViewState extends State<EqualizerView> {
           ),
         ],
         const SizedBox(height: 8),
-        const Text(
-          'Band dan rentang level mengikuti kemampuan perangkat.',
+        Text(
+          'device_band_note'.tr,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: AppColors.textSecondary,
@@ -770,8 +770,8 @@ class _UnavailableState extends StatelessWidget {
               color: AppColors.textSecondary,
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Equalizer unavailable',
+            Text(
+              'equalizer_unavailable'.tr,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 8),
@@ -787,7 +787,7 @@ class _UnavailableState extends StatelessWidget {
             OutlinedButton.icon(
               onPressed: isRefreshing ? null : onRefresh,
               icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Try again'),
+              label: Text('try_again'.tr),
             ),
           ],
         ),
