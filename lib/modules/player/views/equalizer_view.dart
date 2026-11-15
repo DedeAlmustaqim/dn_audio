@@ -788,7 +788,7 @@ class _EqualizerViewState extends State<EqualizerView> {
 }
 
 
-class _VerticalBandSlider extends StatelessWidget {
+class _VerticalBandSlider extends StatefulWidget {
   const _VerticalBandSlider({
     required this.value,
     required this.min,
@@ -805,46 +805,69 @@ class _VerticalBandSlider extends StatelessWidget {
   final ValueChanged<double> onChanged;
   final ValueChanged<double> onChangeEnd;
 
+  @override
+  State<_VerticalBandSlider> createState() => _VerticalBandSliderState();
+}
+
+class _VerticalBandSliderState extends State<_VerticalBandSlider> {
+  late double _currentValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentValue = widget.value;
+  }
+
+  @override
+  void didUpdateWidget(covariant _VerticalBandSlider oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value) {
+      _currentValue = widget.value;
+    }
+  }
+
   double _valueAt(double dy, double height) {
     final fraction = (1 - (dy / height)).clamp(0.0, 1.0);
-    return min + (max - min) * fraction;
+    return widget.min + (widget.max - widget.min) * fraction;
+  }
+
+  void _updateValue(double nextValue) {
+    _currentValue = nextValue.clamp(widget.min, widget.max).toDouble();
+    widget.onChanged(_currentValue);
   }
 
   void _commit(double nextValue) {
-    onChanged(nextValue);
-    onChangeEnd(nextValue);
+    _updateValue(nextValue);
+    widget.onChangeEnd(_currentValue);
   }
 
   @override
   Widget build(BuildContext context) {
-    final safeValue = value.clamp(min, max).toDouble();
+    final safeValue = _currentValue.clamp(widget.min, widget.max).toDouble();
     return Semantics(
       slider: true,
-      enabled: enabled,
+      enabled: widget.enabled,
       value: '${(safeValue / 100).toStringAsFixed(1)} dB',
-      increasedValue: '${((safeValue + 100).clamp(min, max) / 100).toStringAsFixed(1)} dB',
-      decreasedValue: '${((safeValue - 100).clamp(min, max) / 100).toStringAsFixed(1)} dB',
-      onIncrease: enabled
-          ? () => _commit((safeValue + 100).clamp(min, max).toDouble())
+      increasedValue: '${((safeValue + 100).clamp(widget.min, widget.max) / 100).toStringAsFixed(1)} dB',
+      decreasedValue: '${((safeValue - 100).clamp(widget.min, widget.max) / 100).toStringAsFixed(1)} dB',
+      onIncrease: widget.enabled
+          ? () => _commit((safeValue + 100).clamp(widget.min, widget.max).toDouble())
           : null,
-      onDecrease: enabled
-          ? () => _commit((safeValue - 100).clamp(min, max).toDouble())
+      onDecrease: widget.enabled
+          ? () => _commit((safeValue - 100).clamp(widget.min, widget.max).toDouble())
           : null,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTapDown: enabled
-            ? (details) {
-                final next = _valueAt(details.localPosition.dy, 132);
-                _commit(next);
-              }
+        onTapDown: widget.enabled
+            ? (details) => _commit(_valueAt(details.localPosition.dy, 132))
             : null,
-        onVerticalDragUpdate: enabled
-            ? (details) {
-                onChanged(_valueAt(details.localPosition.dy, 132));
-              }
+        onVerticalDragUpdate: widget.enabled
+            ? (details) => _updateValue(
+                  _valueAt(details.localPosition.dy, 132),
+                )
             : null,
-        onVerticalDragEnd: enabled
-            ? (_) => onChangeEnd(value)
+        onVerticalDragEnd: widget.enabled
+            ? (_) => widget.onChangeEnd(_currentValue)
             : null,
         child: SizedBox(
           width: 30,
@@ -852,9 +875,9 @@ class _VerticalBandSlider extends StatelessWidget {
           child: CustomPaint(
             painter: _VerticalBandSliderPainter(
               value: safeValue,
-              min: min,
-              max: max,
-              activeColor: enabled
+              min: widget.min,
+              max: widget.max,
+              activeColor: widget.enabled
                   ? AppColors.controlActive
                   : AppColors.textMuted,
               trackColor: AppColors.border,
