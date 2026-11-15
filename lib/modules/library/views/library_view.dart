@@ -50,7 +50,7 @@ class LibraryView extends GetView<LibraryController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Your Library',
                       style: AppTypography.editorialTitle,
                     ),
@@ -74,25 +74,25 @@ class LibraryView extends GetView<LibraryController> {
                     Row(
                       children: [
                         _LibrarySectionChip(
-                          label: 'Songs',
+                          label: 'songs'.tr,
                           selected: section == 'songs',
                           onTap: () => controller.selectLibrarySection('songs'),
                         ),
                         const SizedBox(width: AppSpacing.sm),
                         _LibrarySectionChip(
-                          label: 'Albums',
+                          label: 'albums'.tr,
                           selected: section == 'albums',
                           onTap: () => controller.selectLibrarySection('albums'),
                         ),
                         const SizedBox(width: 8),
                         _LibrarySectionChip(
-                          label: 'Artists',
+                          label: 'artists'.tr,
                           selected: section == 'artists',
                           onTap: () => controller.selectLibrarySection('artists'),
                         ),
                         const Spacer(),
                         IconButton(
-                          tooltip: 'Scan music again',
+                          tooltip: 'scan_music_again'.tr,
                           onPressed: controller.isLoading.value
                               ? null
                               : controller.refreshLibrary,
@@ -114,7 +114,7 @@ class LibraryView extends GetView<LibraryController> {
                 hasScrollBody: false,
                 child: AppEmptyState(
                   icon: Icons.error_outline_rounded,
-                  title: 'Could not scan music',
+                  title: 'could_not_scan'.tr,
                   message: controller.errorMessage.value!,
                   actionLabel: 'Try again',
                   onAction: controller.refreshLibrary,
@@ -125,7 +125,7 @@ class LibraryView extends GetView<LibraryController> {
                 hasScrollBody: false,
                 child: AppEmptyState(
                   icon: Icons.folder_off_outlined,
-                  title: 'Music access is needed',
+                  title: 'music_access_needed'.tr,
                   message:
                       'Allow DN Audio to access audio files so it can build your offline library.',
                   actionLabel: 'Allow access',
@@ -137,7 +137,7 @@ class LibraryView extends GetView<LibraryController> {
                 hasScrollBody: false,
                 child: AppEmptyState(
                   icon: Icons.music_off_rounded,
-                  title: 'No music found',
+                  title: 'no_music_found'.tr,
                   message:
                       'Audio files stored on your device will appear here after scanning.',
                 ),
@@ -180,7 +180,7 @@ class LibraryView extends GetView<LibraryController> {
                         ),
                         const SizedBox(width: 4),
                         IconButton(
-                          tooltip: 'Add to playlist',
+                          tooltip: 'add_to_playlist'.tr,
                           onPressed: () => _showAddToPlaylistSheet(
                             context,
                             visibleSongs[index],
@@ -254,8 +254,8 @@ class LibraryView extends GetView<LibraryController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 16),
-                const Text(
-                  'Add to playlist',
+                Text(
+                  'add_to_playlist'.tr,
                   style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 5),
