@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../services/dn_audio_handler.dart';
 
 class SleepTimerController extends GetxController {
-  SleepTimerController({DnAudioHandler? handler}) : _handler = handler;
+  SleepTimerController({this._handler});
 
   DnAudioHandler? _handler;
   StreamSubscription<Duration?>? _remainingSubscription;
