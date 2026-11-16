@@ -29,7 +29,7 @@ class DnAudioHandler extends BaseAudioHandler
   /// Using our own named action makes its dispatch explicit and predictable.
   static const String notificationCloseAction = 'dn_audio.close_notification';
 
-  static const MediaControl notificationCloseControl = MediaControl.custom(
+  static final MediaControl notificationCloseControl = MediaControl.custom(
     androidIcon: 'drawable/ic_action_close',
     label: 'Close',
     name: notificationCloseAction,
