@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -22,10 +23,13 @@ void main() {
   });
 
   testWidgets('DN Audio home screen renders', (WidgetTester tester) async {
-    await tester.pumpWidget(const DnAudioApp());
+    await tester.pumpWidget(
+      const DnAudioApp(initialLocale: Locale('en', 'US')),
+    );
     await tester.pump();
+
     expect(find.text('DN AUDIO'), findsOneWidget);
-    expect(find.text('YOUR MUSIC. YOUR EXPERIENCE.'), findsOneWidget);
+    expect(find.byType(TextField), findsOneWidget);
     expect(find.text('Library'), findsOneWidget);
   });
 }
