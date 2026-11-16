@@ -22,6 +22,7 @@ Future<void> main() async {
       androidNotificationChannelName: 'DN Audio Playback',
       androidNotificationChannelDescription:
           'Playback controls and current track information for DN Audio.',
+      androidNotificationIcon: 'drawable/ic_stat_music_note',
       androidNotificationOngoing: true,
     ),
   );
