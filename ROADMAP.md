@@ -218,7 +218,7 @@ Test inventory counts describe source declarations, not passing test results.
 - 10.4.3 — Release checklist and signing/AAB documentation.
 - 10.4.4 — Privacy Policy and Play Store preparation notes.
 
-**Status: In progress. 10.4.1 and 10.4.2 are committed; 10.4.3 and 10.4.4 remain.**
+**Status: In progress. 10.4.1, 10.4.2, and 10.4.3 are committed; 10.4.4 remains.**
 
 ---
 
