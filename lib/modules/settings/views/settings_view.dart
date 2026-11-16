@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/localization/locale_controller.dart';
@@ -551,6 +552,32 @@ class _AboutPanelState extends State<_AboutPanel> {
                 onTap: packageInfo == null
                     ? null
                     : () => _showOpenSourceLicenses(packageInfo),
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                leading: const Icon(
+                  Icons.privacy_tip_outlined,
+                  color: AppColors.primary,
+                ),
+                title: Text(
+                  'privacy_policy'.tr,
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                ),
+                subtitle: Text(
+                  'privacy_policy_description'.tr,
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 11,
+                  ),
+                ),
+                trailing: const Icon(Icons.open_in_new_rounded, size: 18),
+                onTap: () => launchUrl(
+                  Uri.parse(
+                    'https://dedealmustaqim.github.io/dn_audio_privacy/',
+                  ),
+                  mode: LaunchMode.externalApplication,
+                ),
               ),
             ],
           );
