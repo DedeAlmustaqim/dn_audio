@@ -23,12 +23,16 @@ class DnAudioHandler extends BaseAudioHandler
   StreamSubscription<void>? _becomingNoisySubscription;
   int _artworkRequestId = 0;
 
-  /// Explicit close action for the Android media notification.
-  /// Uses the stop media action so AudioService routes it to [stop].
-  static const MediaControl notificationCloseControl = MediaControl(
+  /// Explicit custom action for closing the Android media notification.
+  ///
+  /// Android 13+ represents the built-in stop action as a custom action.
+  /// Using our own named action makes its dispatch explicit and predictable.
+  static const String notificationCloseAction = 'dn_audio.close_notification';
+
+  static const MediaControl notificationCloseControl = MediaControl.custom(
     androidIcon: 'drawable/ic_action_close',
     label: 'Close',
-    action: MediaAction.stop,
+    name: notificationCloseAction,
   );
 
   @visibleForTesting
@@ -185,6 +189,18 @@ class DnAudioHandler extends BaseAudioHandler
 
   @override
   Future<void> seek(Duration position) => player.seek(position);
+
+  @override
+  Future<dynamic> customAction(
+    String name, [
+    Map<String, dynamic>? extras,
+  ]) async {
+    if (name == notificationCloseAction) {
+      await stop();
+      return null;
+    }
+    return super.customAction(name, extras);
+  }
 
   @override
   Future<void> stop() async {
