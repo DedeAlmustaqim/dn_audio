@@ -1,643 +1,294 @@
-# Digital Native Dev
+# DN Audio — Development Roadmap
 
-# Roadmap Utama — DN Audio
+**Product:** DN Audio  
+**Brand:** Digital Native Dev  
+**Tagline:** Your Music. Your Experience.  
+**Platform:** Android · Flutter · GetX  
+**Product model:** Premium offline music player
 
-**Your Music. Your Experience.**
+This document is the current source of truth for development progress. It distinguishes implementation in the repository from local automated tests and physical-device verification.
 
-Premium Offline Music Player · Flutter + GetX
+## Status definitions
+
+- **Complete:** implementation and the required verification for that scope have been confirmed.
+- **Implemented — verification pending:** code is present, but the required local/device checks have not all been confirmed.
+- **In progress:** work is actively being performed.
+- **Not started:** work has not begun.
+- **Release blocker:** must be resolved before production release.
 
 ---
 
-## 1. Stage 1 — Project Foundation
+## Stage 1 — Project Foundation
 
-Fondasi aplikasi, struktur GetX MVC, tema dark premium, navigasi, dan mini-player.
+- Flutter application foundation and GetX MVC structure.
+- Core theme, navigation, and shared application shell.
 
-**Status: Selesai**
+**Status: Complete**
 
-## 2. Stage 2 — Local Music Library
+## Stage 2 — Local Music Library
 
-- Scan musik dari perangkat
-- Permission audio
-- Integrasi Android MediaStore
-- Daftar lagu
-- Pencarian lagu
-- Refresh library
+- Android MediaStore integration and local audio scanning.
+- Android-version-aware audio permission handling.
+- Songs, Albums, and Artists browsing.
+- Search, refresh, metadata, and artwork presentation.
 
-**Status: Selesai**
+**Status: Implemented. Core library and collection flows have been confirmed during earlier device checks. Final permission grant/deny/revoke regression remains part of Stage 10 and Stage 11.**
 
-## 3. Stage 3 — Audio Playback Engine
+## Stage 3 — Audio Playback Engine
 
-- Integrasi `just_audio`
-- Play dan Pause
-- Next dan Previous
-- Seek dan progress
-- Shuffle dan Repeat
-- Mini-player dan Now Playing
+- just_audio playback engine.
+- Play, pause, seek, previous, next, shuffle, and repeat.
+- Mini Player and Now Playing.
+- Collection and playlist playback integration.
 
-**Status: Implementasi dasar selesai**
+**Status: Implemented. Full release regression remains in Stage 11.**
 
-## 4. Stage 3.5 — Stabilization & Refinement
+## Stage 3.5 — Stabilization & Refinement
 
-- Perbaikan proses library loading
-- Penanganan error playback
-- Validasi lagu dan metadata
-- Unit testing
+- Library loading and playback error handling.
+- Song and metadata validation.
+- Automated tests and iterative stabilization.
 
-**Status: Selesai**
+**Status: Complete for the original stabilization scope. Ongoing regression is tracked in Stage 10–11.**
 
-## 5. Stage 4 — Background Audio Experience
+## Stage 4 — Background Audio Experience
 
 ### 4.1 — Audio Service Architecture
 
-- Integrasi `audio_service`
-- Implementasi `DnAudioHandler`
-- Satu instance `AudioPlayer` sebagai playback engine
-- Integrasi dengan GetX
-- Android foreground media service dan media button receiver
+- audio_service integration and DnAudioHandler.
+- Shared playback engine and media-session state bridge.
+- Android foreground media playback service declarations.
 
-**Status: Selesai — sudah diuji lokal**
+**Status: Complete — local device verification was reported.**
 
 ### 4.2 — Background Playback
 
-- Musik tetap berjalan saat aplikasi diminimalkan
-- Musik tetap berjalan saat layar dikunci
-- Kontrol playback diarahkan melalui audio handler
+- Playback while the app is minimized and the screen is locked.
 
-**Status: Selesai — sudah diuji lokal**
+**Status: Complete — local device verification was reported.**
 
-### 4.3 — Media Notification
+### 4.3 — Media Notification & Artwork
 
-- Judul lagu dan artis
-- Informasi album dan durasi
-- Album artwork dari MediaStore jika tersedia
-- Kontrol Play/Pause
-- Kontrol Next/Previous
-- Progress dan posisi pemutaran
-- Kontrol dari notification shade
+- Track title, artist, album, duration, playback controls, and artwork metadata.
+- Native artwork resolution and cache fallback.
+- Synchronization between notification and Now Playing artwork/playback state.
 
-**Status: Implementasi tersedia — verifikasi dan penyempurnaan berlangsung**
+**Status: Implemented. Notification controls and artwork display were reported working. Some metadata quality (for example, missing artist tags in source files) depends on the local media metadata. Include this scope in final regression.**
 
-Catatan pengujian perangkat:
-- Media notification berhasil muncul.
-- Judul lagu, progress, durasi, dan kontrol media sudah tampil.
-- Metadata artis masih terbaca sebagai `<unknown>` pada lagu yang diuji.
-- Artwork notification kini memiliki resolver native: embedded artwork terlebih dahulu, lalu fallback MediaStore album art; hasil disimpan di cache aplikasi.
-- Now Playing kini mendengarkan `MediaItem.artUri` dari `DnAudioHandler`; pengguna telah mengonfirmasi artwork tampil di halaman Now Playing.
-- Sinkronisasi status Play/Pause antara Now Playing dan notifikasi sudah berhasil diuji.
+### 4.4 — Lock Screen, Headset & Audio Focus
 
-### 4.4 — Lock Screen & Audio Focus
+- Audio session configuration and becoming-noisy handling are implemented.
+- Headset/Bluetooth media-button verification, lock-screen verification, and interruption behavior remain device-test items.
 
-- Informasi musik di lock screen
-- Kontrol headset dan Bluetooth
-- Audio focus
-- Penanganan panggilan dan interupsi audio
+**Status: Partially implemented — verification pending.**
 
-#### 4.4.1 — Audio Session & Audio Focus
+---
 
-- Menambahkan dependency `audio_session`
-- Mengonfigurasi `AudioSessionConfiguration.music()` saat startup
-- Menangani event `becomingNoisyEventStream` untuk pause saat headset dilepas
-- Interupsi audio lainnya tetap ditangani oleh mekanisme bawaan `just_audio`
+## Stage 5 — Playlist Management
 
-**Status: Implementasi tersedia di GitHub — pengujian perangkat ditunda**
+- SQLite playlist database and repository.
+- Create, rename, delete, duplicate-name validation.
+- Add/remove tracks and playlist detail.
+- Ordered playlist playback and persistence.
 
-Catatan:
-- Pengujian headset kabel dan Bluetooth belum dilakukan karena perangkat headset belum tersedia.
-- Pengujian interupsi panggilan dan audio dari aplikasi lain juga masih tertunda.
-- Jangan tandai substage ini selesai sebelum pengujian perangkat dilakukan.
+**Status: Implemented in the repository. Automated controller tests exist; full SQLite persistence and end-to-end device regression remain required before release.**
 
-#### 4.4.2 — Headset & Bluetooth Controls
+## Stage 6 — Artwork, Metadata & Collections
 
-- Memastikan tombol media headset dapat mengontrol playback
-- Memastikan tombol media Bluetooth dapat mengontrol playback
-- Memastikan event perubahan koneksi audio ditangani dengan aman
+- Shared artwork resolution and caching.
+- MediaStore album/artist identity and grouping.
+- Album and Artist browsing and detail screens.
+- Play All and collection-based playback.
 
-**Status: Belum dimulai**
+**Status: Core implementation complete. Earlier device checks for artwork and collection flows were reported successful. Include in final regression.**
 
-#### 4.4.3 — Lock Screen Experience
+## Stage 7 — Equalizer & Audio Effects
 
-- Memastikan judul, artis, album, dan artwork tampil di lock screen
-- Memastikan Play/Pause, Next/Previous dapat digunakan dari lock screen
-- Memastikan status playback tetap sinkron
+- Native Android audio-effects manager and MethodChannel.
+- Audio session binding and capability detection.
+- Equalizer bands, presets, Bass Boost, and Virtualizer where supported.
+- SQLite persistence and restoration across audio sessions.
 
-**Status: Belum dimulai**
+**Status: Implemented. Earlier service/preset tests and local checks were reported clean. Physical-device capability and regression checks remain required across supported and unsupported devices.**
 
-#### 4.4.4 — Audio Interruption & Stabilization
+## Stage 8 — Sleep Timer
 
-- Menangani interupsi panggilan dan audio dari aplikasi lain
-- Memastikan perilaku playback setelah interupsi
-- Pengujian akhir audio focus dan perubahan perangkat audio
+- Monotonic countdown service owned by the audio handler.
+- Quick and custom durations.
+- Start, replace, cancel, expiry, and pause playback.
+- UI state and countdown.
 
-**Status: Belum dimulai**
+**Status: Implemented. Automated service/controller tests exist; final background and expiry regression remains part of Stage 11.**
 
-## 6. Stage 5 — Playlist Management
-
-- Membuat playlist
-- Rename playlist
-- Menghapus playlist
-- Menambah dan menghapus lagu dari playlist
-- Menampilkan daftar lagu dalam playlist
-- Pemutaran berdasarkan playlist
-- Next/Previous mengikuti urutan playlist
-- Penyimpanan permanen menggunakan SQLite
-
-#### 5.1 — Playlist Architecture & Database
-
-- Menambahkan SQLite melalui `sqflite`
-- Menyiapkan database lokal khusus playlist
-- Tabel `playlists` untuk identitas dan timestamp playlist
-- Tabel `playlist_songs` untuk relasi playlist, snapshot metadata lagu, dan urutan pemutaran
-- Foreign key cascade agar detail lagu ikut terhapus saat playlist dihapus
-- Indeks untuk pencarian dan pengurutan lagu dalam playlist
-
-**Status: Fondasi database diimplementasikan — menunggu `flutter pub get`, analisis, dan pengujian lokal**
-
-#### 5.2 — Create, Rename & Delete Playlist
-
-- Repository CRUD playlist dengan SQLite
-- Membuat playlist dengan nama wajib dan batas 50 karakter
-- Mencegah nama playlist duplikat tanpa membedakan huruf besar/kecil
-- Rename playlist dan memperbarui `updated_at`
-- Menghapus playlist; detail lagu akan mengikuti foreign key cascade
-- Menampilkan daftar playlist beserta jumlah lagu
-- UI tab Playlists dengan dialog create/rename dan konfirmasi delete
-- Unit test controller menggunakan repository fake
-
-**Status: Implementasi tersedia di GitHub — menunggu analisis dan pengujian lokal**
-
-#### 5.3 — Add & Remove Songs
-
-- Menambahkan operasi repository untuk mengambil lagu playlist berdasarkan urutan posisi
-- Menambahkan lagu ke playlist dengan snapshot metadata lokal
-- Mencegah lagu yang sama ditambahkan dua kali ke playlist yang sama berdasarkan content URI
-- Menempatkan lagu baru pada posisi terakhir playlist
-- Menghapus lagu dari playlist dan memperbarui timestamp playlist
-- Menambahkan aksi controller untuk add/remove lagu serta penanganan error duplikat
-- Menambahkan tombol Add to playlist pada setiap lagu di Music Library
-- Menampilkan pemilih playlist melalui bottom sheet
-- Menambahkan unit test controller untuk proses penambahan lagu dan validasi duplikat
-
-**Status: Implementasi tersedia di GitHub — menunggu analisis dan pengujian lokal. UI penghapusan lagu akan diselesaikan bersama tampilan detail playlist pada Stage 5.4.**
-
-#### 5.4 — Playlist Detail & Song List
-
-- Menambahkan halaman detail playlist dengan navigasi dari daftar playlist
-- Menampilkan nama playlist dan jumlah lagu
-- Memuat daftar lagu dari SQLite sesuai urutan posisi
-- Menampilkan empty state dan opsi refresh
-- Menyediakan menu Remove from playlist pada setiap lagu
-- Menambahkan konfirmasi sebelum lagu dihapus
-- Memperbarui daftar lagu dan jumlah lagu setelah penghapusan
-- Menambahkan unit test controller untuk load playlist songs dan remove song
-
-**Status: Implementasi tersedia di GitHub — menunggu analisis dan pengujian lokal**
-
-#### 5.5 — Playlist Playback & Queue
-
-- Menambahkan validasi playlist kosong dan indeks lagu sebelum audio source dimuat
-- Menyelaraskan queue audio_service dengan urutan lagu playlist setelah audio source berhasil dimuat
-- Menambahkan `PlayerController.playPlaylist()` agar pemutaran playlist dan lagu terpilih memakai satu `DnAudioHandler`
-- Mempertahankan `playSong()` sebagai jalur pemutaran lagu yang meneruskan daftar antrean terkait
-- Menambahkan tombol Play all pada halaman detail playlist
-- Menambahkan aksi tap pada setiap lagu untuk memulai pemutaran dari lagu yang dipilih
-- Next/Previous mengikuti sequence playlist yang dimuat oleh just_audio
-
-**Status: Implementasi tersedia di GitHub — menunggu analisis dan pengujian lokal**
-
-#### 5.6 — Persistence, Validation & Testing
-
-- Memperbaiki propagasi error saat memuat lagu playlist agar kegagalan database tidak dianggap sebagai playlist kosong
-- Menambahkan unit test untuk memastikan error pemuatan lagu diteruskan ke halaman pemanggil dan pesan error controller tetap tersedia
-- Melanjutkan pengujian persistensi SQLite, validasi CRUD, dan konsistensi queue pada perangkat
-
-**Status: Implementasi penyempurnaan tersedia di GitHub — pengujian lokal dan verifikasi persistensi masih menunggu**
-
-## 7. Stage 6 — Album Art & Metadata
-
-### 6.1 — Shared Artwork Resolution & Presentation
-
-- Memusatkan pemanggilan native artwork resolver dalam `ArtworkService`
-- Menggunakan cache Future per lagu agar beberapa tampilan tidak meminta artwork yang sama berulang kali
-- Menyediakan `SongArtwork` sebagai komponen visual bersama dengan fallback DN Audio
-- Menggunakan artwork yang sama pada Library, Playlist, mini player, dan Now Playing
-- Mempertahankan resolver Android MediaStore dan embedded artwork yang sudah ada
-
-- Pengujian perangkat oleh pengguna: seluruh checklist A–F dinyatakan lolos
-- Perbaikan tambahan: keyboard pencarian ditutup saat lagu dipilih dari hasil pencarian
-
-**Status: Selesai — pengguna mengonfirmasi pengujian perangkat A–F dan perbaikan keyboard bersih**
-
-### 6.2 — Metadata & Album/Artist Browsing
-
-#### 6.2.1 — Metadata Identity & Collection Grouping
-
-- Menambahkan `albumId` dan `artistId` dari Android MediaStore ke model `Song`
-- Menjadikan ID MediaStore sebagai identitas utama album dan artis
-- Menyediakan fallback grouping berdasarkan nama album + artis dan nama artis yang dinormalisasi
-- Menurunkan koleksi album dan artis dari daftar lagu yang sudah dimuat
-- Menambahkan unit test untuk parsing ID dan pengelompokan koleksi
-
-**Status: Implementasi tersedia di GitHub — menunggu format, analisis, dan pengujian lokal**
-
-#### 6.2.2 — Album & Artist Browsing UI
-
-- Menambahkan navigasi Songs, Albums, dan Artists di dalam Library
-- Menampilkan daftar album dalam grid dua kolom dengan artwork, nama album, artis, dan jumlah lagu
-- Menampilkan daftar artis dalam list dengan artwork representatif, nama artis, jumlah album, dan jumlah lagu
-- Menyediakan pencarian yang mengikuti tab aktif untuk lagu, album, maupun artis
-- Menyediakan empty state untuk koleksi kosong dan hasil pencarian yang tidak ditemukan
-- Memakai kembali SongArtwork dan koleksi turunan dari LibraryController tanpa scan MediaStore tambahan
-- Navigasi ke halaman detail album/artis ditangani pada Stage 6.2.3
-
-**Status: Implementasi tersedia di GitHub — menunggu format, analisis, dan pengujian lokal**
-
-#### 6.2.3 — Album & Artist Detail
-
-- Menambahkan halaman detail album dengan artwork besar, metadata, jumlah lagu, dan daftar lagu
-- Menambahkan halaman detail artis dengan artwork representatif, jumlah album/lagu, daftar album, dan seluruh lagu artis
-- Menambahkan navigasi dari kartu album dan baris artis ke halaman detail
-- Menambahkan navigasi dari album di halaman artis ke detail album
-- Menambahkan Play all pada detail album dan artis
-- Pemilihan lagu memulai playback dari indeks terpilih dan mempertahankan urutan koleksi melalui `PlayerController.playPlaylist()`
-- Menggunakan kembali SongArtwork, tema DN Audio, dan PlayerMiniBar
-- Menyediakan empty state untuk koleksi yang tidak memiliki lagu
-
-**Status: Selesai — pengguna mengonfirmasi seluruh checklist A–E bersih pada pengujian perangkat**
-
-
-## 8. Stage 7 — Equalizer & Audio Effects
-
-- Equalizer 5-band atau mengikuti kemampuan perangkat
-- Preset audio
-- Bass enhancement
-- Virtualizer / spatial effect jika tersedia
-- Persistensi pengaturan audio
-- Penanganan perangkat yang tidak mendukung efek tertentu
-
-### 7.1 — Audio Effects Architecture & Capability Discovery
-
-- Menggunakan Android Audio Session ID dari instance `just_audio` yang sudah menjadi playback engine utama
-- Mengikat efek native Android ke session ID aktif dan memperbaruinya jika session berubah
-- Menyediakan MethodChannel khusus audio effects, terpisah dari channel audio library
-- Mendeteksi ketersediaan Equalizer, BassBoost, dan Virtualizer serta membaca jumlah band dan rentang level dari perangkat
-- Menyediakan kontrak service Flutter yang tidak bergantung pada UI
-- Melepaskan instance efek lama dengan aman saat session berubah atau service ditutup
-- Menangani perangkat/API yang tidak mendukung efek tanpa mengganggu playback
-
-#### 7.1.1 — Native Audio Effects Manager
-
-- Menambahkan `AudioEffectsManager` native Android untuk mengelola instance Equalizer, BassBoost, dan Virtualizer secara independen
-- Menambahkan MethodChannel khusus `dn_audio/audio_effects`
-- Menyediakan operasi `attachSession`, `getCapabilities`, dan `release`
-- Mengembalikan kemampuan dasar Equalizer dari perangkat, termasuk jumlah band, rentang level, dan rentang frekuensi
-- Menangani kegagalan inisialisasi tiap efek secara terpisah agar efek lain tetap dapat digunakan
-- Melepaskan instance efek dengan aman jika gagal diinisialisasi atau saat manager dilepas
-
-**Status: Implementasi tersedia di GitHub — menunggu build Android, analisis, dan pengujian lokal**
-
-#### 7.1.2 — Session Binding & Lifecycle
-
-- Menambahkan `AudioEffectsService` sebagai pemilik kontrak MethodChannel `dn_audio/audio_effects` di sisi Flutter
-- Menghubungkan `AudioPlayer.androidAudioSessionIdStream` dari `DnAudioHandler` yang sudah ada tanpa membuat player atau audio pipeline baru
-- Menserialisasi event session agar event duplikat atau perubahan cepat tidak menyebabkan attach native berjalan bersamaan
-- Melakukan attach saat session ID valid, release saat session menjadi null, dan release saat handler ditutup
-- Menangani kegagalan MethodChannel sebagai kegagalan fitur opsional tanpa mengubah status playback
-- Menambahkan unit test untuk deduplikasi session, pergantian session, release pada session null, dan disposal
-
-**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian, dan build Android lokal**
-
-#### 7.1.3 — Capability Detection & Error Handling
-
-- Menambahkan model bertipe `AudioEffectsCapabilities`, `AudioEffectCapability`, dan `AudioEffectBandCapability` untuk membaca respons native secara aman
-- Mengambil jumlah band, frekuensi tengah, rentang frekuensi, rentang level, dan jumlah preset sesuai data perangkat
-- Menyediakan snapshot kemampuan terbaru dan stream perubahan capability melalui `AudioEffectsService`
-- Menambahkan pemanggilan `getCapabilities` serta fallback unavailable ketika channel tidak tersedia atau terjadi platform error
-- Menambahkan alasan kegagalan per efek pada native manager agar Equalizer, BassBoost, dan Virtualizer tetap dapat dilaporkan secara independen
-- Menambahkan unit test parsing metadata band, dukungan efek opsional, publikasi capability, dan kegagalan channel
-
-**Status: Selesai — pengguna mengonfirmasi 7.1.1, 7.1.2, dan 7.1.3 clean**
-
-### 7.2 — Equalizer Engine & Controls
-
-- Membuat dan mengelola band equalizer berdasarkan kemampuan perangkat
-- Mengatur level tiap band dan master enable/disable
-- Menambahkan operasi native untuk mengaktifkan/menonaktifkan Equalizer
-- Mengatur level band berdasarkan indeks dan rentang millibel yang dilaporkan perangkat
-- Mengembalikan capability terbaru setelah perubahan agar state Flutter tetap sinkron
-- Menolak indeks band dan level di luar rentang sebelum perubahan diterapkan
-- Menambahkan API service Flutter dan unit test untuk command, sinkronisasi capability, dan validasi rentang
-- Menambahkan akses Equalizer dari header Now Playing
-- Menambahkan halaman bottom sheet Equalizer dengan sakelar ON/OFF
-- Menampilkan slider sesuai band dan rentang level perangkat
-- Menampilkan level dB aktual, refresh capability, reset flat, dan state unsupported
-- Menggunakan AudioEffectsService yang dimiliki DnAudioHandler tanpa membuat audio pipeline baru
-
-**Status: Implementasi UI dan engine tersedia di GitHub — menunggu format, analisis, pengujian, dan build Android lokal**
-
-### 7.3 — Preset Audio
-
-- Menambahkan preset Flat, Bass, Vocal, Treble, dan Rock sebagai kurva bawaan DN Audio
-- Memetakan kurva lima titik frekuensi ke band aktual perangkat menggunakan interpolasi logaritmik
-- Membatasi gain sesuai rentang millibel yang dilaporkan perangkat
-- Menambahkan pemilih preset pada halaman Equalizer
-- Menggunakan perintah band yang sama pada AudioEffectsService dan session native aktif
-- Menambahkan unit test untuk pemetaan Flat, kurva preset, pembatasan rentang, dan ID preset tidak dikenal
-
-**Status: Selesai — pengguna mengonfirmasi pengujian lokal clean**
-
-### 7.4 — Bass Enhancement & Virtualizer
-
-- Menambahkan operasi native untuk mengaktifkan/menonaktifkan BassBoost dan Virtualizer secara independen
-- Menambahkan pengaturan intensitas menggunakan rentang standar Android 0–1000 dan membaca `strengthSupported` dari perangkat
-- Melaporkan status aktif dan kekuatan aktual kedua efek melalui capability snapshot
-- Menambahkan validasi sesi, dukungan efek, kemampuan strength, dan rentang sebelum perintah diterapkan
-- Menambahkan API service Flutter dan unit test untuk command, sinkronisasi capability, serta validasi
-- Menambahkan kontrol toggle dan slider intensitas pada halaman Equalizer; slider hanya aktif jika perangkat mendukung strength control
-- Mempertahankan satu `AudioEffectsService`, satu audio session, dan satu `AudioPlayer` milik `DnAudioHandler`
-
-**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian, dan build Android lokal**
-
-### 7.5 — Persistence, UI & Device Stabilization
-
-- Menyediakan repository SQLite lokal terpisah untuk preferensi efek audio
-- Menyimpan status Equalizer, preset, level band, BassBoost, dan Virtualizer
-- Menambahkan EqualizerController sebagai pengelola preferensi dan pemulihan efek saat session baru aktif
-- Menghubungkan tab Equalizer Home ke halaman Equalizer lengkap
-- Mempertahankan akses Equalizer dari Playing Now melalui bottom sheet
-- Menjaga kedua entry point menggunakan DnAudioHandler dan AudioEffectsService yang sama
-- Menguji efek saat lagu berganti, queue berubah, aplikasi background, dan session audio diperbarui
-- Memastikan playback tetap berjalan ketika efek tidak tersedia atau gagal diinisialisasi
-
-**Status: Selesai — pengguna mengonfirmasi pengujian lokal clean**
-
-## 9. Stage 8 — Sleep Timer
-
-- Pengaturan durasi
-- Countdown
-- Otomatis menghentikan musik
-- Timer dikelola oleh audio handler agar tidak bergantung pada lifecycle halaman UI
-
-### 8.1 — Sleep Timer Architecture
-
-- Menambahkan `SleepTimerService` dengan countdown berbasis `Stopwatch` monotonic
-- Menyediakan start, cancel, remaining time, dan stream pembaruan countdown
-- Memastikan timer pengganti membatalkan timer sebelumnya dan expiry hanya dipicu satu kali
-- Mengikat service ke `DnAudioHandler` yang sama dengan playback engine utama
-- Menjeda playback saat timer berakhir tanpa menghapus queue atau membuat instance `AudioPlayer` baru
-- Membatalkan timer saat audio handler dihentikan dan melepaskan resource saat dispose
-- Menambahkan unit test untuk start, cancel, replacement, expiry, validasi durasi, dan disposal
-
-**Status: Implementasi tersedia di GitHub — menunggu analisis, pengujian lokal, dan verifikasi perangkat**
-
-### 8.2 — Timer UI & Controls
-
-- Menambahkan `SleepTimerController` sebagai state presenter bersama untuk entry point Home dan Now Playing
-- Mendaftarkan controller secara permanent pada binding Home agar countdown tetap terpantau lintas tab dan bottom sheet
-- Menambahkan bottom sheet Sleep Timer dengan pilihan cepat 15, 30, 45, 60, 90, dan 120 menit
-- Menambahkan custom duration melalui pilihan jam dan menit
-- Menampilkan status timer aktif, countdown tersisa, dan informasi ketika timer selesai
-- Menambahkan aksi Cancel Timer dan mengganti timer aktif ketika durasi baru dipilih
-- Menambahkan akses Sleep Timer dari header Home dan Now Playing dengan indikator visual saat timer aktif
-- Memakai `SleepTimerService` milik `DnAudioHandler` yang sama; tidak membuat timer atau audio engine kedua
-- Menambahkan unit test untuk format countdown menit/detik, jam/menit/detik, dan nilai nol
-
-**Status: Fitur utama berjalan — perbaikan SafeArea tersedia di GitHub dan menunggu verifikasi lokal**
-
-### 8.3 — Playback Integration (Stop Playback)
-
-- Menetapkan satu perilaku saat timer berakhir: langsung menghentikan playback dengan pause
-- Tidak menyediakan Fade Out atau transisi volume bertahap
-- Menghubungkan callback expiry `SleepTimerService` ke `DnAudioHandler` yang mengendalikan satu `AudioPlayer` utama
-- Memastikan expiry tidak menghapus queue atau membuat audio player baru
-- Menangani kegagalan pause dengan logging agar tidak memutus lifecycle audio service
-- Memastikan perilaku timer saat aplikasi berada di background melalui audio service
-
-**Status: Integrasi playback sudah tersedia — menunggu verifikasi background dan pengujian lokal Stage 8.3**
-
-### 8.4 — Stabilization & Testing
-
-- Menambahkan unit test untuk publikasi countdown dan event zero saat expiry
-- Menambahkan unit test disposal ketika timer masih aktif agar callback expiry tidak terpanggil setelah service ditutup
-- Menambahkan unit test pembatalan timer aktif dan publikasi nilai null
-- Pengujian timer saat lagu berganti dan queue berubah pada perangkat
-- Pengujian background, pembatalan, dan lifecycle audio service pada perangkat
-- Validasi akurasi countdown dan expiry pada perangkat
-
-**Status: Selesai — pengguna mengonfirmasi pengujian clean**
-
-## 10. Stage 9 — Product Completion, Settings & Release
-
-### 9.0 — Release Readiness & Functional Audit
-
-Temuan audit repository:
-- Home memiliki struktur tampilan, tetapi belum berfungsi sebagai dashboard interaktif.
-- Search field Home masih berupa dekorasi dan belum membuka pencarian Library.
-- Shortcut Songs, Albums, Artists, dan Folders belum memiliki aksi.
-- Section Recently Played masih berupa placeholder; belum ada listening-history persistence yang dapat menjadi sumber data.
-- Label "See all" belum memiliki aksi.
-- Home belum menyediakan akses ke Settings.
-- Library scan mengambil semua audio dari MediaStore; belum ada preferensi format/extension yang dapat dipilih pengguna.
-- Android MediaStore query berada di `MainActivity.kt`, sedangkan pemanggilan scan Flutter berada di `AudioLibraryService` dan `LibraryController`.
-- Belum ditemukan modul Settings atau penyimpanan preferensi aplikasi umum pada struktur `lib/modules` saat audit ini.
-
-Keputusan implementasi:
-- Pertahankan Flutter + GetX MVC dan struktur feature module.
-- Format filter harus diterapkan pada query MediaStore/native scan, bukan hanya menyembunyikan item di UI.
-- Preferensi format disimpan lokal dan diterapkan setiap kali scan/refresh dilakukan.
-- Jangan menampilkan Recently Played seolah-olah berfungsi sebelum sumber riwayat pemutaran tersedia. Bangun listening history secara eksplisit atau gunakan konten Home berbasis data yang sudah tersedia.
-- Folder browsing tidak boleh ditampilkan sebagai fitur aktif sebelum implementasinya tersedia.
-
-**Status: Audit repository selesai — siap masuk implementasi Home**
+## Stage 9 — Product Completion, Settings & UI/UX
 
 ### 9.1 — Home Functional Completion
 
-- Menghubungkan search entry point Home ke pencarian Library.
-- Menghubungkan shortcut Songs, Albums, dan Artists ke section Library yang sesuai.
-- Menghapus atau menonaktifkan shortcut Folders sampai folder browsing benar-benar tersedia.
-- Menghubungkan "See all" ke halaman/section terkait atau menghapus affordance yang belum memiliki aksi.
-- Mengganti placeholder Recently Played dengan data riwayat pemutaran yang nyata, atau mengubah hierarki Home menjadi library-first sampai listening history selesai.
-- Menyediakan akses Settings dari header Home.
-- Menambahkan unit/widget tests untuk aksi Home dan navigasi.
+- Home search entry point and library shortcuts.
+- Real current playback context instead of fabricated history.
+- Settings access and removal of unsupported folder/history affordances.
 
-- Menginisialisasi pemuatan Library ketika HomeController dibuat agar Home siap menggunakan data koleksi aktual.
-- Menghubungkan pencarian Home ke hasil pencarian Songs di Library melalui submit keyboard atau tombol search.
-- Menghubungkan shortcut Songs, Albums, dan Artists ke section Library yang sesuai.
-- Mengganti placeholder Recently Played yang belum memiliki sumber history dengan Now Playing yang hanya muncul saat ada lagu aktif.
-- Menghapus shortcut Folders karena folder browsing belum tersedia.
-- Menghapus affordance See all yang belum memiliki aksi.
+**Status: Implemented.**
 
-**Status: Perbaikan sintaks Home tersedia di GitHub — menunggu format, analisis, dan pengujian lokal ulang**
+### 9.2 — Settings & Audio Library Preferences
 
-Catatan perbaikan setelah hasil `flutter analyze`:
-- Menghapus `const` pada daftar child `IndexedStack` karena `_HomeTab` menerima controller runtime.
-- Memperbaiki newline yang tertulis sebagai karakter literal `\\n` pada pemanggilan `_SearchField` dan deklarasi field.
-- Menghapus `_PlaceholderTab` yang sudah tidak digunakan.
-- Commit perbaikan: `c88ced4a64f5ee2161ffea2ab240222010d72a6c`.
+- SQLite settings repository and audio-format preferences.
+- Native MediaStore format filtering.
+- Playback speed and audio-experience preferences.
 
-
-Catatan koreksi lanjutan:
-- Pull sebelumnya belum menghilangkan dua literal `\\n` pada pemanggilan dan deklarasi `_SearchField`; pola penggantian pertama tidak cocok dengan isi file sebenarnya.
-- Literal tersebut kini diganti dengan newline Dart yang benar pada commit `6251205feaeeae2d716754e93ccdd9dd8aeae8f3`.
-
-### 9.2 — Settings Foundation & Audio Library Preferences
-
-- Membuat modul Settings mengikuti pola GetX MVC.
-- Membuat halaman Settings dengan kelompok Audio Library, Playback, Audio Experience, Storage & Maintenance, dan About.
-- Menambahkan pilihan format audio yang dapat diaktifkan/nonaktifkan pengguna.
-- Menyediakan default format yang umum: MP3, FLAC, WAV, M4A, AAC, OGG, dan OPUS; daftar dapat diperluas berdasarkan dukungan MediaStore.
-- Menyimpan preferensi secara persisten di perangkat.
-- Menerapkan filter format pada query Android MediaStore.
-- Menerapkan ulang preferensi ketika scan ulang atau aplikasi dibuka.
-- Menambahkan unit test untuk model/repository preferensi dan pemetaan filter.
-
-#### 9.2.3 — Native MediaStore Format Filtering
-
-- Mengubah MethodChannel `getSongs` agar menerima daftar extension terpilih dari Flutter.
-- Memvalidasi extension di sisi native menggunakan allowlist MP3, FLAC, WAV, M4A, AAC, OGG, dan OPUS; input tak dikenal diabaikan.
-- Menerapkan filter langsung pada query Android MediaStore menggunakan `DISPLAY_NAME` dan akhiran extension, bukan filter MIME yang dapat mengelompokkan format berbeda.
-- Mempertahankan filter durasi audio lebih dari nol dan urutan judul seperti sebelumnya.
-- Menangani pilihan kosong sebagai hasil scan kosong, bukan kembali ke semua format.
-- Menjaga pemanggilan Flutter tanpa argumen tetap kompatibel dengan default semua format.
-- Menambahkan unit test MethodChannel untuk normalisasi, pilihan kosong, dan default format.
-
-**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian Flutter, dan build Android lokal**
-
-#### 9.2.2 — Settings UI
-
-- Menambahkan halaman Settings dengan desain dark premium yang konsisten dengan DN Audio.
-- Menambahkan akses Settings dari ikon gear di header Home dan route khusus `/settings`.
-- Menampilkan tujuh format audio sebagai switch individual: MP3, FLAC, WAV, M4A, AAC, OGG, dan OPUS.
-- Perubahan format disimpan langsung melalui SettingsController dan SettingsRepository SQLite; kegagalan penyimpanan mengembalikan pilihan sebelumnya serta menampilkan pesan inline.
-- Menambahkan Reset defaults, status jumlah format aktif, peringatan jika semua format dinonaktifkan, dan bagian About DN Audio.
-- Menambahkan unit test untuk load, perubahan, rollback saat gagal simpan, dan reset format.
-- UI belum memicu scan ulang atau mengubah hasil MediaStore pada tahap ini; integrasi filter dilakukan pada 9.2.3–9.2.4.
-
-**Status: Implementasi tersedia di GitHub — menunggu format, analisis, dan pengujian lokal**
-
-#### 9.2.1 — Preferences Foundation
-
-- Menambahkan model AudioLibraryPreferences dengan daftar extension yang didukung dan default MP3, FLAC, WAV, M4A, AAC, OGG, dan OPUS.
-- Menormalisasi extension (huruf kecil dan tanpa titik) serta mengabaikan extension yang tidak didukung.
-- Menyediakan serialisasi model ke/dari map untuk penyimpanan lokal.
-- Menambahkan SettingsRepository berbasis SQLite dengan database terpisah dn_audio_settings.db dan tabel key-value agar dapat diperluas untuk preferensi aplikasi berikutnya.
-- Menambahkan unit test untuk default, normalisasi, serialisasi, data tidak valid, dan pilihan kosong.
-- Belum menghubungkan repository ke UI atau MediaStore; integrasi dilakukan pada sub-tahap berikutnya.
-
-**Status: Implementasi tersedia di GitHub — menunggu format, analisis, dan pengujian lokal**
-
-### 9.3 — Playback & Audio Experience Settings
-
-- Menentukan dan mengimplementasikan opsi playback yang benar-benar didukung engine.
-- Menyediakan pengaturan preferensi audio yang terhubung ke EqualizerController/AudioEffectsService.
-- Tidak menampilkan toggle untuk perilaku yang belum memiliki implementasi nyata.
-- Menambahkan pengujian persistensi dan penerapan preferensi.
-
-#### 9.3.1 — Playback Speed Preference
-
-- Menambahkan model PlaybackPreferences dengan default 1.0× dan opsi 0.5×, 0.75×, 1.0×, 1.25×, 1.5×, 1.75×, dan 2.0×.
-- Memperluas SettingsRepository SQLite yang sudah ada untuk menyimpan preferensi playback tanpa membuat database baru.
-- Menambahkan kontrol Playback Speed pada Settings dan menerapkan perubahan langsung melalui AudioPlayer.setSpeed milik DnAudioHandler.
-- Memulihkan playback speed sebelum aplikasi menjalankan UI sehingga preferensi berlaku sejak playback pertama.
-- Memvalidasi nilai yang tersimpan; nilai yang tidak didukung kembali ke 1.0×.
-- Menambahkan unit test model dan controller untuk default, pemulihan, persistensi, validasi, serta rollback ketika penyimpanan gagal.
-
-**Status: Implementasi tersedia di GitHub — menunggu flutter format, flutter analyze, flutter test, dan verifikasi perangkat lokal.**
-
-#### 9.3.2 — Audio Experience Preferences
-
-- Memperkuat pemulihan preferensi pada setiap audio session dengan antrean session terbaru, pemeriksaan session aktif di setiap operasi, dan validasi hasil setiap efek.
-- Mencegah session baru terlewat ketika proses restore session sebelumnya masih berlangsung.
-- Menambahkan retry pemulihan untuk session aktif setelah kegagalan sementara.
-- Mengintegrasikan akses Equalizer & Effects ke Settings tanpa membuat audio player atau audio pipeline baru.
-- Mempertahankan penyimpanan SQLite yang sudah ada untuk preset, level band, Equalizer, Bass Boost, dan Virtualizer.
-- Verifikasi lokal mencakup pergantian lagu/session, pergantian preset, restart aplikasi, serta perangkat yang tidak mendukung salah satu efek.
-
-**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian Flutter, dan verifikasi perangkat lokal.**
+**Status: Implemented. Automated and device verification is included in final regression.**
 
 ### 9.4 — Storage & Maintenance
 
-#### 9.4.1 — Library Overview & Rescan
+- Library overview and rescan.
+- Artwork cache size/count information.
+- Safe artwork cache cleanup with explicit scope and confirmation.
 
-- Menambahkan ringkasan jumlah lagu yang sudah terindeks pada Settings.
-- Menyediakan aksi Scan Library yang menjalankan pemindaian ulang melalui LibraryController yang sudah ada.
-- Menampilkan indikator proses dan hasil scan, termasuk kondisi izin audio tidak diberikan.
-- Mempertahankan daftar lagu sebelumnya ketika pemindaian ulang gagal.
-- Menambahkan unit test untuk pemindaian ulang dan preservasi data ketika scan gagal.
-
-**Status: Selesai — pengguna melanjutkan ke tahap 9.4.2.**
-
-#### 9.4.2 — Artwork Cache Information
-
-- Menambahkan MethodChannel native untuk membaca isi direktori `cacheDir/dn_audio_artwork`.
-- Menghitung jumlah file dan total byte secara rekursif tanpa membaca atau mengubah file cache.
-- Menambahkan ArtworkCacheInfo pada ArtworkService dan format ukuran B, KB, MB, atau GB.
-- Menampilkan ukuran cache dan jumlah file pada Settings dengan indikator loading, retry saat gagal, dan refresh manual.
-- Menambahkan unit test parsing metadata dan pemformatan ukuran.
-
-**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian Flutter, build Android, dan verifikasi perangkat lokal.**
-
-#### 9.4.3 — Artwork Cache Cleanup
-
-- Menambahkan operasi native `clearArtworkCache` yang hanya menghapus isi direktori `cacheDir/dn_audio_artwork`.
-- Memvalidasi canonical path sebelum penghapusan dan menghentikan operasi jika ada entri yang gagal dihapus.
-- Menyinkronkan proses resolve artwork dan cleanup agar operasi yang sedang berjalan selesai sebelum cache dibersihkan.
-- Menunggu seluruh resolve artwork yang sedang berjalan, membersihkan Future cache di ArtworkService, dan menahan permintaan artwork baru sampai cleanup selesai.
-- Menambahkan konfirmasi pengguna, indikator proses, hasil jumlah file yang dihapus, penanganan error, dan refresh statistik cache.
-- Menegaskan bahwa file musik, database playlist, preferensi playback/audio, serta data aplikasi lain tidak disentuh.
-- Menambahkan unit test untuk pemanggilan native cleanup dan hasil jumlah file.
-
-**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian Flutter, build Android, dan verifikasi perangkat lokal.**
+**Status: Implemented. Final device regression for scan failure/retry and cache cleanup remains required.**
 
 ### 9.5 — About DN Audio
 
-- Mengembangkan panel About pada Settings dengan identitas DN Audio dan tagline "Your Music. Your Experience."
-- Menambahkan deskripsi produk yang menjelaskan DN Audio sebagai pemutar musik offline premium.
-- Menampilkan versi aplikasi dan build number secara dinamis melalui package metadata.
-- Menampilkan Digital Native Dev sebagai developer.
-- Membuka halaman lisensi pihak ketiga menggunakan halaman lisensi bawaan Flutter.
-- Tidak menampilkan tautan Privacy Policy sampai URL resmi tersedia.
+- Product identity and developer attribution.
+- Dynamic app version/build.
+- Open-source license information.
 
-**Status: Implementasi tersedia di GitHub — menunggu format, analisis, pengujian Flutter, dan verifikasi perangkat lokal.**
+**Status: Implemented.**
 
-### 9.6 — Final UI/UX Polish
+### 9.6 — Final UI/UX Refinement
 
-- Menerapkan arah Premium Editorial dengan aksen Monochrome sesuai `docs/DESIGN_DIRECTION.md`.
-- Memoles Home, Library, Settings, Playlist, Now Playing, Equalizer, dan Sleep Timer.
-- Menjaga seluruh fungsi, playback, queue, background audio, dan playlist tetap utuh.
-- Menyelesaikan accessibility, safe-area, text scaling, dan responsive checks.
+Approved design source: [docs/DESIGN_DIRECTION.md](docs/DESIGN_DIRECTION.md).
 
-**Status: Direncanakan**
+Locked design direction:
+- Immersive Minimal across the application.
+- Editorial Now Playing.
+- Premium Dark monochrome palette: black, white, and grey.
+- Poppins typography direction.
+- Preserve feature behavior and architecture; do not invent unsupported features.
 
-### 9.7 — Performance, Regression & Release Preparation
+Implementation slices recorded:
+- 9.6.1 — design foundation and shared tokens.
+- 9.6.2 — shared components.
+- 9.6.3 — Home, Library, Album, and Artist surfaces.
+- 9.6.4 — Now Playing.
+- 9.6.5 — Playlists and Playlist Detail.
+- 9.6.6 — Equalizer and Sleep Timer.
+- 9.6.7 — Settings, Storage, and About.
+- 9.6.8 — visual QA refinements and regression checklist.
 
-- Audit performa scan, artwork cache, memory, dan battery usage.
-- Regression test seluruh fitur utama.
-- Verifikasi audio focus, headset/Bluetooth, lock screen, dan interupsi audio.
-- Menyiapkan app icon, splash screen, versioning, signing, release build, privacy policy, dan Google Play Store checklist.
-
-**Status: Direncanakan**
-
----
-
-## Posisi Pengembangan Saat Ini
-
-# Stage 9.4.2 — Artwork Cache Information
-
-9.4.1 — Library Overview & Rescan telah dilanjutkan ke tahap berikutnya. 9.4.2 — Artwork Cache Information kini menampilkan ukuran dan jumlah file cache artwork melalui MethodChannel native, dengan refresh manual dan unit test model. Menunggu format, analisis, pengujian Flutter, build Android, dan verifikasi perangkat lokal.
-
-# Stage 9.2.1 — Preferences Foundation
-
-Stage 9.1 telah dinyatakan bersih oleh pengguna. Fondasi preferensi Settings tersedia di GitHub: model AudioLibraryPreferences, SettingsRepository SQLite, dan unit test model. Menunggu format, analisis, dan pengujian lokal sebelum melanjutkan ke Settings UI.
-
-Catatan hasil pengujian lokal dari pengguna: ditemukan tiga kegagalan pada test Audio Effects, Sleep Timer, dan widget Home. Perbaikan test telah dikirim: mock attachSession kini mengikuti kontrak respons native (capabilities langsung), assertion countdown menggunakan toleransi waktu Stopwatch, dan widget test mendaftarkan DnAudioHandler sebelum membangun aplikasi. Menunggu verifikasi ulang lokal.
-
-
+**Status: Implementation slices recorded in the repository. Final visual/accessibility QA and physical-device regression are not yet declared complete.**
 
 ---
 
-## Aturan Penyelesaian Tahap
+## Stage 10 — Final Repository Audit & Release Preparation
 
-- Status tahap hanya diubah menjadi **Selesai** setelah implementasi dan pengujian lokal dinyatakan berhasil.
-- Implementasi di GitHub tidak otomatis berarti tahap sudah terverifikasi di perangkat.
-- Setiap tahap dikerjakan bertahap agar perubahan mudah diuji dan masalah mudah ditelusuri.
-- Pengembangan utama dilakukan pada branch `main`.
+### 10.1 — Android Configuration & Dependencies
+
+- Flutter/Android toolchain review.
+- Application ID, version, SDK configuration.
+- Debug APK build validation.
+
+**Status: Audit complete for the checked environment.**  
+The user's local debug APK was reported built successfully with application ID com.digitalnative.dn_audio, version 1.0.0+1, minSdk 24, compileSdk 36, and targetSdk 36. This does not certify a production release artifact.
+
+### 10.2 — Permissions, Manifest & Data Behavior
+
+- Main manifest and permission declarations reviewed.
+- Android MediaStore permission handling reviewed.
+- Local SQLite settings and playlist storage reviewed.
+- No direct analytics/ad/Firebase dependency was identified in the reviewed dependency manifest.
+
+**Status: Static audit complete; device permission regression and merged release manifest review pending.**  
+This static review is not a complete privacy audit.
+
+### 10.3 — Test Coverage & Feature Verification
+
+- Repository inventory identified 17 Dart test files and 89 declared test cases at the audit baseline.
+- No integration-test directory or GitHub Actions workflow was found at that baseline.
+- Four test failures were identified and test-only fixes were committed:
+  - initialize GetX translations in playlist controller tests;
+  - align the Home widget smoke test with the current UI rather than a removed tagline.
+
+**Status: In progress — the updated test suite must be rerun locally and results recorded.**  
+Test inventory counts describe source declarations, not passing test results.
+
+### 10.4 — Documentation & Release Checklist
+
+- 10.4.1 — README reconstruction.
+- 10.4.2 — Roadmap synchronization.
+- 10.4.3 — Release checklist and signing/AAB documentation.
+- 10.4.4 — Privacy Policy and Play Store preparation notes.
+
+**Status: In progress. 10.4.1 and 10.4.2 are committed; 10.4.3 and 10.4.4 remain.**
+
+---
+
+## Stage 11 — QA & Regression Testing
+
+Planned final regression scope:
+
+- First-launch permission, deny, grant, revoke, and retry.
+- Library scan, refresh, empty library, and scan errors.
+- Songs, Albums, Artists, search, and collection playback.
+- Play/pause, seek, next/previous, shuffle, and repeat.
+- Background playback, notification, lock screen, audio focus, and headset behavior.
+- Playlist create/rename/delete, add/remove tracks, order, and persistence after restart.
+- Equalizer presets/bands and supported/unsupported effects.
+- Sleep Timer quick/custom duration, cancellation, and expiry while backgrounded.
+- Playback speed, settings persistence, library rescan, and artwork cache cleanup.
+- Localization, text scaling, accessibility, insets, and compact screen layouts.
+
+**Status: Not started as a formal release regression pass.**
+
+## Stage 12 — Android Release Engineering
+
+- Create and securely store production upload keystore.
+- Replace debug signing configuration with production release signing.
+- Verify release build type, merged manifest, permissions, and app bundle.
+- Build and validate signed Android App Bundle (AAB).
+- Verify version code/name and signing certificate.
+
+**Status: Not started.**
+
+**Release blocker:** the previously audited release build configuration used the debug signing config. Production signing must be configured before a Play Store release. Never commit keystores or passwords.
+
+## Stage 13 — Google Play Store Preparation
+
+- Final app name, short/full description, screenshots, icon, and feature graphic.
+- Privacy Policy hosted at a public URL.
+- Data Safety, Ads, App Access, Content Rating, and target audience declarations as applicable.
+- Permission rationale and store compliance review.
+- Internal/closed testing track preparation.
+
+**Status: Not started.**
+
+## Stage 14 — Release & Post-release Monitoring
+
+- Upload to Play Console testing track.
+- Resolve pre-launch report and tester feedback.
+- Production rollout after approval.
+- Monitor crashes, ANRs, reviews, and user-reported issues.
+- Plan patch releases and post-release improvements.
+
+**Status: Not started.**
+
+---
+
+## Current Development Position
+
+**Current stage: Stage 10.4 — Documentation & Release Checklist Audit**
+
+- 10.4.1 README reconstruction: committed.
+- 10.4.2 ROADMAP synchronization: in progress.
+- 10.4.3 Release checklist: pending.
+- 10.4.4 Privacy and Play Store preparation: pending.
+
+The next work item is **Stage 10.4.3 — create the release checklist**.
+
+## Completion Rules
+
+1. A commit on GitHub proves that a change is present in the repository; it does not prove local build or device verification.
+2. Mark a stage complete only when its stated acceptance checks have been performed and results recorded.
+3. Do not claim tests, builds, signing, or device checks passed unless the developer reports the result or an available tool verifies it.
+4. Keep changes small, scoped, and reviewable.
+5. Develop on the main branch unless the project owner explicitly changes this decision.
+6. Never commit private signing credentials, keystores, passwords, or personal secrets.
