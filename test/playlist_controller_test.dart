@@ -1,5 +1,8 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get/get.dart';
 
+import 'package:dn_audio/core/localization/app_translations.dart';
 import 'package:dn_audio/modules/library/models/song.dart';
 import 'package:dn_audio/modules/playlist/controllers/playlist_controller.dart';
 import 'package:dn_audio/modules/playlist/models/playlist.dart';
@@ -7,6 +10,11 @@ import 'package:dn_audio/modules/playlist/models/playlist_song.dart';
 import 'package:dn_audio/modules/playlist/services/playlist_repository.dart';
 
 void main() {
+  setUpAll(() {
+    Get.addTranslations(AppTranslations().keys);
+    Get.locale = const Locale('en', 'US');
+  });
+
   group('PlaylistController', () {
     test('loads playlists on initialization', () async {
       final repository = _FakePlaylistRepository();
