@@ -278,11 +278,11 @@ Planned final regression scope:
 **Current stage: Stage 10.4 — Documentation & Release Checklist Audit**
 
 - 10.4.1 README reconstruction: committed.
-- 10.4.2 ROADMAP synchronization: in progress.
-- 10.4.3 Release checklist: pending.
+- 10.4.2 ROADMAP synchronization: committed.
+- 10.4.3 Release checklist: committed at `docs/RELEASE_CHECKLIST.md`.
 - 10.4.4 Privacy and Play Store preparation: pending.
 
-The next work item is **Stage 10.4.3 — create the release checklist**.
+The next work item is **Stage 10.4.4 — Privacy Policy and Play Store preparation notes**.
 
 ## Completion Rules
 
