@@ -26,5 +26,7 @@ void main() {
     expect(translations['id_ID']?['nav_home'], 'Beranda');
     expect(translations['en_US']?['settings_title'], 'Settings');
     expect(translations['id_ID']?['settings_title'], 'Pengaturan');
+    expect(translations['en_US']?['privacy_policy'], 'Privacy Policy');
+    expect(translations['id_ID']?['privacy_policy'], 'Kebijakan Privasi');
   });
 }
