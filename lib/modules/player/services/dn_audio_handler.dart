@@ -23,6 +23,22 @@ class DnAudioHandler extends BaseAudioHandler
   StreamSubscription<void>? _becomingNoisySubscription;
   int _artworkRequestId = 0;
 
+  /// Explicit close action for the Android media notification.
+  /// Uses the stop media action so AudioService routes it to [stop].
+  static const MediaControl notificationCloseControl = MediaControl(
+    androidIcon: 'drawable/ic_action_close',
+    label: 'Close',
+    action: MediaAction.stop,
+  );
+
+  @visibleForTesting
+  static List<MediaControl> notificationControls({required bool isPlaying}) => [
+        MediaControl.skipToPrevious,
+        if (isPlaying) MediaControl.pause else MediaControl.play,
+        MediaControl.skipToNext,
+        notificationCloseControl,
+      ];
+
   DnAudioHandler() {
     sleepTimerService = SleepTimerService(
       onExpired: _handleSleepTimerExpired,
@@ -140,11 +156,7 @@ class DnAudioHandler extends BaseAudioHandler
 
     playbackState.add(
       PlaybackState(
-        controls: [
-          MediaControl.skipToPrevious,
-          if (player.playing) MediaControl.pause else MediaControl.play,
-          MediaControl.skipToNext,
-        ],
+        controls: notificationControls(isPlaying: player.playing),
         systemActions: const {MediaAction.seek},
         androidCompactActionIndices: const [0, 1, 2],
         processingState: processingState,
