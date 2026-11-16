@@ -114,6 +114,12 @@ Never commit signing keys, passwords, or other release credentials to the reposi
 
 The application is organized by core infrastructure and feature modules. The project uses GetX-based controllers and separates UI from services and local persistence. Android-specific functionality is implemented in the Android host project and accessed through platform channels where required.
 
+## Privacy Policy
+
+The DN Audio Privacy Policy is published separately and is also accessible from **Settings → About → Privacy Policy**:
+
+https://dedealmustaqim.github.io/dn_audio_privacy/
+
 ## Quality and release status
 
 DN Audio is in **release preparation**. A successful debug build does not by itself mean that a production release is ready.
