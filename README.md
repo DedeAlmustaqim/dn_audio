@@ -1,59 +1,134 @@
 # DN Audio
 
-**DN Audio** is a premium offline music player for Android, built by **Digital Native Dev**.
+**DN Audio** is an offline-first music player for Android, developed by **Digital Native Dev**.
 
 > Your Music. Your Experience.
 
+DN Audio plays music stored on the user's device. It is designed around a focused local listening experience, with library browsing, playlists, playback controls, background audio, and device-supported audio effects.
+
 ## Product direction
 
-- Offline-first playback from the device's local music library.
-- Modern, minimal Premium Dark interface.
-- Library browsing, playlists, queue and Now Playing.
-- Background playback with notification and lock-screen controls.
-- Equalizer and audio effects where supported by the device.
-- Sleep timer designed for reliable operation while the screen is off.
+- **Product model:** offline-first; music is read from the device's local audio library.
+- **Visual direction:** Immersive Minimal across the app, with an Editorial Now Playing experience.
+- **Theme:** Premium Dark, using a monochrome palette of black, white, and grey.
+- **Typography direction:** Poppins.
+- **Localization:** English and Bahasa Indonesia.
+- **Platform:** Android.
 
-## Tech stack
+DN Audio is not a streaming service. It does not advertise cloud music, online discovery, or cloud library synchronization.
 
-- Flutter
-- GetX for state management and navigation
-- just_audio for audio playback
-- audio_service for the Android background audio service and media session
-- Android MediaStore through a platform MethodChannel
-- Android-first development
+## Features
 
-## Implemented
+### Music library
+- Scan and browse local audio through Android MediaStore.
+- Browse Songs, Albums, and Artists.
+- Search local tracks by title, artist, and album.
+- Handle audio-library permission states and library refresh.
+- Display available track metadata and local album artwork.
 
-- Premium Dark application shell and bottom navigation.
-- Local audio library scanning through Android MediaStore.
-- Audio permission handling when the Library tab is first opened.
-- Song search by title, artist, and album.
-- Audio playback with play, pause, seek, previous, and next controls.
+### Playback
+- Play, pause, seek, previous, and next.
 - Shuffle and repeat modes.
-- Persistent mini-player and expanded Now Playing view.
-- Background audio handler foundation with a shared just_audio engine and media queue/state bridge.
-- Android media playback foreground service and media button receiver declarations.
-- Media notification metadata includes track title, artist, album, duration, and available MediaStore album artwork URI.
+- Persistent mini-player and expanded Now Playing screen.
+- Background playback through Android media playback service integration.
+- Media notification and lock-screen playback controls.
+- Audio-session handling, including pausing when headphones or an audio route are disconnected where supported by the platform.
 
-## Planned
+### Playlists
+- Create, rename, and delete user playlists.
+- Add and remove tracks.
+- Play a playlist or an individual track.
+- Persist playlist data locally.
 
-- Background playback and lifecycle validation (Stage 4.2).
-- Media notification metadata and album artwork integration (Stage 4.3).
-- Lock-screen controls and audio focus refinements (Stage 4.4).
-- Playlist management and playback queue UI.
-- Album artwork and richer metadata presentation.
-- Equalizer and supported audio effects.
-- Sleep timer.
-- Listening history and recently played.
+### Audio experience
+- Equalizer presets and frequency-band controls where supported by the device.
+- Bass Boost and Virtualizer controls where supported by the device and audio session.
+- Playback speed preference.
+- Sleep timer with quick/custom duration and cancellation.
 
-## Development
+Audio-effect availability depends on the Android device and active audio session. The app should not represent an unsupported effect as active.
 
-    flutter pub get
-    dart format lib test
-    flutter analyze
-    flutter test
-    flutter run
+### Settings and maintenance
+- English and Bahasa Indonesia interface.
+- Library preferences and rescan.
+- Artwork-cache information and cleanup.
+- About screen with app version/build information and open-source licenses.
 
-## Current status
+## Technology
 
-Stages 1–3.5 and Stage 4.1 are complete. Stage 4.2 background playback has passed local device verification. Stage 4.3 adds media notification metadata and album artwork; local verification is pending.
+- **Flutter** — Android application UI and application framework.
+- **Dart** — application language.
+- **GetX** — state management, dependency management, navigation, and translations.
+- **just_audio** — audio playback engine.
+- **audio_service** — background audio and media-session integration.
+- **audio_session** — audio-session configuration.
+- **sqflite** — local settings and playlist persistence.
+- **Android MediaStore** — access to indexed local audio and artwork metadata.
+- **Kotlin / MethodChannel** — Android platform integration, including native audio-library and audio-effects operations.
+
+## Requirements
+
+- Flutter SDK compatible with the project configuration.
+- Android SDK and Android toolchain.
+- Android device or emulator.
+- Android minimum SDK: **24**.
+- The app requests access to local audio using the Android media permissions appropriate to the OS version.
+
+## Getting started
+
+Install dependencies:
+
+```bash
+flutter pub get
+```
+
+Run static analysis and tests:
+
+```bash
+dart format lib test
+flutter analyze
+flutter test
+```
+
+Run on a connected Android device or emulator:
+
+```bash
+flutter run
+```
+
+Build a debug APK:
+
+```bash
+flutter build apk --debug
+```
+
+For a Play Store release, configure a private upload keystore and release signing locally before building an Android App Bundle:
+
+```bash
+flutter build appbundle --release
+```
+
+Never commit signing keys, passwords, or other release credentials to the repository.
+
+## Project structure
+
+The application is organized by core infrastructure and feature modules. The project uses GetX-based controllers and separates UI from services and local persistence. Android-specific functionality is implemented in the Android host project and accessed through platform channels where required.
+
+## Quality and release status
+
+DN Audio is in **release preparation**. A successful debug build does not by itself mean that a production release is ready.
+
+Before release, the project still requires the applicable checks to be completed and recorded, including:
+
+- Full automated test run and review of any failures.
+- Physical-device regression for permissions, library scanning, playback, background playback, notifications, playlists, sleep timer, and audio effects.
+- Release-manifest and permission review.
+- Production upload-key configuration and signed AAB validation.
+- Privacy Policy and Google Play Data Safety / app-content declarations.
+- Store listing assets and final Play Console review.
+
+See [ROADMAP.md](ROADMAP.md) for development stages and [docs/DESIGN_DIRECTION.md](docs/DESIGN_DIRECTION.md) for the approved UX/UI direction.
+
+## License
+
+No license is specified in this README. Refer to the repository's license file, if present, for the applicable terms.
