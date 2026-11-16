@@ -217,8 +217,12 @@ Test inventory counts describe source declarations, not passing test results.
 - 10.4.2 — Roadmap synchronization.
 - 10.4.3 — Release checklist and signing/AAB documentation.
 - 10.4.4 — Privacy Policy and Play Store preparation notes.
+  - Bilingual Privacy Policy published in the separate `dn_audio_privacy` repository.
+  - Added an in-app Privacy Policy entry under Settings → About, opening the hosted page in the external browser.
+  - Added English and Indonesian labels and a localization test.
+  - Added the public policy URL to the project README.
 
-**Status: In progress. 10.4.1, 10.4.2, and 10.4.3 are committed; 10.4.4 remains.**
+**Status: Implemented — verification pending.** The in-app link and localization are committed in source; local dependency resolution, automated tests, and actual public URL/browser behavior must be verified by the developer. The final merged release manifest and complete SDK/data-transmission review remain pending.
 
 ---
 
@@ -280,7 +284,7 @@ Planned final regression scope:
 - 10.4.1 README reconstruction: committed.
 - 10.4.2 ROADMAP synchronization: committed.
 - 10.4.3 Release checklist: committed at `docs/RELEASE_CHECKLIST.md`.
-- 10.4.4 Privacy and Play Store preparation: pending.
+- 10.4.4 Privacy Policy and in-app link: implemented in source; local verification and final data/SDK audit pending.
 
 The next work item is **Stage 10.4.4 — Privacy Policy and Play Store preparation notes**.
 
