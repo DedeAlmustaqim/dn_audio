@@ -265,6 +265,21 @@ Planned final regression scope:
 
 **Status: Not started.**
 
+## Stage 15 — DN Audio Pro & Monetization Planning
+
+Planning document: [docs/PRO_PLAN.md](docs/PRO_PLAN.md).
+
+Scope recorded in the planning document:
+- Preserve a useful Free offline music-player experience.
+- Evaluate Advanced Equalizer, custom presets, Premium Personalization, Advanced Sleep Timer, and advanced playlist management as Pro candidates.
+- Evaluate a one-time Pro unlock; purchase policy and lifetime/future-feature terms are not yet approved.
+- Treat Rp19.000–49.000 as exploratory pricing only, not a final price.
+- Revisit priorities after DN Audio 1.0.0 release and early user feedback.
+
+**Status: Planning documented — implementation not started.** Stage 15 work must not displace the immediate 1.0.0 release priority.
+
+---
+
 ## Stage 14 — Release & Post-release Monitoring
 
 - Upload to Play Console testing track.
