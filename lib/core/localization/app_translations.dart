@@ -61,6 +61,8 @@ class AppTranslations extends Translations {
       'independent_development': 'Independent software development',
       'open_source_licenses': 'Open-source licenses',
       'view_third_party_licenses': 'View licenses for third-party packages',
+      'privacy_policy': 'Privacy Policy',
+      'privacy_policy_description': 'How DN Audio handles your information',
       'scan_error': 'Could not scan music',
       'scan_success': 'Scan complete',
       'format_save_failed':
@@ -252,6 +254,8 @@ class AppTranslations extends Translations {
       'independent_development': 'Pengembangan perangkat lunak independen',
       'open_source_licenses': 'Lisensi sumber terbuka',
       'view_third_party_licenses': 'Lihat lisensi paket pihak ketiga',
+      'privacy_policy': 'Kebijakan Privasi',
+      'privacy_policy_description': 'Cara DN Audio menangani informasi Anda',
       'scan_error': 'Gagal memindai musik',
       'scan_success': 'Pemindaian selesai',
       'format_save_failed':
