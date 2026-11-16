@@ -90,41 +90,48 @@ class _HomeTab extends StatelessWidget {
     return CustomScrollView(
       slivers: [
         SliverPadding(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.lg, AppSpacing.screenHorizontal, AppSpacing.xxxl),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.screenHorizontal,
+            AppSpacing.lg,
+            AppSpacing.screenHorizontal,
+            AppSpacing.xxxl,
+          ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
               const _BrandHeader(),
               const SizedBox(height: AppSpacing.xxxl),
-              Text(
-                'home_tagline'.tr,
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AppColors.textSecondary,
-                      letterSpacing: 2.0,
-                      fontWeight: FontWeight.w600,
-                    ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              Text(
-                'home_headline'.tr,
-                style: AppTypography.editorialTitle.copyWith(fontSize: 30),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              Text(
-                'home_description'.tr,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.textSecondary,
-                      height: 1.45,
-                    ),
-              ),
-              const SizedBox(height: AppSpacing.xxl),
+              // Text(
+              //   'home_tagline'.tr,
+              //   style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              //     color: AppColors.textSecondary,
+              //     letterSpacing: 2.0,
+              //     fontWeight: FontWeight.w600,
+              //   ),
+              // ),
+              // const SizedBox(height: AppSpacing.sm),
+              // Text(
+              //   'home_headline'.tr,
+              //   style: AppTypography.editorialTitle.copyWith(fontSize: 30),
+              // ),
+              // const SizedBox(height: AppSpacing.sm),
+              // Text(
+              //   'home_description'.tr,
+              //   style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              //     color: AppColors.textSecondary,
+              //     height: 1.45,
+              //   ),
+              // ),
+              // const SizedBox(height: AppSpacing.xxl),
               _SearchField(
                 textController: controller.searchTextController,
                 onSubmitted: controller.submitSearch,
               ),
-              const SizedBox(height: AppSpacing.xxxl),
+              // const SizedBox(height: AppSpacing.xxxl),
               const _NowPlayingSection(),
               const SizedBox(height: AppSpacing.xxxl),
-              _RecentlyAddedSection(onSeeAll: () => controller.openLibrary(section: 'songs')),
+              _RecentlyAddedSection(
+                onSeeAll: () => controller.openLibrary(section: 'songs'),
+              ),
               const SizedBox(height: AppSpacing.xxxl),
               _HomePlaylistsSection(onSeeAll: () => controller.selectTab(2)),
               const SizedBox(height: AppSpacing.xxxl),
@@ -160,7 +167,6 @@ class _HomeTab extends StatelessWidget {
                   ),
                 ],
               ),
-
             ]),
           ),
         ),
@@ -207,13 +213,15 @@ class _RecentlyAddedSection extends StatelessWidget {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: recent.length,
-                separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.md),
+                separatorBuilder: (_, _) =>
+                    const SizedBox(width: AppSpacing.md),
                 itemBuilder: (context, index) {
                   final song = recent[index];
                   return SizedBox(
                     width: 116,
                     child: InkWell(
-                      onTap: () => Get.find<PlayerController>().playSong(song, recent),
+                      onTap: () =>
+                          Get.find<PlayerController>().playSong(song, recent),
                       borderRadius: AppRadius.medium,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,18 +239,16 @@ class _RecentlyAddedSection extends StatelessWidget {
                             song.title,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            style: Theme.of(context).textTheme.labelLarge
+                                ?.copyWith(fontWeight: FontWeight.w600),
                           ),
                           const SizedBox(height: 2),
                           Text(
                             song.artist,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                  color: AppColors.textSecondary,
-                                ),
+                            style: Theme.of(context).textTheme.labelSmall
+                                ?.copyWith(color: AppColors.textSecondary),
                           ),
                         ],
                       ),
@@ -292,9 +298,7 @@ class _HomePlaylistsSection extends StatelessWidget {
               onAction: onSeeAll,
             )
           else
-            ...visible.map(
-              (playlist) => _HomePlaylistTile(playlist: playlist),
-            ),
+            ...visible.map((playlist) => _HomePlaylistTile(playlist: playlist)),
         ],
       );
     });
@@ -342,20 +346,25 @@ class _HomePlaylistTile extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       const SizedBox(height: 3),
                       Text(
-                        'song_count'.trParams({'count': '${playlist.songCount}'}),
+                        'song_count'.trParams({
+                          'count': '${playlist.songCount}',
+                        }),
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
+                          color: AppColors.textSecondary,
+                        ),
                       ),
                     ],
                   ),
                 ),
-                const Icon(Icons.chevron_right_rounded, color: AppColors.textSecondary),
+                const Icon(
+                  Icons.chevron_right_rounded,
+                  color: AppColors.textSecondary,
+                ),
               ],
             ),
           ),
@@ -394,9 +403,9 @@ class _HomeSectionEmpty extends StatelessWidget {
           Expanded(
             child: Text(
               message,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
             ),
           ),
           if (actionLabel != null && onAction != null)
@@ -414,18 +423,10 @@ class _BrandHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: AppColors.surfaceElevated,
-            borderRadius: AppRadius.medium,
-          ),
-          child: const Icon(
-            Icons.graphic_eq_rounded,
-            color: AppColors.textPrimary,
-            size: 25,
-          ),
+        Image.asset(
+          "assets/icon/dn_audio_logo.png",
+          height: 70.0,
+          fit: BoxFit.fill,
         ),
         const SizedBox(width: AppSpacing.md),
         const Column(
@@ -434,8 +435,8 @@ class _BrandHeader extends StatelessWidget {
             Text(
               'DN AUDIO',
               style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w800,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
                 letterSpacing: 2,
               ),
             ),
@@ -454,7 +455,10 @@ class _BrandHeader extends StatelessWidget {
         IconButton(
           tooltip: 'settings'.tr,
           onPressed: () => Get.toNamed(AppRoutes.settings),
-          icon: const Icon(Icons.settings_outlined, color: AppColors.textSecondary),
+          icon: const Icon(
+            Icons.settings_outlined,
+            color: AppColors.textSecondary,
+          ),
         ),
         Obx(() {
           final active = Get.find<SleepTimerController>().isActive.value;
@@ -522,11 +526,7 @@ class _SearchField extends StatelessWidget {
 }
 
 class _SectionHeader extends StatelessWidget {
-  _SectionHeader({
-    required this.title,
-    this.actionLabel,
-    this.onAction,
-  });
+  _SectionHeader({required this.title, this.actionLabel, this.onAction});
 
   final String title;
   final String? actionLabel;
@@ -538,10 +538,7 @@ class _SectionHeader extends StatelessWidget {
       children: [
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-          ),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
         ),
         const Spacer(),
         if (actionLabel != null && onAction != null)
@@ -591,9 +588,9 @@ class _LibraryShortcut extends StatelessWidget {
                 title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 3),
               Text(
@@ -601,9 +598,9 @@ class _LibraryShortcut extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AppColors.textSecondary,
-                      fontSize: 9,
-                    ),
+                  color: AppColors.textSecondary,
+                  fontSize: 9,
+                ),
               ),
             ],
           ),
@@ -683,7 +680,9 @@ class _NowPlayingSection extends StatelessWidget {
                                   const SizedBox(width: 6),
                                   Text(
                                     'NOW PLAYING',
-                                    style: Theme.of(context).textTheme.labelSmall
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall
                                         ?.copyWith(
                                           color: AppColors.textSecondary,
                                           letterSpacing: 1.1,
@@ -696,7 +695,9 @@ class _NowPlayingSection extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         IconButton.filled(
-                          tooltip: player.isPlaying.value ? 'pause'.tr : 'play'.tr,
+                          tooltip: player.isPlaying.value
+                              ? 'pause'.tr
+                              : 'play'.tr,
                           onPressed: player.togglePlayPause,
                           icon: Icon(
                             player.isPlaying.value
@@ -722,15 +723,13 @@ class _NowPlayingSection extends StatelessWidget {
                       children: [
                         Text(
                           player.formatDuration(player.position.value),
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: AppColors.textSecondary,
-                              ),
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(color: AppColors.textSecondary),
                         ),
                         Text(
                           player.formatDuration(player.duration.value),
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: AppColors.textSecondary,
-                              ),
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(color: AppColors.textSecondary),
                         ),
                       ],
                     ),
@@ -749,5 +748,6 @@ class _EqualizerTab extends StatelessWidget {
   const _EqualizerTab();
 
   @override
-  Widget build(BuildContext context) => const EqualizerView(isBottomSheet: false);
+  Widget build(BuildContext context) =>
+      const EqualizerView(isBottomSheet: false);
 }

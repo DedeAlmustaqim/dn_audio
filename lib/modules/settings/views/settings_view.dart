@@ -27,164 +27,188 @@ class SettingsView extends GetView<SettingsController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: Text('settings_title'.tr),
-        leading: IconButton(
-          tooltip: 'back'.tr,
-          onPressed: Get.back,
-          icon: const Icon(Icons.arrow_back_rounded),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: AppBar(
+          title: Text('settings_title'.tr),
+          leading: IconButton(
+            tooltip: 'back'.tr,
+            onPressed: Get.back,
+            icon: const Icon(Icons.arrow_back_rounded),
+          ),
         ),
-      ),
-      body: Obx(() {
-        if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
+        body: Obx(() {
+          if (controller.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-        return ListView(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.md, AppSpacing.screenHorizontal, AppSpacing.xxxl),
-          children: [
-            const _SettingsIntro(),
-            const SizedBox(height: AppSpacing.xl),
-            _LanguagePreferencePanel(),
-            const SizedBox(height: AppSpacing.xxxl),
-            _SectionHeading(
-              title: 'playback'.tr,
-              subtitle: 'playback_description'.tr,
+          return ListView(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.screenHorizontal,
+              AppSpacing.md,
+              AppSpacing.screenHorizontal,
+              AppSpacing.xxxl,
             ),
-            const SizedBox(height: AppSpacing.md),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: AppRadius.medium,
-                border: Border.all(color: AppColors.border),
+            children: [
+              // const _SettingsIntro(),
+              const SizedBox(height: AppSpacing.xl),
+              _LanguagePreferencePanel(),
+              const SizedBox(height: AppSpacing.xxxl),
+              _SectionHeading(
+                title: 'playback'.tr,
+                subtitle: 'playback_description'.tr,
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'playback_speed'.tr,
-                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-                        ),
-                        SizedBox(height: AppSpacing.xxs),
-                        Text(
-                          'playback_speed_description'.tr,
-                          style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.md),
-                  DropdownButton<double>(
-                    value: controller.playbackPreferences.value.speed,
-                    underline: const SizedBox.shrink(),
-                    borderRadius: AppRadius.small,
-                    dropdownColor: AppColors.surfaceElevated,
-                    onChanged: controller.isSaving.value
-                        ? null
-                        : (speed) {
-                            if (speed != null) controller.setPlaybackSpeed(speed);
-                          },
-                    items: PlaybackPreferences.supportedSpeeds
-                        .map(
-                          (speed) => DropdownMenuItem<double>(
-                            value: speed,
-                            child: Text(
-                              '$speed×',
-                              style: const TextStyle(fontWeight: FontWeight.w600),
+              const SizedBox(height: AppSpacing.md),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.lg,
+                  vertical: AppSpacing.md,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: AppRadius.medium,
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'playback_speed'.tr,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
                             ),
                           ),
-                        )
-                        .toList(growable: false),
+                          SizedBox(height: AppSpacing.xxs),
+                          Text(
+                            'playback_speed_description'.tr,
+                            style: TextStyle(
+                              color: AppColors.textSecondary,
+                              fontSize: 11,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    DropdownButton<double>(
+                      value: controller.playbackPreferences.value.speed,
+                      underline: const SizedBox.shrink(),
+                      borderRadius: AppRadius.small,
+                      dropdownColor: AppColors.surfaceElevated,
+                      onChanged: controller.isSaving.value
+                          ? null
+                          : (speed) {
+                              if (speed != null)
+                                controller.setPlaybackSpeed(speed);
+                            },
+                      items: PlaybackPreferences.supportedSpeeds
+                          .map(
+                            (speed) => DropdownMenuItem<double>(
+                              value: speed,
+                              child: Text(
+                                '$speed×',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList(growable: false),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppSpacing.xxxl),
+              _SectionHeading(
+                title: 'audio_library'.tr,
+                subtitle: 'audio_library_description'.tr,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              _FormatPanel(
+                enabledExtensions:
+                    controller.preferences.value.enabledExtensions,
+                isSaving: controller.isSaving.value,
+                onChanged: controller.toggleExtension,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'formats_enabled'.trParams({
+                        'enabled':
+                            '${controller.preferences.value.enabledExtensions.length}',
+                        'total':
+                            '${AudioLibraryPreferences.supportedExtensions.length}',
+                      }),
+                      style: const TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  TextButton.icon(
+                    onPressed: controller.isSaving.value
+                        ? null
+                        : controller.resetFormats,
+                    icon: const Icon(Icons.restart_alt_rounded, size: 17),
+                    label: Text('reset_defaults'.tr),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: AppSpacing.xxxl),
-            _SectionHeading(
-              title: 'audio_library'.tr,
-              subtitle: 'audio_library_description'.tr,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            _FormatPanel(
-              enabledExtensions: controller.preferences.value.enabledExtensions,
-              isSaving: controller.isSaving.value,
-              onChanged: controller.toggleExtension,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'formats_enabled'.trParams({'enabled': '${controller.preferences.value.enabledExtensions.length}', 'total': '${AudioLibraryPreferences.supportedExtensions.length}'}),
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 12,
-                    ),
+              if (controller.preferences.value.enabledExtensions.isEmpty)
+                _InlineNotice(
+                  message: 'no_formats_enabled'.tr,
+                  icon: Icons.info_outline_rounded,
+                ),
+              if (controller.isSaving.value) ...[
+                const SizedBox(height: AppSpacing.sm),
+                const LinearProgressIndicator(minHeight: 2),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  'saving_changes'.tr,
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 11,
                   ),
                 ),
-                TextButton.icon(
-                  onPressed: controller.isSaving.value
-                      ? null
-                      : controller.resetFormats,
-                  icon: const Icon(Icons.restart_alt_rounded, size: 17),
-                  label: Text('reset_defaults'.tr),
+              ],
+              if (controller.errorMessage.value != null) ...[
+                const SizedBox(height: AppSpacing.md),
+                _InlineNotice(
+                  message: controller.errorMessage.value!,
+                  icon: Icons.error_outline_rounded,
+                  isError: true,
                 ),
               ],
-            ),
-            if (controller.preferences.value.enabledExtensions.isEmpty)
-              _InlineNotice(
-                message: 'no_formats_enabled'.tr,
-                icon: Icons.info_outline_rounded,
+              const SizedBox(height: AppSpacing.xxxl),
+              _SectionHeading(
+                title: 'storage_maintenance'.tr,
+                subtitle: 'storage_description'.tr,
               ),
-            if (controller.isSaving.value) ...[
-              const SizedBox(height: AppSpacing.sm),
-              const LinearProgressIndicator(minHeight: 2),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                'saving_changes'.tr,
-                style: TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 11,
-                ),
-              ),
-            ],
-            if (controller.errorMessage.value != null) ...[
               const SizedBox(height: AppSpacing.md),
-              _InlineNotice(
-                message: controller.errorMessage.value!,
-                icon: Icons.error_outline_rounded,
-                isError: true,
+              const _LibraryOverviewPanel(),
+              const SizedBox(height: AppSpacing.md),
+              const _ArtworkCachePanel(),
+              const SizedBox(height: 32),
+              _SectionHeading(
+                title: 'about'.tr,
+                subtitle: 'about_description'.tr,
               ),
+              const SizedBox(height: AppSpacing.md),
+              const _AboutPanel(),
             ],
-            const SizedBox(height: AppSpacing.xxxl),
-            _SectionHeading(
-              title: 'storage_maintenance'.tr,
-              subtitle: 'storage_description'.tr,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            const _LibraryOverviewPanel(),
-            const SizedBox(height: AppSpacing.md),
-            const _ArtworkCachePanel(),
-            const SizedBox(height: 32),
-            _SectionHeading(
-              title: 'about'.tr,
-              subtitle: 'about_description'.tr,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            const _AboutPanel(),
-          ],
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 }
-
 
 class _LanguagePreferencePanel extends StatelessWidget {
   @override
@@ -207,9 +231,21 @@ class _LanguagePreferencePanel extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('language'.tr, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text(
+                    'language'.tr,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
                   const SizedBox(height: AppSpacing.xxs),
-                  Text('language_description'.tr, style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
+                  Text(
+                    'language_description'.tr,
+                    style: const TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 11,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -223,8 +259,14 @@ class _LanguagePreferencePanel extends StatelessWidget {
                 if (value != null) localeController.changeLocale(value);
               },
               items: [
-                DropdownMenuItem(value: 'en', child: Text('language_english'.tr)),
-                DropdownMenuItem(value: 'id', child: Text('language_indonesian'.tr)),
+                DropdownMenuItem(
+                  value: 'en',
+                  child: Text('language_english'.tr),
+                ),
+                DropdownMenuItem(
+                  value: 'id',
+                  child: Text('language_indonesian'.tr),
+                ),
               ],
             ),
           ],
@@ -261,7 +303,10 @@ class _SettingsIntro extends StatelessWidget {
                 SizedBox(height: AppSpacing.xxs),
                 Text(
                   'settings_intro_subtitle'.tr,
-                  style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 12,
+                  ),
                 ),
               ],
             ),
@@ -283,11 +328,18 @@ class _SectionHeading extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+        ),
         const SizedBox(height: AppSpacing.xs),
         Text(
           subtitle,
-          style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, height: 1.4),
+          style: const TextStyle(
+            color: AppColors.textSecondary,
+            fontSize: 12,
+            height: 1.4,
+          ),
         ),
       ],
     );
@@ -315,29 +367,51 @@ class _FormatPanel extends StatelessWidget {
       ),
       child: Column(
         children: [
-          for (var index = 0;
-              index < AudioLibraryPreferences.supportedExtensions.length;
-              index++) ...[
+          for (
+            var index = 0;
+            index < AudioLibraryPreferences.supportedExtensions.length;
+            index++
+          ) ...[
             if (index > 0)
-              const Divider(height: 1, indent: 18, endIndent: 18, color: AppColors.border),
-            Builder(builder: (context) {
-              final extension = AudioLibraryPreferences.supportedExtensions[index];
-              final selected = enabledExtensions.contains(extension);
-              return SwitchListTile(
-                value: selected,
-                onChanged: isSaving ? null : (value) => onChanged(extension, value),
-                activeThumbColor: AppColors.primary,
-                title: Text(
-                  SettingsView._formatLabels[extension] ?? extension.toUpperCase(),
-                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-                ),
-                subtitle: Text(
-                  '.$extension',
-                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 11),
-                ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.xs),
-              );
-            }),
+              const Divider(
+                height: 1,
+                indent: 18,
+                endIndent: 18,
+                color: AppColors.border,
+              ),
+            Builder(
+              builder: (context) {
+                final extension =
+                    AudioLibraryPreferences.supportedExtensions[index];
+                final selected = enabledExtensions.contains(extension);
+                return SwitchListTile(
+                  value: selected,
+                  onChanged: isSaving
+                      ? null
+                      : (value) => onChanged(extension, value),
+                  activeThumbColor: AppColors.primary,
+                  title: Text(
+                    SettingsView._formatLabels[extension] ??
+                        extension.toUpperCase(),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                  subtitle: Text(
+                    '.$extension',
+                    style: const TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 11,
+                    ),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg,
+                    vertical: AppSpacing.xs,
+                  ),
+                );
+              },
+            ),
           ],
         ],
       ),
@@ -365,8 +439,7 @@ class _AboutPanelState extends State<_AboutPanel> {
     showLicensePage(
       context: context,
       applicationName: 'DN Audio',
-      applicationVersion:
-          '${packageInfo.version}+${packageInfo.buildNumber}',
+      applicationVersion: '${packageInfo.version}+${packageInfo.buildNumber}',
       applicationLegalese: 'Digital Native Dev',
     );
   }
@@ -384,11 +457,15 @@ class _AboutPanelState extends State<_AboutPanel> {
         future: _packageInfoFuture,
         builder: (context, snapshot) {
           final packageInfo = snapshot.data;
-          final versionLabel = snapshot.connectionState == ConnectionState.waiting
+          final versionLabel =
+              snapshot.connectionState == ConnectionState.waiting
               ? 'version_loading'.tr
               : snapshot.hasError || packageInfo == null
-                  ? 'version_unavailable'.tr
-                  : 'version_build'.trParams({'version': packageInfo.version, 'build': packageInfo.buildNumber});
+              ? 'version_unavailable'.tr
+              : 'version_build'.trParams({
+                  'version': packageInfo.version,
+                  'build': packageInfo.buildNumber,
+                });
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -441,10 +518,7 @@ class _AboutPanelState extends State<_AboutPanel> {
               const SizedBox(height: AppSpacing.xxs),
               Text(
                 'independent_development'.tr,
-                style: TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 11,
-                ),
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
               ),
               const SizedBox(height: AppSpacing.md),
               Text(
@@ -509,7 +583,11 @@ class _InlineNotice extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 18, color: isError ? AppColors.error : AppColors.textSecondary),
+          Icon(
+            icon,
+            size: 18,
+            color: isError ? AppColors.error : AppColors.textSecondary,
+          ),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
@@ -584,7 +662,10 @@ class _LibraryOverviewPanelState extends State<_LibraryOverviewPanel> {
                     color: AppColors.surfaceElevated,
                     borderRadius: AppRadius.small,
                   ),
-                  child: const Icon(Icons.library_music_rounded, color: AppColors.primary),
+                  child: const Icon(
+                    Icons.library_music_rounded,
+                    color: AppColors.primary,
+                  ),
                 ),
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
@@ -593,12 +674,18 @@ class _LibraryOverviewPanelState extends State<_LibraryOverviewPanel> {
                     children: [
                       Text(
                         'music_library'.tr,
-                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                        ),
                       ),
                       const SizedBox(height: AppSpacing.xxs),
                       Text(
                         'songs_indexed'.trParams({'count': '$songCount'}),
-                        style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
+                        style: const TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 12,
+                        ),
                       ),
                     ],
                   ),
@@ -756,7 +843,11 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
         children: [
           Row(
             children: [
-              const Icon(Icons.image_outlined, color: AppColors.primary, size: 21),
+              const Icon(
+                Icons.image_outlined,
+                color: AppColors.primary,
+                size: 21,
+              ),
               const SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: Text(
@@ -790,12 +881,16 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
                         style: TextStyle(color: AppColors.error, fontSize: 12),
                       ),
                     ),
-                    TextButton(onPressed: _refreshCacheInfo, child: Text('retry'.tr)),
+                    TextButton(
+                      onPressed: _refreshCacheInfo,
+                      child: Text('retry'.tr),
+                    ),
                   ],
                 );
               }
 
-              final info = snapshot.data ??
+              final info =
+                  snapshot.data ??
                   const ArtworkCacheInfo(fileCount: 0, totalBytes: 0);
               return Row(
                 children: [
@@ -826,9 +921,7 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
                       ? Icons.check_circle_outline_rounded
                       : Icons.error_outline_rounded,
                   size: 17,
-                  color: _actionSucceeded
-                      ? AppColors.primary
-                      : AppColors.error,
+                  color: _actionSucceeded ? AppColors.primary : AppColors.error,
                 ),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
@@ -858,10 +951,14 @@ class _ArtworkCachePanelState extends State<_ArtworkCachePanel> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : const Icon(Icons.delete_outline_rounded, size: 18),
-              label: Text(_isClearing ? 'clearing_cache'.tr : 'clear_artwork_cache'.tr),
+              label: Text(
+                _isClearing ? 'clearing_cache'.tr : 'clear_artwork_cache'.tr,
+              ),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.error,
-                side: BorderSide(color: AppColors.error.withValues(alpha: 0.45)),
+                side: BorderSide(
+                  color: AppColors.error.withValues(alpha: 0.45),
+                ),
               ),
             ),
           ),

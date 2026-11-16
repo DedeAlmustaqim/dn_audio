@@ -5,7 +5,7 @@ import 'playlist_database.dart';
 
 class PlaylistRepository {
   PlaylistRepository({PlaylistDatabase? database})
-      : _database = database ?? PlaylistDatabase.instance;
+    : _database = database ?? PlaylistDatabase.instance;
 
   final PlaylistDatabase _database;
 
@@ -126,8 +126,8 @@ class PlaylistRepository {
         'FROM playlist_songs WHERE playlist_id = ?',
         [playlistId],
       );
-      final nextPosition =
-          (positionResult.first['next_position'] as num).toInt();
+      final nextPosition = (positionResult.first['next_position'] as num)
+          .toInt();
 
       await txn.insert(
         'playlist_songs',
@@ -146,10 +146,7 @@ class PlaylistRepository {
     });
   }
 
-  Future<void> removeSongFromPlaylist(
-    int playlistId,
-    String contentUri,
-  ) async {
+  Future<void> removeSongFromPlaylist(int playlistId, String contentUri) async {
     final db = await _database.database;
     await db.transaction((txn) async {
       final deleted = await txn.delete(
