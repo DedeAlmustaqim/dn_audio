@@ -22,6 +22,7 @@ class DnAudioHandler extends BaseAudioHandler
   StreamSubscription<SequenceState>? _sequenceStateSubscription;
   StreamSubscription<void>? _becomingNoisySubscription;
   int _artworkRequestId = 0;
+  bool _notificationDismissed = false;
 
   /// Explicit custom action for closing the Android media notification.
   ///
@@ -105,6 +106,7 @@ class DnAudioHandler extends BaseAudioHandler
       throw RangeError.index(initialIndex, songs, 'initialIndex');
     }
 
+    _notificationDismissed = false;
     await player.setAudioSources(
       songs
           .map((song) => AudioSource.uri(
@@ -131,6 +133,8 @@ class DnAudioHandler extends BaseAudioHandler
       );
 
   void _broadcastCurrentMediaItem(SequenceState state) {
+    if (_notificationDismissed) return;
+
     final tag = state.currentSource?.tag;
     if (tag is! Song) return;
 
@@ -142,7 +146,11 @@ class DnAudioHandler extends BaseAudioHandler
   Future<void> _resolveCurrentArtwork(Song song, int requestId) async {
     try {
       final artworkUri = await ArtworkService.resolve(song);
-      if (requestId != _artworkRequestId || artworkUri == null) return;
+      if (_notificationDismissed ||
+          requestId != _artworkRequestId ||
+          artworkUri == null) {
+        return;
+      }
       mediaItem.add(_toMediaItem(song, artworkUri: artworkUri));
     } catch (_) {
       // Artwork is optional; a resolution failure must not interrupt playback.
@@ -150,6 +158,8 @@ class DnAudioHandler extends BaseAudioHandler
   }
 
   void _broadcastPlaybackState(PlaybackEvent event) {
+    if (_notificationDismissed) return;
+
     final processingState = switch (player.processingState) {
       ProcessingState.idle => AudioProcessingState.idle,
       ProcessingState.loading => AudioProcessingState.loading,
@@ -182,7 +192,10 @@ class DnAudioHandler extends BaseAudioHandler
   }
 
   @override
-  Future<void> play() => player.play();
+  Future<void> play() {
+    _notificationDismissed = false;
+    return player.play();
+  }
 
   @override
   Future<void> pause() => player.pause();
@@ -196,6 +209,7 @@ class DnAudioHandler extends BaseAudioHandler
     Map<String, dynamic>? extras,
   ]) async {
     if (name == notificationCloseAction) {
+      _notificationDismissed = true;
       await stop();
       return null;
     }
