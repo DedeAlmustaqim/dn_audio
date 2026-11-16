@@ -22,27 +22,6 @@ class DnAudioHandler extends BaseAudioHandler
   StreamSubscription<SequenceState>? _sequenceStateSubscription;
   StreamSubscription<void>? _becomingNoisySubscription;
   int _artworkRequestId = 0;
-  bool _notificationDismissed = false;
-
-  /// Explicit custom action for closing the Android media notification.
-  ///
-  /// Android 13+ represents the built-in stop action as a custom action.
-  /// Using our own named action makes its dispatch explicit and predictable.
-  static const String notificationCloseAction = 'dn_audio.close_notification';
-
-  static final MediaControl notificationCloseControl = MediaControl.custom(
-    androidIcon: 'drawable/ic_action_close',
-    label: 'Close',
-    name: notificationCloseAction,
-  );
-
-  @visibleForTesting
-  static List<MediaControl> notificationControls({required bool isPlaying}) => [
-        MediaControl.skipToPrevious,
-        if (isPlaying) MediaControl.pause else MediaControl.play,
-        MediaControl.skipToNext,
-        notificationCloseControl,
-      ];
 
   DnAudioHandler() {
     sleepTimerService = SleepTimerService(
@@ -106,7 +85,6 @@ class DnAudioHandler extends BaseAudioHandler
       throw RangeError.index(initialIndex, songs, 'initialIndex');
     }
 
-    _notificationDismissed = false;
     await player.setAudioSources(
       songs
           .map((song) => AudioSource.uri(
@@ -133,8 +111,6 @@ class DnAudioHandler extends BaseAudioHandler
       );
 
   void _broadcastCurrentMediaItem(SequenceState state) {
-    if (_notificationDismissed) return;
-
     final tag = state.currentSource?.tag;
     if (tag is! Song) return;
 
@@ -146,11 +122,7 @@ class DnAudioHandler extends BaseAudioHandler
   Future<void> _resolveCurrentArtwork(Song song, int requestId) async {
     try {
       final artworkUri = await ArtworkService.resolve(song);
-      if (_notificationDismissed ||
-          requestId != _artworkRequestId ||
-          artworkUri == null) {
-        return;
-      }
+      if (requestId != _artworkRequestId || artworkUri == null) return;
       mediaItem.add(_toMediaItem(song, artworkUri: artworkUri));
     } catch (_) {
       // Artwork is optional; a resolution failure must not interrupt playback.
@@ -158,8 +130,6 @@ class DnAudioHandler extends BaseAudioHandler
   }
 
   void _broadcastPlaybackState(PlaybackEvent event) {
-    if (_notificationDismissed) return;
-
     final processingState = switch (player.processingState) {
       ProcessingState.idle => AudioProcessingState.idle,
       ProcessingState.loading => AudioProcessingState.loading,
@@ -170,7 +140,11 @@ class DnAudioHandler extends BaseAudioHandler
 
     playbackState.add(
       PlaybackState(
-        controls: notificationControls(isPlaying: player.playing),
+        controls: [
+          MediaControl.skipToPrevious,
+          if (player.playing) MediaControl.pause else MediaControl.play,
+          MediaControl.skipToNext,
+        ],
         systemActions: const {MediaAction.seek},
         androidCompactActionIndices: const [0, 1, 2],
         processingState: processingState,
@@ -192,29 +166,13 @@ class DnAudioHandler extends BaseAudioHandler
   }
 
   @override
-  Future<void> play() {
-    _notificationDismissed = false;
-    return player.play();
-  }
+  Future<void> play() => player.play();
 
   @override
   Future<void> pause() => player.pause();
 
   @override
   Future<void> seek(Duration position) => player.seek(position);
-
-  @override
-  Future<dynamic> customAction(
-    String name, [
-    Map<String, dynamic>? extras,
-  ]) async {
-    if (name == notificationCloseAction) {
-      _notificationDismissed = true;
-      await stop();
-      return null;
-    }
-    return super.customAction(name, extras);
-  }
 
   @override
   Future<void> stop() async {
