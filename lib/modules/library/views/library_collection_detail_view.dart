@@ -12,7 +12,7 @@ import '../models/song.dart';
 import '../widgets/song_artwork.dart';
 
 class AlbumDetailView extends StatelessWidget {
-  AlbumDetailView({super.key, required this.album});
+  const AlbumDetailView({super.key, required this.album});
 
   final AlbumCollection album;
 
@@ -93,7 +93,7 @@ class AlbumDetailView extends StatelessWidget {
 }
 
 class ArtistDetailView extends StatelessWidget {
-  ArtistDetailView({super.key, required this.artist});
+  const ArtistDetailView({super.key, required this.artist});
 
   final ArtistCollection artist;
 
@@ -223,7 +223,7 @@ class ArtistDetailView extends StatelessWidget {
 }
 
 class _ArtistAlbumCard extends StatelessWidget {
-  _ArtistAlbumCard({required this.album});
+  const _ArtistAlbumCard({required this.album});
   final AlbumCollection album;
 
   @override
@@ -270,7 +270,7 @@ class _ArtistAlbumCard extends StatelessWidget {
 }
 
 class _PlayAllButton extends StatelessWidget {
-  _PlayAllButton({required this.onPressed});
+  const _PlayAllButton({required this.onPressed});
   final VoidCallback onPressed;
 
   @override
@@ -296,7 +296,7 @@ class _PlayAllButton extends StatelessWidget {
 }
 
 class _SongListSliver extends StatelessWidget {
-  _SongListSliver({required this.songs});
+  const _SongListSliver({required this.songs});
   final List<Song> songs;
 
   @override
@@ -361,7 +361,7 @@ class _SongListSliver extends StatelessWidget {
 }
 
 class _DetailEmptyState extends StatelessWidget {
-  _DetailEmptyState({required this.title, required this.message});
+  const _DetailEmptyState({required this.title, required this.message});
   final String title;
   final String message;
 
