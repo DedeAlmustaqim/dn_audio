@@ -4,6 +4,10 @@ class AppTranslations extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
     'en_US': {
+      'update_available_title': 'Update available',
+      'update_available_version': 'DN Audio @version is ready to install.',
+      'update_later': 'Later',
+      'update_now': 'Update now',
       'splash_tagline': 'YOUR MUSIC. YOUR EXPERIENCE.',
       'splash_initializing': 'Preparing your listening experience…',
       'splash_error': 'DN Audio could not finish starting. Please try again.',
@@ -198,6 +202,10 @@ class AppTranslations extends Translations {
       'sound_control': 'Sound control',
     },
     'id_ID': {
+      'update_available_title': 'Pembaruan tersedia',
+      'update_available_version': 'DN Audio @version sudah tersedia.',
+      'update_later': 'Nanti',
+      'update_now': 'Perbarui sekarang',
       'splash_tagline': 'MUSIKMU. PENGALAMANMU.',
       'splash_initializing': 'Menyiapkan pengalaman mendengarkan…',
       'splash_error': 'DN Audio tidak dapat memulai. Silakan coba lagi.',
