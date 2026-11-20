@@ -4,6 +4,9 @@ class AppTranslations extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
     'en_US': {
+      'splash_tagline': 'YOUR MUSIC. YOUR EXPERIENCE.',
+      'splash_initializing': 'Preparing your listening experience…',
+      'splash_error': 'DN Audio could not finish starting. Please try again.',
       'settings_title': 'Settings',
       'language': 'Language',
       'language_description': 'Choose the language used throughout DN Audio.',
@@ -195,6 +198,9 @@ class AppTranslations extends Translations {
       'sound_control': 'Sound control',
     },
     'id_ID': {
+      'splash_tagline': 'MUSIKMU. PENGALAMANMU.',
+      'splash_initializing': 'Menyiapkan pengalaman mendengarkan…',
+      'splash_error': 'DN Audio tidak dapat memulai. Silakan coba lagi.',
       'settings_title': 'Pengaturan',
       'language': 'Bahasa',
       'language_description':
