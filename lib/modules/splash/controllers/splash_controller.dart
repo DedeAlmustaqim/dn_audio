@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:get/get.dart';
-import 'package:flutter/widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/localization/app_locale.dart';
 import '../../../core/localization/locale_controller.dart';
@@ -20,6 +19,7 @@ class SplashController extends GetxController {
   DnAudioHandler? _handler;
   final updateInfo = Rxn<AppUpdateInfo>();
   final UpdateCheckerService _updateChecker = UpdateCheckerService();
+  bool _updatePromptShown = false;
 
   @override
   void onReady() {
@@ -28,9 +28,11 @@ class SplashController extends GetxController {
   }
 
   Future<void> _checkForUpdate() async {
+    if (_updatePromptShown) return;
     final result = await _updateChecker.checkForUpdate();
     if (result?.isUpdateAvailable == true) {
       updateInfo.value = result;
+      _updatePromptShown = true;
       await Future<void>.delayed(const Duration(milliseconds: 500));
       if (Get.isDialogOpen != true) {
         await Get.dialog<void>(
@@ -40,14 +42,18 @@ class SplashController extends GetxController {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('update_available_version'.trParams({'version': result!.latestVersion})),
+                Text(
+                  'update_available_version'.trParams({
+                    'version': result.latestVersion,
+                  }),
+                ),
                 const SizedBox(height: 12),
                 Text(result.releaseNotes),
               ],
             ),
             actions: [
               TextButton(
-                onPressed: Get.back,
+                onPressed: () => Get.back<void>(),
                 child: Text('update_later'.tr),
               ),
               FilledButton(
