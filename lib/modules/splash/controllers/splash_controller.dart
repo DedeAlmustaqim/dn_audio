@@ -29,48 +29,50 @@ class SplashController extends GetxController {
 
   Future<void> _checkForUpdate() async {
     if (_updatePromptShown) return;
+
     final result = await _updateChecker.checkForUpdate();
     if (result == null || !result.isUpdateAvailable) return;
 
     updateInfo.value = result;
-      _updatePromptShown = true;
-      await Future<void>.delayed(const Duration(milliseconds: 500));
-      if (Get.isDialogOpen != true) {
-        await Get.dialog<void>(
-          AlertDialog(
-            title: Text('update_available_title'.tr),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'update_available_version'.trParams({
-                    'version': result.latestVersion,
-                  }),
-                ),
-                const SizedBox(height: 12),
-                Text(result.releaseNotes),
-              ],
+    _updatePromptShown = true;
+
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+    if (Get.isDialogOpen == true) return;
+
+    await Get.dialog<void>(
+      AlertDialog(
+        title: Text('update_available_title'.tr),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'update_available_version'.trParams({
+                'version': result.latestVersion,
+              }),
             ),
-            actions: [
-              TextButton(
-                onPressed: () => Get.back<void>(),
-                child: Text('update_later'.tr),
-              ),
-              FilledButton(
-                onPressed: () async {
-                  final uri = Uri.parse(result.playStoreUrl);
-                  if (await canLaunchUrl(uri)) {
-                    await launchUrl(uri, mode: LaunchMode.externalApplication);
-                  }
-                },
-                child: Text('update_now'.tr),
-              ),
-            ],
+            const SizedBox(height: 12),
+            Text(result.releaseNotes),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back<void>(),
+            child: Text('update_later'.tr),
           ),
-          barrierDismissible: false,
-        );
-      }
+          FilledButton(
+            onPressed: () async {
+              final uri = Uri.parse(result.playStoreUrl);
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              }
+            },
+            child: Text('update_now'.tr),
+          ),
+        ],
+      ),
+      barrierDismissible: false,
+    );
   }
 
   Future<void> initialize() async {
