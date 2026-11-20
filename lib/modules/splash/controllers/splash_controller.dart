@@ -9,12 +9,15 @@ import '../../../core/localization/locale_controller.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../player/services/dn_audio_handler.dart';
 import '../../settings/services/settings_repository.dart';
+import '../services/update_checker_service.dart';
 
 class SplashController extends GetxController {
   final isInitializing = true.obs;
   final hasError = false.obs;
 
   DnAudioHandler? _handler;
+  final updateInfo = Rxn<AppUpdateInfo>();
+  final UpdateCheckerService _updateChecker = UpdateCheckerService();
 
   @override
   void onReady() {
@@ -77,6 +80,7 @@ class SplashController extends GetxController {
       }
       Get.updateLocale(initialLocale);
       Get.offAllNamed(AppRoutes.home);
+      unawaited(_checkForUpdate());
     } catch (error, stackTrace) {
       debugPrint('DN Audio: startup initialization failed: $error');
       debugPrintStack(stackTrace: stackTrace);
