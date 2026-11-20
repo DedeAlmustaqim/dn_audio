@@ -25,6 +25,13 @@ class SplashController extends GetxController {
     unawaited(initialize());
   }
 
+  Future<void> _checkForUpdate() async {
+    final result = await _updateChecker.checkForUpdate();
+    if (result?.isUpdateAvailable == true) {
+      updateInfo.value = result;
+    }
+  }
+
   Future<void> initialize() async {
     if (isInitializing.value && _handler != null) return;
 
