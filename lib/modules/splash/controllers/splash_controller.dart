@@ -31,8 +31,8 @@ class SplashController extends GetxController {
     if (_updatePromptShown) return;
     final result = await _updateChecker.checkForUpdate();
     if (result == null || !result.isUpdateAvailable) return;
-    {
-      updateInfo.value = result;
+
+    updateInfo.value = result;
       _updatePromptShown = true;
       await Future<void>.delayed(const Duration(milliseconds: 500));
       if (Get.isDialogOpen != true) {
@@ -71,7 +71,6 @@ class SplashController extends GetxController {
           barrierDismissible: false,
         );
       }
-    }
   }
 
   Future<void> initialize() async {
