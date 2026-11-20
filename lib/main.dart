@@ -14,18 +14,21 @@ Future<void> main() async {
 }
 
 class DnAudioApp extends StatelessWidget {
-  const DnAudioApp({super.key});
+  const DnAudioApp({super.key, this.initialLocale, this.initialRoute = AppRoutes.splash});
+
+  final Locale? initialLocale;
+  final String initialRoute;
 
   @override
   Widget build(BuildContext context) {
-    final deviceLocale = AppLocale.fromLanguageCode(
+    final resolvedLocale = initialLocale ?? AppLocale.fromLanguageCode(
       WidgetsBinding.instance.platformDispatcher.locale.languageCode,
     );
 
     return GetMaterialApp(
       title: 'DN Audio',
       translations: AppTranslations(),
-      locale: deviceLocale,
+      locale: resolvedLocale,
       fallbackLocale: const Locale('en', 'US'),
       supportedLocales: AppLocale.supportedLocales,
       localizationsDelegates: const [
@@ -35,7 +38,7 @@ class DnAudioApp extends StatelessWidget {
       ],
       debugShowCheckedModeBanner: false,
       theme: AppTheme.dark,
-      initialRoute: AppRoutes.splash,
+      initialRoute: initialRoute,
       getPages: AppPages.pages,
     );
   }
