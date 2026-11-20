@@ -689,7 +689,7 @@ class _EqualizerViewState extends State<EqualizerView> {
                       child: Column(
                         children: [
                           Text(
-                            '${(safeValue / 100).toStringAsFixed(1)}',
+                            (safeValue / 100).toStringAsFixed(1),
                             style: TextStyle(
                               color: enabled
                                   ? AppColors.controlActive
