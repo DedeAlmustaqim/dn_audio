@@ -104,8 +104,9 @@ class SettingsView extends GetView<SettingsController> {
                       onChanged: controller.isSaving.value
                           ? null
                           : (speed) {
-                              if (speed != null)
+                              if (speed != null) {
                                 controller.setPlaybackSpeed(speed);
+                              }
                             },
                       items: PlaybackPreferences.supportedSpeeds
                           .map(
