@@ -30,7 +30,8 @@ class SplashController extends GetxController {
   Future<void> _checkForUpdate() async {
     if (_updatePromptShown) return;
     final result = await _updateChecker.checkForUpdate();
-    if (result?.isUpdateAvailable == true) {
+    if (result == null || !result.isUpdateAvailable) return;
+    {
       updateInfo.value = result;
       _updatePromptShown = true;
       await Future<void>.delayed(const Duration(milliseconds: 500));
