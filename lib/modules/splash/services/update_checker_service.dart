@@ -27,10 +27,7 @@ class UpdateCheckerService {
   Future<AppUpdateInfo?> checkForUpdate() async {
     try {
       final response = await http
-          .get(
-            _manifestUri,
-            headers: const {'Accept': 'application/json'},
-          )
+          .get(_manifestUri, headers: const {'Accept': 'application/json'})
           .timeout(const Duration(seconds: 5));
 
       if (response.statusCode != 200) {
@@ -90,8 +87,7 @@ class UpdateCheckerService {
 
     for (var index = 0; index < length; index++) {
       final remotePart = index < remoteParts.length ? remoteParts[index] : 0;
-      final currentPart =
-          index < currentParts.length ? currentParts[index] : 0;
+      final currentPart = index < currentParts.length ? currentParts[index] : 0;
       if (remotePart != currentPart) {
         return remotePart.compareTo(currentPart);
       }
