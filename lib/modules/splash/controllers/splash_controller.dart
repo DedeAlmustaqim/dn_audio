@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:get/get.dart';
+import 'package:flutter/widgets.dart';
 
 import '../../../core/localization/app_locale.dart';
 import '../../../core/localization/locale_controller.dart';
@@ -29,6 +31,39 @@ class SplashController extends GetxController {
     final result = await _updateChecker.checkForUpdate();
     if (result?.isUpdateAvailable == true) {
       updateInfo.value = result;
+      await Future<void>.delayed(const Duration(milliseconds: 500));
+      if (Get.isDialogOpen != true) {
+        await Get.dialog<void>(
+          AlertDialog(
+            title: Text('update_available_title'.tr),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('update_available_version'.trParams({'version': result!.latestVersion})),
+                const SizedBox(height: 12),
+                Text(result.releaseNotes),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: Get.back,
+                child: Text('update_later'.tr),
+              ),
+              FilledButton(
+                onPressed: () async {
+                  final uri = Uri.parse(result.playStoreUrl);
+                  if (await canLaunchUrl(uri)) {
+                    await launchUrl(uri, mode: LaunchMode.externalApplication);
+                  }
+                },
+                child: Text('update_now'.tr),
+              ),
+            ],
+          ),
+          barrierDismissible: false,
+        );
+      }
     }
   }
 
