@@ -5,6 +5,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'package:dn_audio/main.dart';
 import 'package:dn_audio/modules/player/services/dn_audio_handler.dart';
+import 'package:dn_audio/core/routes/app_routes.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +25,7 @@ void main() {
 
   testWidgets('DN Audio home screen renders', (WidgetTester tester) async {
     await tester.pumpWidget(
-      const DnAudioApp(initialLocale: Locale('en', 'US')),
+      const DnAudioApp(initialLocale: Locale('en', 'US'), initialRoute: AppRoutes.home),
     );
     await tester.pump();
 
