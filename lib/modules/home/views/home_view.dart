@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
 import '../../library/widgets/song_artwork.dart';
 import '../../library/controllers/library_controller.dart';
 import '../../library/views/library_view.dart';
@@ -375,7 +374,7 @@ class _HomePlaylistTile extends StatelessWidget {
 }
 
 class _HomeSectionEmpty extends StatelessWidget {
-  _HomeSectionEmpty({
+  const _HomeSectionEmpty({
     required this.icon,
     required this.message,
     this.actionLabel,
@@ -526,7 +525,7 @@ class _SearchField extends StatelessWidget {
 }
 
 class _SectionHeader extends StatelessWidget {
-  _SectionHeader({required this.title, this.actionLabel, this.onAction});
+  const _SectionHeader({required this.title, this.actionLabel, this.onAction});
 
   final String title;
   final String? actionLabel;
