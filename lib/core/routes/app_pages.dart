@@ -9,10 +9,19 @@ import '../../modules/player/controllers/sleep_timer_controller.dart';
 import '../../modules/playlist/controllers/playlist_controller.dart';
 import '../../modules/settings/controllers/settings_controller.dart';
 import '../../modules/settings/views/settings_view.dart';
+import '../../modules/splash/controllers/splash_controller.dart';
+import '../../modules/splash/views/splash_view.dart';
 import 'app_routes.dart';
 
 abstract final class AppPages {
   static final pages = <GetPage<dynamic>>[
+    GetPage(
+      name: AppRoutes.splash,
+      page: () => const SplashView(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<SplashController>(SplashController.new);
+      }),
+    ),
     GetPage(
       name: AppRoutes.home,
       page: () => const HomeView(),
